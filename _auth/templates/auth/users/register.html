@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - E-BLOOD BANK</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-white items-center justify-center h-screen">
+    <!-- <h2 class="text-2xl font-bold mb-6 text-center">Register</h2> -->
+    <header class="flex items-center justify-center space-x-4">
+        <svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
+            <path
+                d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z">
+            </path>
+            <path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97">
+            </path>
+        </svg>
+    </header>
+    <h1 class="text-3xl font-bold text-center">E-BLOOD BANK</h1>
+    <br>
+    <h2 class="text-2xl font-bold text-center">Inscription</h2>
+    <p class="text-center text-gray-500 mb-6">Créez un compte pour accéder à nos services</p>
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-lg p-6" style="display: flex; flex-direction: column; margin-left: auto; margin-right: auto; width: 50%;">
+
+        <form action="{% url '_auth:register' %}" method="POST">
+
+            {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'success' %}
+                    <div role="alert" class="rounded-xl border border-gray-100 bg-white p-4">
+                        <div class="flex items-start gap-4">
+                            <span class="text-green-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                    stroke="currentColor" class="h-6 w-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </span>
+
+                            <div class="flex-1">
+                                <strong class="block font-medium text-gray-900"> Success! </strong>
+
+                                <p class="mt-1 text-sm text-gray-700">
+                                    {{ message }}
+                                </p>
+                            </div>
+
+                            <button class="text-gray-500 transition hover:text-gray-600">
+                                <span class="sr-only">Dismiss popup</span>
+
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                    stroke="currentColor" class="h-6 w-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                {% endif %}
+                {% if message.tags == 'error' %}
+                    <div role="alert" class="rounded border-s-4 border-red-500 bg-red-50 p-4">
+                        <div class="flex items-center gap-2 text-red-800">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5">
+                                <path fill-rule="evenodd"
+                                    d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                                    clip-rule="evenodd" />
+                            </svg>
+
+                            <strong class="block font-medium"> Something went wrong </strong>
+                        </div>
+
+                        <p class="mt-2 text-sm text-red-700">
+                            {{ message }}
+                        </p>
+                    </div>
+                {% endif %}
+            {% endfor %}
+            {% endif %}
+            {% csrf_token %}
+            <div class="mb-4 mt-4">
+                <h6 class="block -mb-3 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-blue-gray-900">Prénom</h6>
+                <br>
+                <div class="relative h-11 w-full min-w-[200px]">
+                    <input type="text" name="firstName" id="firstName" placeholder="Entrez votre prénom"
+                        class="peer h-full w-full rounded-md border border-blue-gray-200 border-t-transparent !border-t-blue-gray-200 bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:!border-t-gray-900 focus:outline-0" required>
+                </div>
+            </div>
+            <div class="mb-4">
+                <h6 class="block -mb-3 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-blue-gray-900">Nom</h6>
+                <br>
+                <div class="relative h-11 w-full min-w-[200px]">
+                    <input type="text" name="lastName" id="lastName" placeholder="Entrez votre nom"
+                        class="peer h-full w-full rounded-md border border-blue-gray-200 border-t-transparent !border-t-blue-gray-200 bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:!border-t-gray-900 focus:outline-0" required>
+                </div>
+            </div>
+            <div class="mb-4">
+                <h6 class="block -mb-3 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-blue-gray-900">Email</h6>
+                <br>
+                <div class="relative h-11 w-full min-w-[200px]">
+                    <input type="email" name="email" id="email" placeholder="info@example.com"
+                        class="peer h-full w-full rounded-md border border-blue-gray-200 border-t-transparent !border-t-blue-gray-200 bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:!border-t-gray-900 focus:outline-0" required>
+                </div>
+            </div>
+            <div class="mb-4">
+                <h6 class="block -mb-3 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-blue-gray-900">Mot de passe</h6>
+                <br>
+                <div class="relative h-11 w-full min-w-[200px]">
+                    <input type="password" name="password" id="password" placeholder="Tapez votre mot de passe"
+                        class="peer h-full w-full rounded-md border border-blue-gray-200 border-t-transparent !border-t-blue-gray-200 bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:!border-t-gray-900 focus:outline-0" required>
+                </div>
+            </div>
+            <div class="mb-4">
+                <h6 class="block -mb-3 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-blue-gray-900">Confirmez le mot de passe</h6>
+                <br>
+                <div class="relative h-11 w-full min-w-[200px]">
+                    <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirmez votre mot de passe"
+                        class="peer h-full w-full rounded-md border border-blue-gray-200 border-t-transparent !border-t-blue-gray-200 bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:!border-t-gray-900 focus:outline-0" required>
+                </div>
+            </div>
+            <div class="mb-4">
+                <div>
+                    <input type="checkbox" name="terms" style="width: 1rem; height: 1rem;"
+                        class="rounded-lg focus:outline-none focus:ring focus:border-blue-300 p-3 rounded-lg" required>
+                    <label>J'accepte les <a href="#" class="text-blue-600 hover:underline">termes de confidentialité</a></label>
+                </div>
+            </div>
+            <button type="submit"
+                class="w-full bg-black text-white py-2 rounded-lg">S'inscrire</button>
+        </form>
+        <div class="mt-4 text-center">
+            <p>Already have an account? <a href="{% url '_auth:login' %}" class="text-blue-500 hover:underline">Login</a></p>
+        </div>
+    </div>
+</body>
+
+</html>

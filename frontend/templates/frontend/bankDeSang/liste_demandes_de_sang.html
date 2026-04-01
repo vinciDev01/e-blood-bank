@@ -1,0 +1,373 @@
+{% extends 'frontend/bankDeSang/accueil_bankDeSang.html' %}
+
+{% load static %}
+
+{% block title %}Liste des demandes{% endblock %}
+
+<style>
+  .hidden {
+    display: none;
+
+  }
+</style>
+
+{% block content %}
+<div class="container mx-auto px-4 sm:px-8 bg-white" style="font-size: 1.140rem; font-family: 'Poppins', sans-serif;">
+  <div class="py-8">
+    <div>
+      <h2 class="text-2xl font-semibold leading-tight">Liste des demandes</h2>
+    </div>
+    <div class="flex justify-between mt-4">
+      <div class="justify-between flex mr-4">
+        <div class="items-center mb-2">
+          <select id="select-1" class="bg-white border border-gray-300 rounded-md py-2 px-4 text-sm text-gray-600">
+            <option>5</option>
+            <option>10</option>
+            <option>20</option>
+          </select>
+        </div>
+
+        <div class="items-center mb-2 ml-4">
+          <select id="select-2" class="bg-white border border-gray-300 rounded-md py-2 px-4 text-sm text-gray-600">
+            <option>Trier par</option>
+            <option>Plus récent</option>
+            <option>Plus ancien</option>
+          </select>
+        </div>
+      </div>
+      <div class="flex-1">
+        <div class="relative">
+          <input type="search" class="bg-white border border-gray-300 rounded-md py-2 px-4 text-sm text-gray-600 w-full"
+            placeholder="Rechercher">
+          <svg viewBox="0 0 24 24" class="absolute right-2 top-2 h-4 w-4 text-gray-400" fill="none"
+            stroke="currentColor" stroke-width="2">
+            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div class="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
+      <div class="inline-block min-w-full shadow rounded-lg overflow-hidden">
+        <table class="min-w-full leading-normal" style="font-size: 1.125rem;">
+          <thead class="bg-gray-100 box-shadow">
+            <tr>
+              <th
+                class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                Etablissement
+              </th>
+              <th
+                class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                Groupe Sanguin
+              </th>
+              <th
+                class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                Quantité
+              </th>
+              <th
+                class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                Date de la demande
+              </th>
+              <th
+                class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer flex"
+                data-sort="urgence">
+                Urgence
+                <svg role="img" xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24"
+                  aria-labelledby="sortingIconTitle" stroke="#000" stroke-width="0.96" stroke-linecap="square"
+                  stroke-linejoin="miter" fill="none" color="#000">
+                  <title id="sortingIconTitle">Sorting</title>
+                  <polyline points="8 8.333 12 4.333 16 8.333 16 8.333" />
+                  <polyline points="16 15.667 12 19.667 8 15.667 8 15.667" />
+                </svg>
+              </th>
+              <th
+                class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                Actions
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for demande_data in demandes_data %}
+            <tr class="hover:bg-gray-100">
+              <td class="px-5 py-5 border-b border-gray-200">
+                <div class="flex items-center">
+                  <div class="ml-3">
+                    <p class="text-sm text-gray-900 whitespace-no-wrap">
+                      <strong>
+                        <u>{{ demande_data.demande.nom_etablissement }}</u>
+                      </strong>
+                    </p>
+                  </div>
+                </div>
+              </td>
+              <td class="px-5 py-5 border-b border-gray-200 text-sm">
+                {% for grp in demande_data.groupe_sanguin %}
+                <span class="block">{{ grp }}</span>
+                {% endfor %}
+              </td>
+              <td class="px-5 py-5 border-b border-gray-200 text-sm">
+                {% for poche in demande_data.nombre_poches %}
+                <span class="block">{{ poche }}</span>
+                {% endfor %}
+              </td>
+              <td class="px-5 py-5 border-b border-gray-200">
+                <p class="text-sm text-gray-900 whitespace-no-wrap">{{ demande_data.demande.date_demande }}</p>
+              </td>
+              <td class="px-5 py-5 border-b border-gray-200">
+                <span
+                  class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {% if demande_data.demande.urgence == 'Immédiate' %}bg-red-100 text-red-800{% elif demande_data.demande.urgence == '24 heures' %}bg-yellow-100 text-yellow-800{% else %}bg-green-100 text-green-800{% endif %}">
+                  {{ demande_data.demande.urgence }}
+                </span>
+              </td>
+              <td class="px-5 py-5 border-b border-gray-200 text-sm">
+                <a href="#" class="text-indigo-600 hover:text-indigo-900 show-details"
+                  data-id="{{ demande_data.demande.id }}">
+                  <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                    color="#000000" stroke-width="1.5">
+                    <path d="M3 13C6.6 5 17.4 5 21 13" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
+                      stroke-linejoin="round"></path>
+                    <path
+                      d="M12 17C10.3431 17 9 15.6569 9 14C9 12.3431 10.3431 11 12 11C13.6569 11 15 12.3431 15 14C15 15.6569 13.6569 17 12 17Z"
+                      fill="#000000" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    </path>
+                  </svg>
+                </a>
+              </td>
+            </tr>
+            <tr class="details-row hidden" id="details-{{ demande_data.demande.id }}">
+              <td colspan="6" class="px-5 py-5 border-b border-gray-200 bg-gray-50 text-sm">
+                <div class="mt-4">
+                  <table class="min-w-full leading-normal">
+                    <thead>
+                      <tr>
+                        <th
+                          class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                          Groupe Sanguin</th>
+                        <th
+                          class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                          Quantité</th>
+                        <th
+                          class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                          Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for groupe_sang, nombre_poche in demande_data.demande_zip %}
+                      <tr>
+                        <td class="px-5 py-5 border-b border-gray-200" id="{{ groupe_sang }}">{{ groupe_sang }}</td>
+                        <td class="px-5 py-5 border-b border-gray-200">{{ nombre_poche }}</td>
+                        <td class="px-5 py-5 border-b border-gray-200">
+                          {% if groupe_sang in demande_data.groupe_etat_approuvee %}
+                          <span class="text-green text-sm"><i>Accepté</i>
+                            
+                          </span>
+                          {% elif groupe_sang in demande_data.groupe_etat_refusee %}
+                          <span class="text-red text-sm"><i>Refusé</i></span>
+                          {% else %}
+                          <button class="bg-green-500 text-white px-4 py-2 rounded-md"
+                            onclick="openModal('{{ demande_data.demande.id }}', '{{ groupe_sang }}')">Accepter</button>
+                          <button class="bg-red-500 text-white px-4 py-2 rounded-md"
+                            onclick="openRefuseModal('{{ demande_data.demande.id }}', '{{ groupe_sang }}')">Refuser</button>
+
+                          {% endif %}
+                        </td>
+                      </tr>
+                      <div id="modal-refuse" class="modal hidden fixed z-99999 inset-0 overflow-y-auto"
+                        onclick="closeRefuseModal()">
+                        <div
+                          class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+                          onclick="event.stopPropagation()">
+                          <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                            <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+                          </div>
+                          <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;
+                          </span>
+                          <div
+                            class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                              <div class="sm:flex sm:items-start">
+                                <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                                  <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                                    Êtes-vous sûr de vouloir refuser cette demande ?
+                                  </h3>
+                                  <div class="mt-2">
+                                    <div class="mt-4 justify-center">
+                                      <button type="button" class="bg-red-500 text-white px-4 py-2 rounded-md"
+                                        onclick="rejetePoche('{{ demande_data.demande.id }}', '{{ groupe_sang }}')">Oui,
+                                        Refuser</button>
+                                      <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded-md"
+                                        onclick="closeRefuseModal()">Annuler</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                  <!-- <div><strong>Patient ID:</strong> {{ demande_data.demande.patient_id }}</div> -->
+                  <!-- <div><strong>Service Médicaux ID:</strong> {{ demande_data.demande.serviceMedicaux_id }}</div> -->
+                  <div><strong>Adresse:</strong> {{ demande_data.demande.serviceMedicaux.adresse }}</div>
+                  <div><strong>Téléphone:</strong> {{ demande_data.demande.serviceMedicaux.telephone }}</div>
+                  <div><strong>Email:</strong> {{ demande_data.demande.serviceMedicaux.email }}</div>
+                  <!-- <div><strong>Donneur ID:</strong> {{ demande_data.demande.donneur_id }}</div> -->
+                  <div><strong>Type de produit:</strong> {{ demande_data.demande.type_produit }}</div>
+                  <div><strong>Motif:</strong> {{ demande_data.demande.motif }}</div>
+                  <div><strong>Commentaire:</strong> {{ demande_data.demande.commentaire }}</div>
+                </div>
+
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="modal-selection" class="modal hidden fixed z-99999 inset-0 overflow-y-auto">
+  <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+    <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+      <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+    </div>
+    <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203; </span>
+    <div
+      class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+      <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+        <div class="sm:flex sm:items-start">
+          <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+              Sélectionner les poches de sang
+            </h3>
+            <div class="mt-2">
+              <form id="form-selection" method="POST" action="{% url 'bankDeSang:accepterDemande' %}" class="w-full">
+                {% csrf_token %}
+                <input type="hidden" id="demande-id" name="demande_id">
+                <input type="hidden" id="groupe-sang" name="groupe_sang">
+                <div id="poches-disponibles" class="mt-4 grid grid-cols-2 gap-4">
+                  <!-- Les poches disponibles seront chargées ici par JavaScript -->
+                </div>
+                <div class="mt-4">
+                  <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-md">Envoyer</button>
+                  <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded-md"
+                    onclick="closeModal()">Annuler</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const detailButtons = document.querySelectorAll('.show-details');
+    detailButtons.forEach(button => {
+      button.addEventListener('click', function (event) {
+        event.preventDefault();
+        const demandeId = button.getAttribute('data-id');
+        const detailsRow = document.getElementById(`details-${demandeId}`);
+        detailsRow.classList.toggle('hidden');
+      });
+    });
+  });
+
+  function openModal(demandeId, groupeSang) {
+    document.getElementById('demande-id').value = demandeId;
+    document.getElementById('groupe-sang').value = groupeSang;
+    fetchPochesDisponibles(demandeId, groupeSang);
+    document.getElementById('modal-selection').classList.remove('hidden');
+  }
+
+  function closeModal() {
+    document.getElementById('modal-selection').classList.add('hidden');
+  }
+
+  function fetchPochesDisponibles(demandeId, groupeSang) {
+    fetch(`/bankDeSang/poches_disponibles/?demande_id=${demandeId}&groupe_sang=${encodeURIComponent(groupeSang)}`)
+      .then(response => response.json())
+      .then(data => {
+        const pochesDiv = document.getElementById('poches-disponibles');
+        pochesDiv.innerHTML = '';
+        if (data.poches.length === 0) {
+          pochesDiv.innerHTML = '<p>Aucune poche disponible.</p>';
+        } else {
+          data.poches.forEach(poche => {
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.name = 'poches[]';
+            checkbox.value = poche.matricule;
+            checkbox.classList.add('mr-2', 'w-3', 'h-3', 'rounded');
+
+            const label = document.createElement('label');
+            label.classList.add('block', 'mb-2', 'text-gray-700', 'font-semibold', 'size-1', 'mr-2');
+            label.appendChild(checkbox);
+            label.appendChild(document.createTextNode(`${poche.groupe_sanguin} (${poche.matricule}) : Exp. Jj-${poche.exp}`));
+
+            pochesDiv.appendChild(label);
+          });
+        }
+      })
+      .catch(error => {
+        console.error('Il y a eu un problème avec l\'opération fetch:', error);
+      });
+  }
+
+  function openRefuseModal(demandeId, groupeSang) {
+    document.getElementById('demande-id').value = demandeId;
+    document.getElementById('groupe-sang').value = groupeSang;
+    document.getElementById('modal-refuse').classList.remove('hidden');
+  }
+
+  function closeRefuseModal() {
+    document.getElementById('modal-refuse').classList.add('hidden');
+  }
+
+  function rejetePoche(demandeId, groupeSang) {
+    console.log('Rejeter poche:', demandeId, groupeSang);
+    fetch(`/bankDeSang/refuserDemande/?demande_id=${demandeId}&groupe_sang=${encodeURIComponent(groupeSang)}`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.status === 'success') {
+          alert(data.message);
+          closeRefuseModal();
+          location.reload();
+        } else {
+          alert(data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Il y a eu un problème avec l\'opération fetch:', error);
+        alert('Une erreur s\'est produite. Veuillez réessayer.');
+      });
+  }
+
+  document.getElementById('form-selection').addEventListener('submit', function (event) {
+    const checkboxes = document.querySelectorAll('input[name="poches[]"]:checked');
+    const selectedPoches = Array.from(checkboxes).map(cb => cb.value);
+    console.log('Poches sélectionnées:', selectedPoches);
+
+    // Désactiver le bouton Accepter après l'envoi
+    const acceptButton = document.querySelector(`button[onclick="openModal('${document.getElementById('demande-id').value}', '${document.getElementById('groupe-sang').value}')"]`);
+    if (acceptButton) {
+      acceptButton.disabled = true;
+      acceptButton.classList.add('hidden');
+    }
+  });
+
+</script>
+{% endblock %}

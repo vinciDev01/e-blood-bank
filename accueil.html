@@ -1,0 +1,458 @@
+{% extends 'frontend/base.html' %}
+{% block extrahead %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+{% endblock %}
+
+{% block body %}
+{% block content %}
+<!-- Contenu Principal -->
+<div class="w-full" style="font-size: 1.140rem; font-family: 'Poppins', sans-serif;">
+  {% if user.is_authenticated %}
+  <!-- Formulaire de demande de sang -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <section class="bg-white">
+    <div class="max-w-screen-xl 2xl:max-w-screen-2xl px-8 md:px-12 mx-auto py-12 lg:py-24 space-y-24 flex flex-col justify-center lg:h-screen">
+      <!-- Début du composant -->
+      <div class="flex justify-center" x-data="{ open: false }">
+        <!-- Déclencheur -->
+        <span x-on:click="open = true">
+          <button type="button" class="flex items-center 2xl:text-xl 2xl:h-12 justify-center h-10 px-4 py-2 text-base font-semibold text-white transition-all duration-200 rounded-full bg-gradient-to-b from-blue-500 to-indigo-600 hover:to-indigo-700 shadow-button shadow-blue-600/50 focus:ring-2 focus:ring-blue-950 focus:ring-offset-2 ring-offset-gray-200 hover:shadow-none">
+            Demande de Sang
+          </button>
+        </span>
+        <!-- Modal -->
+        <div x-show="open" role="dialog" aria-modal="true" x-id="['modal-title']" aria-labelledby="modal-title-1" :aria-labelledby="$id('modal-title')" x-on:keydown.escape.prevent.stop="open = false" class="fixed inset-0 z-50 w-screen overflow-y-auto">
+          <!-- Overlay -->
+          <div x-show="open" x-transition.opacity="" class="fixed inset-0 bg-gray-500 bg-opacity-50"></div>
+          <!-- Panel -->
+          <div x-show="open" x-on:click="open = false" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="transform opacity-0 translate-y-full" x-transition:enter-end="transform opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="transform opacity-100 translate-y-0" x-transition:leave-end="transform opacity-0 translate-y-full" class="relative flex min-h-screen items-center justify-center p-4">
+            <div x-on:click.stop="" x-trap.noscroll.inert="open" class="relative w-full max-w-md overflow-y-auto shadow-2xl bg-white ring-1 ring-gray-200 rounded-3xl p-10">
+              <div class="relative">
+                <div class="flex flex-col text-center mb-6">
+                  <h2 class="text-3xl font-bold text-gray-900 lg:text-4xl">Demande de Sang</h2>
+                  <p class="text-lg font-medium text-gray-500 lg:text-xl">
+                    Remplissez le formulaire ci-dessous pour demander du sang.
+                  </p>
+                </div>
+                <!-- Formulaire de demande de sang -->
+                <form method="post" action="{% url 'serviceMedicaux:faireDemandeDeSang' %}" class="space-y-4">
+                  {% csrf_token %}
+                  <!-- Champs pour les informations de la demande -->
+                  <div>
+                    <label for="groupe_sanguin" class="block text-sm font-medium text-gray-700">Groupe sanguin</label>
+                    <select id="groupe_sanguin" name="groupe_sanguin" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                      <option value="">Groupe Sanguin</option>
+                      <option value="A+">A+</option>
+                      <option value="A-">A-</option>
+                      <option value="B+">B+</option>
+                      <option value="B-">B-</option>
+                      <option value="AB+">AB+</option>
+                      <option value="AB-">AB-</option>
+                      <option value="O+">O+</option>
+                      <option value="O-">O-</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="type_produit" class="block text-sm font-medium text-gray-700">Type de produit sanguin</label>
+                    <select id="type_produit" name="type_produit" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                      <option value="">Type de produit</option>
+                      <option value="Sang total">Sang total</option>
+                      <option value="Concentré de globules rouges">Concentré de globules rouges</option>
+                      <option value="Plasma">Plasma</option>
+                      <option value="Plaquettes">Plaquettes</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="quantite" class="block text-sm font-medium text-gray-700">Quantité</label>
+                    <input type="number" id="quantite" name="quantite" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                  </div>
+                  <div>
+                    <label for="urgence" class="block text-sm font-medium text-gray-700">Urgence</label>
+                    <select id="urgence" name="urgence" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                      <option value="">Type d'Urgence</option>
+                      <option value="Immédiate">Immédiate</option>
+                      <option value="24 heures">24 heures</option>
+                      <option value="Non urgent">Non urgent</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="motif" class="block text-sm font-medium text-gray-700">Motif</label>
+                    <select id="motif" name="motif" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                      <option value="">Votre Motif</option>
+                      <option value="Chirurgie">Chirurgie</option>
+                      <option value="Accident">Accident</option>
+                      <option value="Maladie">Maladie</option>
+                      {% if user.role == 'medical' %}
+                      <option value="Stock Epuisé">Stock Epuisé</option>
+                      {% endif %}
+                      <option value="Autre">Autre</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="commentaire" class="block text-sm font-medium text-gray-700">Commentaire</label>
+                    <textarea id="commentaire" name="commentaire" rows="3" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+                  </div>
+                  <!-- Champs supplémentaires pour les utilisateurs lambda -->
+                  {% if user.role == 'generic' %}
+                  <div>
+                    <label for="nom" class="block text-sm font-medium text-gray-700">Nom</label>
+                    <input type="text" id="nom" name="nom" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                  </div>
+                  <div>
+                    <label for="prenom" class="block text-sm font-medium text-gray-700">Prénom</label>
+                    <input type="text" id="prenom" name="prenom" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                  </div>
+                  <div>
+                    <label for="date_de_naissance" class="block text-sm font-medium text-gray-700">Date de naissance</label>
+                    <input type="date" id="date_de_naissance" name="date_de_naissance" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                  </div>
+                  <div>
+                    <label for="proche" class="block text-sm font-medium text-gray-700">Proche</label>
+                    <input type="text" id="proche" name="proche" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                  </div>
+                  <div>
+                    <label for="relation_proche_patient" class="block text-sm font-medium text-gray-700">Relation avec le proche</label>
+                    <input type="text" id="relation_proche_patient" name="relation_proche_patient" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                  </div>
+                  <div>
+                    <label for="telephone" class="block text-sm font-medium text-gray-700">Téléphone</label>
+                    <input type="text" id="telephone" name="telephone" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                  </div>
+                  <div>
+                    <label for="numero_identification" class="block text-sm font-medium text-gray-700">Numéro d'identification</label>
+                    <input type="text" id="numero_identification" name="numero_identification" required class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                  </div>
+                  {% endif %}
+                  <div class="flex justify-center mt-6">
+                    <button type="submit" class="w-full py-2 px-4 bg-indigo-600 text-white rounded-md shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                      Soumettre
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> <!-- Fin du composant -->
+    </div>
+  </section>  
+  {% else %}
+  <section class="m-10">
+    <div
+      class="p-10 rounded-l-xl border border-blue-gray-100 bg-[url('/image/gradient-bg-1.png')] rounded-xl bg-no-repeat lg:bg-contain bg-cover bg-right"
+    >
+      <p
+        class="block antialiased font-sans text-sm font-light leading-normal text-blue-gray-900 font-bold mb-2"
+      >
+        Événements à venir
+      </p>
+      <h3
+        class="block antialiased tracking-normal font-sans text-3xl font-semibold leading-snug text-blue-gray-900"
+      >
+        Tech Summit: Shaping Tomorrow
+      </h3>
+      <p
+        class="block antialiased font-sans text-base font-light leading-relaxed text-inherit mt-2 mb-6 !text-base font-normal text-gray-500"
+      >
+        Préparez-vous à faire partie de conversations dynamiques qui redéfiniront les limites.
+      </p>
+      <button
+        class="align-middle select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 px-6 rounded-lg border border-gray-900 text-gray-900 hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85] flex-shrink-0"
+        type="button"
+        data-ripple-dark="true"
+      >
+        Rejoindre maintenant
+      </button>
+    </div>
+  </section>
+  <section class="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-blue-50">
+    <div class="container px-4 md:px-6">
+      <div class="flex flex-col items-center space-y-4 text-center">
+        <div class="space-y-2">
+          <h1 class="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none text-blue-900">
+            Devenez un Donneur de Sang
+          </h1>
+          <p class="mx-auto max-w-[700px] text-gray-700 md:text-xl dark:text-gray-400">
+            Rejoignez notre mission pour sauver des vies en donnant votre sang. Votre don peut faire la différence.
+          </p>
+        </div>
+        <div class="w-full max-w-sm space-y-2">
+          <form class="flex space-x-2">
+            <input
+              class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 max-w-lg flex-1"
+              placeholder="Entrez votre email" type="email" />
+            <button
+              class="inline-flex h-10 items-center justify-center rounded-md bg-blue-900 px-8 text-sm font-medium text-white shadow transition-colors hover:bg-blue-800 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-950 disabled:pointer-events-none disabled:opacity-50"
+              type="submit">
+              S'inscrire
+            </button>
+          </form>
+          <p class="text-xs text-gray-500 dark:text-gray-400">
+            Inscrivez-vous pour devenir un donneur de sang.
+            <a class="underline underline-offset-2" href="#">
+              Termes &amp; Conditions
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="p-6 grid gap-4 px-8 py-12 mx-auto md:px-12 lg:px-32 max-w-7xl">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-2 border bg-gray-100 rounded-3xl">
+      <div class="flex flex-col items-center justify-center gap-4 p-6 bg-white dark:bg-gray-800 rounded-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-12 w-12 text-blue-900">
+          <path
+            d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z">
+          </path>
+        </svg>
+        <h3 class="font-bold text-lg text-blue-900">Donner du Sang</h3>
+        <p class="text-gray-700 dark:text-gray-400 text-center ">
+          Devenez un donneur de sang et aidez à sauver des vies. Trouvez une collecte de sang près de chez vous.
+        </p>
+        <a href="#"
+          class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-900 text-white hover:bg-blue-800 h-10 px-4 py-2"
+          style="font-family: 'Roboto', sans-serif; font-size: 15px;">
+          Donner Maintenant
+        </a>
+      </div>
+      <div class="flex flex-col items-center justify-center gap-4 p-6 bg-white dark:bg-gray-800 rounded-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-12 w-12 text-blue-900">
+          <line x1="12" x2="12" y1="2" y2="22"></line>
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+        </svg>
+        <h3 class="font-bold text-lg text-blue-900">Faire un Don Monétaire</h3>
+        <p class="text-gray-700 dark:text-gray-400 text-center">
+          Soutenez notre mission en faisant un don monétaire. Chaque contribution compte.
+        </p>
+        <a href="#"
+          class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-900 text-white hover:bg-blue-800 h-10 px-4 py-2"
+          style="font-family: 'Roboto', sans-serif; font-size: 15px;">
+          Faire un Don
+        </a>
+      </div>
+    </div>
+    <div class="gap-4 p-2 border bg-gray-100 rounded-3xl shadow-2xl">
+      <div class="flex flex-col items-center justify-center gap-4 p-6 bg-white dark:bg-gray-800 rounded-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-12 w-12 text-blue-900">
+          <path d="M12 6v4"></path>
+          <path d="M14 14h-4"></path>
+          <path d="M14 18h-4"></path>
+          <path d="M14 8h-4"></path>
+          <path d="M18 12h2a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2h2"></path>
+          <path d="M18 22V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v18"></path>
+        </svg>
+        <h3 class="font-bold text-lg text-blue-900">Rejoindre en tant qu'Établissement Médical</h3>
+        <p class="text-gray-700 dark:text-gray-400 text-center">
+          Les hôpitaux et cliniques peuvent rejoindre notre plateforme pour gérer les stocks de sang et les demandes.
+        </p>
+        <a href="{% url '_auth:inscriptionServiceMedicaux' %}"
+          class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-900 text-white hover:bg-blue-800 h-10 px-4 py-2"
+          style="font-family: 'Roboto', sans-serif; font-size: 15px;">
+          Rejoindre Maintenant
+        </a>
+      </div>
+    </div>
+  </div>
+  <section class="w-full py-12 bg-blue-50">
+    <div class="container mx-auto px-4">
+      <h2 class="text-2xl font-semibold text-center text-blue-900">Trouver un lieu pour donner votre sang</h2>
+      <div class="mt-6">
+        <iframe width="100%" height="450" style="border:0" loading="lazy" allowfullscreen
+          referrerpolicy="no-referrer-when-downgrade"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2624.9991395863445!2d2.292292615673203!3d48.8588440792876!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e66ff18e1c6baf%3A0xf4e9e7dfdeb72a6!2sTour%20Eiffel!5e0!3m2!1sfr!2sfr!4v1624012892133!5m2!1sfr!2sfr">
+        </iframe>
+      </div>
+    </div>
+  </section>
+  <section>
+    <div class="px-8 py-12 mx-auto md:px-12 lg:px-32 max-w-7xl">
+      <div class="p-2 border bg-gray-50 rounded-3xl">
+        <div
+          class="relative px-6 pt-16 overflow-hidden bg-white shadow-2xl isolate sm:rounded-3xl sm:px-16 md:pt-24 lg:flex lg:gap-x-20 lg:px-24 lg:pt-0">
+          <div class="max-w-md mx-auto text-center lg:mx-0 lg:flex-auto lg:py-32 lg:text-left">
+            <span class="text-sm font-semibold text-gray-500 uppercase">❖ windstatic</span>
+            <p class="mt-8 text-4xl font-semibold tracking-tighter text-blue-900">
+              Téléchargez notre application aujourd'hui
+            </p>
+            <p class="mt-4 text-base font-medium text-gray-700">
+              La méthode la plus rapide pour travailler ensemble sur des environnements de mise en scène et temporaires. Bouton principal
+            </p>
+            <div class="flex flex-col items-center gap-2 mx-auto mt-8 md:flex-row">
+              <button
+                class="inline-flex items-center justify-center w-full h-12 gap-3 px-5 py-3 font-medium text-white duration-200 bg-blue-900 md:w-auto rounded-xl hover:bg-blue-800 focus:ring-2 focus:ring-offset-2 focus:ring-blue-950"
+                aria-label="Primary action">
+                Bouton principal
+              </button>
+              <button
+                class="inline-flex items-center justify-center w-full h-12 gap-3 px-5 py-3 font-medium duration-200 bg-gray-100 md:w-auto rounded-xl hover:bg-gray-200 focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                aria-label="Secondary action">
+                Bouton secondaire
+              </button>
+            </div>
+          </div>
+          <div class="relative mt-16 h-80 lg:mt-8">
+            <img class="w-full rounded-lg" src="https://via.placeholder.com/400x600" alt="Post Image" width="1824"
+              height="1080">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section>
+    <div class="px-8 py-24 mx-auto md:px-12 lg:px-32 max-w-7xl">
+      <div class="grid text-sm font-medium text-gray-700 lg:grid-cols-2 gap-x-2 gap-y-12 lg:gap-y-16 text-balance">
+        <div>
+          <div class="flex flex-col justify-between px-4">
+            <div>
+              <p class="text-base text-blue-900">Liberté de modification</p>
+              <p class="mt-2">
+                Vous pouvez adapter, remixer, transformer et construire sur le travail sous licence.
+              </p>
+            </div>
+          </div>
+          <div class="p-2 mt-4 overflow-hidden border rounded-3xl">
+            <img class="w-full rounded-lg" src="https://via.placeholder.com/600x400" alt="Post Image" width="1824"
+              height="1080">
+          </div>
+        </div>
+        <div>
+          <div class="p-2 overflow-hidden border rounded-3xl">
+            <img class="w-full rounded-lg" src="https://via.placeholder.com/600x400" alt="Post Image" width="1824"
+              height="1080">
+          </div>
+          <div class="flex flex-col justify-between px-4 mt-4">
+            <div>
+              <p class="text-base text-blue-900">Utilisation commerciale autorisée</p>
+              <p class="mt-2">
+                Vous êtes autorisé à utiliser le travail sous licence à des fins non commerciales et commerciales.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+  </section>
+  <section class="w-full py-12 md:py-24 lg:py-32 bg-blue-50">
+    <div
+      class="container grid max-w-5xl items-center justify-center gap-4 px-4 text-center md:gap-8 md:px-6 lg:grid-cols-2 lg:text-left xl:max-w-6xl xl:gap-10">
+      <div class="flex flex-col justify-center space-y-4">
+        <div class="space-y-2">
+          <h2 class="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-blue-900">Rejoignez Notre Communauté</h2>
+          <p
+            class="max-w-[500px] text-gray-700 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
+            Connectez-vous avec d'autres donneurs de sang et professionnels de la santé pour partager des expériences, des ressources et des meilleures pratiques.
+          </p>
+        </div>
+        <div class="w-full max-w-sm space-y-2">
+          <form class="flex space-x-2">
+            <input
+              class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 max-w-lg flex-1"
+              placeholder="Entrez votre email" type="email" />
+            <a class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-900 text-white hover:bg-blue-800 h-10 px-4 py-2"
+              style="font-family: 'Roboto', sans-serif; font-size: 15px;" href="#">
+              Rejoindre maintenant
+            </a>
+          </form>
+          <p class="text-xs text-gray-500 dark:text-gray-400">
+            Inscrivez-vous pour faire partie de notre communauté.
+            <a class="underline underline-offset-2" href="#">
+              Termes &amp; Conditions
+            </a>
+          </p>
+        </div>
+      </div>
+      <div class="grid w-full grid-cols-2 items-stretch justify-center  gap-4">
+        <div class="mx-auto flex w-full items-center justify-center bg-gray-100 p-4 sm:p-6 dark:bg-gray-800">
+          <img class="w-full rounded-lg" src="https://via.placeholder.com/200x200" alt="Post Image" width="1824"
+            height="1080" class="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center" />
+        </div>
+        <div class="mx-auto flex w-full items-center justify-center bg-gray-100 p-4 sm:p-6 dark:bg-gray-800">
+          <img class="w-full rounded-lg" src="https://via.placeholder.com/200x200" alt="Post Image" width="1824"
+            height="1080" class="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center" />
+        </div>
+        <div class="mx-auto flex w-full items-center justify-center bg-gray-100 p-4 sm:p-6 dark:bg-gray-800">
+          <img class="w-full rounded-lg" src="https://via.placeholder.com/200x200" alt="Post Image" width="1824"
+            height="1080" class="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center" />
+        </div>
+        <div class="mx-auto flex w-full items-center justify-center bg-gray-100 p-4 sm:p-6 dark:bg-gray-800">
+          <img class="w-full rounded-lg" src="https://via.placeholder.com/200x200" alt="Post Image" width="1824"
+            height="1080" class="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center" />
+        </div>
+        <div class="mx-auto flex w-full items-center justify-center bg-gray-100 p-4 sm:p-6 dark:bg-gray-800">
+          <img class="w-full rounded-lg" src="https://via.placeholder.com/200x200" alt="Post Image" width="1824"
+            height="1080" class="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center" />
+        </div>
+        <div class="mx-auto flex w-full items-center justify-center bg-gray-100 p-4 sm:p-6 dark:bg-gray-800">
+          <img class="w-full rounded-lg" src="https://via.placeholder.com/200x200" alt="Post Image" width="1824"
+            height="1080" class="aspect-[2/1] overflow-hidden rounded-lg object-contain object-center" />
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="overflow-y-auto bg-white lg:h-svh">
+    <div class="px-8 py-24 mx-auto md:px-12 lg:px-32 max-w-7xl lg:flex">
+      <div class="lg:w-1/2">
+        <div class="top-0 pt-8 pb-16 lg:sticky">
+          <div>
+            <div class="lg:pr-24 md:pr-12">
+              <div>
+                <h1 class="text-4xl font-semibold tracking-tighter text-blue-900">
+                  Construire des pages ensemble, où que vous soyez
+                </h1>
+                <p class="mt-4 text-base font-medium text-gray-700 text-balance">
+                  Contrôle et sécurité accrue. Avec la décentralisation, les utilisateurs ont plus de contrôle sur leurs données et transactions, et la plateforme est moins susceptible aux attaques malveillantes.
+                </p>
+                <div class="flex flex-col items-center gap-2 mx-auto mt-8 md:flex-row">
+                  <button
+                    class="inline-flex items-center justify-center w-full h-12 gap-3 px-5 py-3 font-medium text-white duration-200 bg-blue-900 md:w-auto rounded-xl hover:bg-blue-800 focus:ring-2 focus:ring-offset-2 focus:ring-blue-950"
+                    aria-label="Primary action">
+                    Bouton principal
+                  </button>
+                  <button
+                    class="inline-flex items-center justify-center w-full h-12 gap-3 px-5 py-3 font-medium duration-200 bg-gray-100 md:w-auto rounded-xl hover:bg-gray-200 focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    aria-label="Secondary action">
+                    Bouton secondaire
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="lg:w-1/2">
+        <div class="flex-shrink-0">
+          <div>
+            <ul class="grid grid-cols-1 gap-12 mt-6 text-base font-medium text-gray-700 list-none lg:mt-0 text-balance"
+              role="list">
+              <li>
+                <div>
+                  <div>❖</div>
+                  <p class="mt-5 text-lg text-blue-900">Outils pour chaque pile</p>
+                </div>
+                <div class="mt-2">
+                  Concurrencer sur le marché mondial du commerce électronique de 5 000 milliards de dollars nécessite une présence internationale qui ne se perd pas dans la traduction. Rejoignez-nous alors que nous traversons le globe pour explorer les nombreux avantages d'offrir des expériences de paiement localisées et optimisées qui sont réalisables en quelques minutes, pas en quelques mois.
+                </div>
+              </li>
+              <li>
+                <div>
+                  <div>❖</div>
+                  <p class="mt-5 text-lg text-blue-900">Intégrations préconstruites</p>
+                </div>
+                <div class="mt-2">
+                  Rejoignez les ingénieurs et designers de Lexingtøn Themes pour un aperçu technique des applications Lexingtøn Themes. Vous entendrez directement les créateurs, assisterez à une démonstration complète pour les développeurs et repartirez avec tout ce dont vous avez besoin pour commencer.
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  {% endif %}
+</div>
+{% endblock %}
+{% endblock %}

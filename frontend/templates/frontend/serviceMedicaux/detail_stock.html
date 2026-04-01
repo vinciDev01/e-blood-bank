@@ -1,0 +1,84 @@
+{% extends 'frontend/serviceMedicaux/base.html' %}
+{% load static %}
+{% block title %}Détails des stocks{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<header class="bg-gradient-to-r from-red-600 to-red-800 py-12 shadow-2xl">
+    <div class="container mx-auto px-6">
+        <h1 class="text-5xl font-bold text-white tracking-wide">Détail du stock de sang</h1>
+        <p class="text-lg text-red-200 mt-2">Consultez les informations détaillées sur les stocks de sang disponibles</p>
+    </div>
+</header>
+
+<!-- Main content -->
+<main class="container mx-auto px-4 py-6">
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <div class="flex items-center mb-4">
+            <a href="{% url 'serviceMedicaux:gestionStock' %}" class="text-red-600 hover:text-red-800 transition duration-300">
+                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </a>
+            <h2 class="text-3xl font-bold">
+                Stock de {{ stock.type_produit }} ({{ stock.groupe_sanguin }})
+            </h2>
+        </div>
+
+        <!-- Stock details -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="p-4 border rounded-lg">
+                <label class="block text-gray-600 font-semibold">Nombre de poches :</label>
+                <span class="text-lg">{{ stock.nombre_de_poches }}</span>
+            </div>
+            <div class="p-4 border rounded-lg">
+                <label class="block text-gray-600 font-semibold">Date d'enregistrement :</label>
+                <span class="text-lg">{{ stock.date_enregistrement }}</span>
+            </div>
+        </div>
+
+        <!-- List of blood pockets -->
+        <h3 class="text-2xl font-bold mb-4">Poches de sang disponibles :</h3>
+        <ul class="list-none mb-6">
+            {% for poche in poches %}
+            <li class="flex items-center py-3 border-b">
+                <div class="flex-1">
+                    <span class="text-lg font-semibold">{{ poche.matricule }}</span>
+                    <span class="text-gray-600">({{ poche.type_produit }} - {{ poche.groupe_sanguin }})</span>
+                </div>
+                <div class="w-24 h-24 relative group">
+                    <div class="relative inline-block" x-data="{ popover: false }">
+                        <button @click.prevent="popover = !popover" class="w-full h-full">
+                            <img src="{{ poche.code_qr.url }}" alt="QR code" class="w-full h-full object-cover rounded-lg shadow-md" />
+                        </button>
+                        <div class="absolute right-full top-0 z-20 mr-3 w-max max-w-xs rounded bg-white drop-shadow-5 dark:bg-meta-4" x-show="popover">
+                            <span class="absolute -right-1.5 top-4 -z-10 h-4 w-4 rotate-45 rounded-sm bg-white dark:bg-meta-4"></span>
+                            <div class="border-b border-stroke p-3 dark:border-strokedark">
+                                <h4 class="text-center text-title-sm font-semibold text-black dark:text-white">Détails de la Poche</h4>
+                            </div>
+                            <div class="px-5 py-4.5 flex flex-col items-left">
+                                <p class="font-medium text-gray-600">
+                                    <span class="font-bold ">Matricule:</span> <span class="text-blue-500">{{ poche.matricule }}</span><br>
+                                    <span class="font-bold">Type:</span> <span class="text-gray-800">{{ poche.type_produit }}</span><br>
+                                    <span class="font-bold">Groupe:</span> <span class="text-gray-800">{{ poche.groupe_sanguin }}</span><br>
+                                    <span class="font-bold">Date de prélèvement:</span> <span class="text-green-600">{{ poche.date_de_prelevement }}</span><br>
+                                    <span class="font-bold">Date d'expiration:</span> <span class="text-red-600">{{ poche.date_expiration }}</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            {% empty %}
+            <li class="text-lg text-gray-600 py-3">Aucune poche de sang disponible</li>
+            {% endfor %}
+        </ul>
+
+        <!-- Actions -->
+        <div class="flex justify-end space-x-4">
+            <a href="{% url 'serviceMedicaux:gestionStock' %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300">Modifier le stock</a>
+            <a href="{% url 'serviceMedicaux:gestionStock' %}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-300">Supprimer le stock</a>
+        </div>
+    </div>
+</main>
+{% endblock %}

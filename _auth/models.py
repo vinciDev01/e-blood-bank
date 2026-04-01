@@ -1,0 +1,184 @@
+from django.db import models
+from django.db import models
+from datetime import date
+from django.contrib.auth.models import AbstractUser, Group, Permission
+# from .roles import *
+import os
+
+# Create your models here.
+def renomer_image(instance, filename):
+    model_name = instance.__class__.__name__.lower()
+    upload_to = f'images/{model_name}/'
+    ext = filename.split('.')[-1]
+    filename = f'photo_profile/{instance.nom}_{instance.prenom}.{ext}'
+    return os.path.join(upload_to, filename)
+
+def numero_de_donneur():
+    return f"{date.today().year}{'ebb'}{Donneur.nom}{Donneur.objects.count() + 1:04d}"
+
+
+
+class CustomUser(AbstractUser):
+
+    ROLE_CHOICES = (
+        ('generic', 'Generic User'),
+        ('medical', 'Medical Service User'),
+        ('clinic', 'Clinic User'),
+        ('donor', 'Donor User'),
+        ('blood_bank', 'Blood Bank User'),
+        ('admin', 'Admin User'),
+    )
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='generic')
+    
+
+    groups = models.ManyToManyField(
+        Group,
+        related_name='customuser_set',
+        blank=True,
+        help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.',
+        verbose_name='groups',
+    )
+    user_permissions = models.ManyToManyField(
+        Permission,
+        related_name='customuser_set',
+        blank=True,
+        help_text='Specific permissions for this user.',
+        verbose_name='user permissions',
+    )
+
+    def __str__(self):
+        return self.username
+    
+    # def set_profil(self, image):
+    #     self.profil = image
+    #     self.save()
+
+class Utilisateur(models.Model):
+    nom = models.CharField(max_length=200)
+    prenom = models.CharField(max_length=200)
+    email = models.EmailField(unique=True, null=True)
+    profil = models.ImageField(upload_to=renomer_image, default='images/default.jpg')
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='utilisateur')
+
+class ServiceMedicaux(models.Model):
+    nom_etablissement = models.CharField(max_length=200)
+    type_etablissement = models.CharField(max_length=200)
+    responsable = models.CharField(max_length=200)
+    adresse = models.CharField(max_length=200)
+    email = models.EmailField(unique=True)
+    ville = models.CharField(max_length=100)
+    code_postal = models.CharField(max_length=10)
+    pays = models.CharField(max_length=100)
+    telephone = models.CharField(max_length=20)
+    numero_licence = models.CharField(max_length=20)
+    numero_enregistrement = models.CharField(max_length=20)
+    certificat_enregistrement = models.FileField(upload_to='servicesMedicaux/certificats/')
+    profil = models.ImageField(upload_to=renomer_image, default='images/default.jpg')
+
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='service_medical')
+
+    groups = models.ManyToManyField(Group, related_name="services_medicaux")
+    user_permissions = models.ManyToManyField(Permission, related_name="services_medicaux_permissions")
+
+    USERNAME_FIELD = 'email'
+    
+    REQUIRED_FIELDS = [
+        'nom_etablissement', 
+        'type_etablissement', 
+        'responsable', 
+        'adresse', 
+        'ville', 
+        'code_postal', 
+        'pays', 
+        'telephone', 
+        'numero_licence', 
+        'numero_enregistrement', 
+        'certificat_enregistrement'
+    ]
+
+    def __str__(self):
+        return self.nom_etablissement
+    
+    class Meta:
+        verbose_name = "Service Médical"
+        verbose_name_plural = "Services Médicaux"
+
+
+class Donneur(models.Model):
+    nom = models.CharField(max_length=200)
+    prenom = models.CharField(max_length=200)
+    date_naissance = models.DateField()
+    sexe = models.CharField(max_length=10)
+    groupe_sanguin_choices = [
+        ('A+', 'A+'),
+        ('A-', 'A-'),
+        ('B+', 'B+'),
+        ('B-', 'B-'),
+        ('AB+', 'AB+'),
+        ('AB-', 'AB-'),
+        ('O+', 'O+'),
+        ('O-', 'O-'),
+    ]
+    groupe_sanguin = models.CharField(max_length=3, choices=groupe_sanguin_choices)
+    #rh = models.CharField(max_length=10)
+    adresse = models.CharField(max_length=200)
+    ville = models.CharField(max_length=100)
+    code_postal = models.CharField(max_length=10)
+    pays = models.CharField(max_length=100)
+    telephone = models.CharField(max_length=20)
+    profil = models.ImageField(upload_to=renomer_image, default='images/default.jpg')
+    numero_de_donneur = models.CharField(max_length=20, default=numero_de_donneur)
+
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='donneur')
+
+    groups = models.ManyToManyField(Group, related_name="donneurs")
+    user_permissions = models.ManyToManyField(Permission, related_name="donneurs_permissions")
+
+    def __str__(self):
+        return self.nom + ' ' + self.prenom
+    
+    @property
+    def age(self):
+        return date.today().year - self.date_naissance.year - (
+            (date.today().month, date.today().day) < (self.date_naissance.month, self.date_naissance.day)
+        )
+
+    # @property
+    # def peut_donner(self):
+    #     if not self.date_dernier_don:
+    #         return True
+    #     temps_depuis_dernier_don = date.today() - self.date_dernier_don
+    #     return temps_depuis_dernier_don.days >= 90
+
+
+
+    class Meta:
+        verbose_name = "Donneur"
+        verbose_name_plural = "Donneurs"
+
+
+class BanqueDeSang(models.Model):
+    nom_etablissement = models.CharField(max_length=200)
+    responsable = models.CharField(max_length=200)
+    adresse = models.CharField(max_length=200)
+    ville = models.CharField(max_length=100)
+    code_postal = models.CharField(max_length=10)
+    pays = models.CharField(max_length=100)
+    telephone = models.CharField(max_length=20)
+    profil = models.ImageField(upload_to=renomer_image, default='images/default.jpg')
+
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='banque_de_sang')
+
+    groups = models.ManyToManyField(Group, related_name="banques_de_sang")
+    user_permissions = models.ManyToManyField(Permission, related_name="banques_de_sang_permissions")
+
+    def __str__(self):
+        return self.nom_etablissement
+    
+    class Meta:
+        verbose_name = "Banque de Sang"
+        verbose_name_plural = "Banques de Sang"
+
+
+
+

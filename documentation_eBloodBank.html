@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation eBloodBank</title>
+    <style>
+        :root {
+            --primary: #c0392b;
+            --primary-dark: #96281b;
+            --primary-light: #f5d0cd;
+            --accent: #e74c3c;
+            --bg: #fdf6f5;
+            --card-bg: #ffffff;
+            --text: #2c3e50;
+            --text-light: #7f8c8d;
+            --border: #e8dedd;
+            --code-bg: #f8f1f0;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --info: #2980b9;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(180deg, var(--primary-dark) 0%, var(--primary) 100%);
+            color: white;
+            overflow-y: auto;
+            z-index: 100;
+            padding: 20px 0;
+            box-shadow: 3px 0 15px rgba(0,0,0,0.15);
+        }
+
+        nav .logo {
+            text-align: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+            margin-bottom: 15px;
+        }
+
+        nav .logo h2 {
+            font-size: 1.4em;
+            letter-spacing: 1px;
+        }
+
+        nav .logo span {
+            font-size: 0.8em;
+            opacity: 0.7;
+        }
+
+        nav ul { list-style: none; }
+
+        nav ul li a {
+            display: block;
+            padding: 10px 25px;
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        nav ul li a:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-left-color: white;
+        }
+
+        nav .section-title {
+            padding: 15px 25px 5px;
+            font-size: 0.7em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.5;
+        }
+
+        /* Main Content */
+        main {
+            margin-left: 280px;
+            padding: 40px 60px;
+            max-width: 1100px;
+        }
+
+        /* Header */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 50px 40px;
+            border-radius: 16px;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 30px rgba(192,57,43,0.25);
+        }
+
+        .hero h1 { font-size: 2.2em; margin-bottom: 10px; }
+        .hero p { opacity: 0.9; font-size: 1.1em; max-width: 700px; }
+
+        /* Sections */
+        section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 35px 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            border: 1px solid var(--border);
+        }
+
+        section h2 {
+            color: var(--primary);
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-light);
+        }
+
+        section h3 {
+            color: var(--primary-dark);
+            font-size: 1.15em;
+            margin: 25px 0 12px;
+        }
+
+        section h4 {
+            color: var(--text);
+            font-size: 1em;
+            margin: 18px 0 8px;
+        }
+
+        p { margin-bottom: 12px; }
+
+        /* Lists */
+        ul, ol {
+            margin: 10px 0 15px 25px;
+        }
+
+        li { margin-bottom: 6px; }
+
+        /* Code */
+        code {
+            background: var(--code-bg);
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-size: 0.88em;
+            color: var(--primary-dark);
+            font-family: 'Consolas', 'Fira Code', monospace;
+        }
+
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-size: 0.88em;
+            line-height: 1.6;
+        }
+
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.92em;
+        }
+
+        thead { background: var(--primary); color: white; }
+
+        th {
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 10px 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tbody tr:hover { background: var(--primary-light); }
+
+        /* Badges & Tags */
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.78em;
+            font-weight: 600;
+        }
+
+        .badge-role { background: var(--primary-light); color: var(--primary-dark); }
+        .badge-success { background: #d5f5e3; color: #1e8449; }
+        .badge-info { background: #d6eaf8; color: #1a5276; }
+        .badge-warning { background: #fdebd0; color: #935116; }
+
+        /* Info boxes */
+        .info-box {
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid;
+        }
+
+        .info-box.note {
+            background: #eaf2f8;
+            border-color: var(--info);
+        }
+
+        .info-box.warning {
+            background: #fef9e7;
+            border-color: var(--warning);
+        }
+
+        .info-box.success {
+            background: #eafaf1;
+            border-color: var(--success);
+        }
+
+        .info-box.danger {
+            background: #fdedec;
+            border-color: var(--accent);
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        /* Flow diagrams */
+        .flow {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 15px 0;
+        }
+
+        .flow-step {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.88em;
+            font-weight: 500;
+        }
+
+        .flow-arrow {
+            color: var(--primary);
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        /* Architecture diagram */
+        .arch-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .arch-card {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 18px;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .arch-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            border-color: var(--primary);
+        }
+
+        .arch-card h4 {
+            color: var(--primary);
+            margin: 0 0 8px;
+        }
+
+        .arch-card p {
+            font-size: 0.85em;
+            color: var(--text-light);
+            margin: 0;
+        }
+
+        /* Schema visual */
+        .model-box {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            margin: 12px 0;
+            overflow: hidden;
+        }
+
+        .model-box .model-header {
+            background: var(--primary);
+            color: white;
+            padding: 8px 15px;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        .model-box .model-fields {
+            padding: 10px 15px;
+            font-size: 0.88em;
+        }
+
+        .model-box .model-fields div {
+            padding: 3px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .model-box .model-fields div:last-child { border-bottom: none; }
+
+        .field-type {
+            color: var(--text-light);
+            font-size: 0.85em;
+            float: right;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            nav { display: none; }
+            main { margin-left: 0; padding: 20px; }
+        }
+
+        /* Scroll behavior */
+        html { scroll-behavior: smooth; }
+        section[id] { scroll-margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+    <div class="logo">
+        <h2>eBloodBank</h2>
+        <span>Documentation du projet</span>
+    </div>
+    <ul>
+        <li><a href="#introduction">Introduction</a></li>
+        <div class="section-title">Architecture</div>
+        <li><a href="#architecture">Vue d'ensemble</a></li>
+        <li><a href="#applications">Les applications</a></li>
+        <li><a href="#modeles">Les modeles</a></li>
+        <li><a href="#urls">Routes URL</a></li>
+        <div class="section-title">Fonctionnalites</div>
+        <li><a href="#authentification">Authentification</a></li>
+        <li><a href="#banque-sang">Banque de sang</a></li>
+        <li><a href="#service-medical">Service medical</a></li>
+        <li><a href="#donneur-app">Espace donneur</a></li>
+        <li><a href="#frontend-app">Pages publiques</a></li>
+        <div class="section-title">Procedures</div>
+        <li><a href="#installation">Installation</a></li>
+        <li><a href="#flux-inscription">Inscription</a></li>
+        <li><a href="#flux-connexion">Connexion</a></li>
+        <li><a href="#flux-demande">Demande de sang</a></li>
+        <li><a href="#flux-stock">Gestion du stock</a></li>
+        <div class="section-title">Technique</div>
+        <li><a href="#config">Configuration</a></li>
+        <li><a href="#securite">Securite</a></li>
+        <li><a href="#arborescence">Arborescence</a></li>
+    </ul>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main>
+
+<!-- HERO -->
+<div class="hero">
+    <h1>Documentation eBloodBank</h1>
+    <p>Systeme de gestion de banque de sang developpe avec Django 4.2. Ce document explique l'architecture du projet, ses fonctionnalites et les procedures a suivre pour l'utiliser et le maintenir.</p>
+</div>
+
+<!-- 1. INTRODUCTION -->
+<section id="introduction">
+    <h2>1. Presentation du projet</h2>
+
+    <p><strong>eBloodBank</strong> est une application web qui permet de gerer les dons de sang, le stock de poches de sang, et les demandes provenant des services medicaux (hopitaux, cliniques, etc.).</p>
+
+    <h3>Que fait cette application ?</h3>
+    <ul>
+        <li><strong>Gerer les donneurs</strong> : enregistrer les donneurs, suivre leurs dons et leur groupe sanguin.</li>
+        <li><strong>Gerer le stock de sang</strong> : ajouter des poches de sang, suivre la disponibilite par groupe sanguin, generer des codes QR.</li>
+        <li><strong>Traiter les demandes</strong> : les services medicaux font des demandes de sang, la banque de sang les accepte ou les refuse.</li>
+        <li><strong>Gerer les utilisateurs</strong> : inscription, connexion, verification par email, acces selon le role.</li>
+    </ul>
+
+    <h3>Les 4 types d'utilisateurs</h3>
+    <table>
+        <thead>
+            <tr><th>Role</th><th>Code</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><span class="badge badge-role">Utilisateur generique</span></td>
+                <td><code>generic</code></td>
+                <td>Visiteur inscrit, peut voir les hopitaux et faire des demandes basiques.</td>
+            </tr>
+            <tr>
+                <td><span class="badge badge-info">Service medical</span></td>
+                <td><code>medical</code></td>
+                <td>Hopital ou clinique, peut faire des demandes de sang et gerer ses patients.</td>
+            </tr>
+            <tr>
+                <td><span class="badge badge-success">Donneur</span></td>
+                <td><code>donor</code></td>
+                <td>Donneur de sang enregistre, a acces a son espace personnel.</td>
+            </tr>
+            <tr>
+                <td><span class="badge badge-warning">Banque de sang</span></td>
+                <td><code>blood_bank</code></td>
+                <td>Gere le stock, accepte/refuse les demandes, enregistre les poches.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>Technologies utilisees</h3>
+    <table>
+        <thead>
+            <tr><th>Technologie</th><th>Version</th><th>Utilite</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>Django</td><td>4.2.13</td><td>Framework web principal</td></tr>
+            <tr><td>MySQL</td><td>-</td><td>Base de donnees</td></tr>
+            <tr><td>Pillow</td><td>10.3.0</td><td>Gestion des images (profils)</td></tr>
+            <tr><td>qrcode</td><td>7.4.2</td><td>Generation de codes QR pour les poches</td></tr>
+            <tr><td>mysqlclient</td><td>2.2.4</td><td>Connecteur Python-MySQL</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- 2. ARCHITECTURE -->
+<section id="architecture">
+    <h2>2. Architecture generale</h2>
+
+    <p>Le projet suit l'architecture classique de Django : il est divise en <strong>applications</strong> (apps), chacune ayant une responsabilite precise.</p>
+
+    <div class="arch-grid">
+        <div class="arch-card">
+            <h4>eBloodBank/</h4>
+            <p>Configuration du projet (settings, URLs racine, email)</p>
+        </div>
+        <div class="arch-card">
+            <h4>_auth/</h4>
+            <p>Authentification, modeles utilisateurs, inscription, connexion</p>
+        </div>
+        <div class="arch-card">
+            <h4>bankDeSang/</h4>
+            <p>Gestion des poches de sang, stock, dons</p>
+        </div>
+        <div class="arch-card">
+            <h4>serviceMedicaux/</h4>
+            <p>Demandes de sang, patients, stock par service</p>
+        </div>
+        <div class="arch-card">
+            <h4>donneur/</h4>
+            <p>Espace donneur (vues uniquement, modeles dans _auth)</p>
+        </div>
+        <div class="arch-card">
+            <h4>frontend/</h4>
+            <p>Pages publiques, templates, fichiers statiques</p>
+        </div>
+    </div>
+
+    <div class="info-box note">
+        <strong>Point important :</strong>
+        Tous les modeles lies aux utilisateurs (Donneur, BanqueDeSang, ServiceMedicaux, Utilisateur) sont definis dans <code>_auth/models.py</code>, pas dans leurs applications respectives. C'est un choix de conception pour centraliser la gestion des profils.
+    </div>
+</section>
+
+<!-- 3. APPLICATIONS -->
+<section id="applications">
+    <h2>3. Detail des applications</h2>
+
+    <h3>3.1 Application <code>_auth</code> (Authentification)</h3>
+    <p>C'est l'application la plus importante. Elle contient :</p>
+    <ul>
+        <li>Le modele <code>CustomUser</code> qui etend le systeme d'authentification de Django avec un champ <code>role</code>.</li>
+        <li>Les modeles de profil : <code>Utilisateur</code>, <code>Donneur</code>, <code>ServiceMedicaux</code>, <code>BanqueDeSang</code>.</li>
+        <li>Les vues d'inscription, connexion, deconnexion et activation par email.</li>
+        <li>Un backend d'authentification personnalise (<code>CustomUserBackend</code>).</li>
+        <li>Un generateur de token pour la verification par email (<code>token.py</code>).</li>
+    </ul>
+
+    <h3>3.2 Application <code>bankDeSang</code> (Banque de sang)</h3>
+    <p>Gere tout ce qui concerne le stock de sang :</p>
+    <ul>
+        <li><strong>PocheDeSang</strong> : une poche de sang avec son matricule, groupe sanguin, date d'expiration et code QR.</li>
+        <li><strong>DonDeSang</strong> : enregistrement d'un don associe a un donneur et une poche.</li>
+        <li><strong>StockDeSang</strong> : suivi du nombre de poches par groupe sanguin.</li>
+        <li>Vues pour ajouter des poches, voir le stock, accepter/refuser les demandes.</li>
+    </ul>
+
+    <h3>3.3 Application <code>serviceMedicaux</code> (Services medicaux)</h3>
+    <p>Gere les demandes de sang des hopitaux :</p>
+    <ul>
+        <li><strong>Patient</strong> : informations du patient qui a besoin de sang.</li>
+        <li><strong>DemandeDeSang</strong> : la demande elle-meme, avec les groupes sanguins demandes, les quantites, l'urgence et l'etat.</li>
+        <li><strong>Stock_de_sang</strong> : stock de sang recu par un service medical.</li>
+    </ul>
+
+    <h3>3.4 Application <code>donneur</code> (Donneur)</h3>
+    <p>Contient uniquement les vues pour l'espace donneur. Les modeles sont dans <code>_auth/models.py</code>.</p>
+
+    <h3>3.5 Application <code>frontend</code> (Pages publiques)</h3>
+    <p>Les pages visibles par tous : accueil, liste des hopitaux, detail d'un hopital. Contient aussi tous les templates HTML du projet.</p>
+</section>
+
+<!-- 4. MODELES -->
+<section id="modeles">
+    <h2>4. Les modeles de donnees</h2>
+
+    <p>Voici les principaux modeles du projet et leurs champs.</p>
+
+    <h3>4.1 Modeles utilisateurs (<code>_auth/models.py</code>)</h3>
+
+    <div class="model-box">
+        <div class="model-header">CustomUser (extends AbstractUser)</div>
+        <div class="model-fields">
+            <div>role <span class="field-type">CharField (generic, medical, clinic, donor, blood_bank, admin)</span></div>
+        </div>
+    </div>
+
+    <div class="model-box">
+        <div class="model-header">Utilisateur (Profil generique)</div>
+        <div class="model-fields">
+            <div>nom, prenom <span class="field-type">CharField</span></div>
+            <div>email <span class="field-type">EmailField (unique)</span></div>
+            <div>profil <span class="field-type">ImageField</span></div>
+            <div>user <span class="field-type">OneToOneField &rarr; CustomUser</span></div>
+        </div>
+    </div>
+
+    <div class="model-box">
+        <div class="model-header">Donneur (Donneur de sang)</div>
+        <div class="model-fields">
+            <div>nom, prenom <span class="field-type">CharField</span></div>
+            <div>date_naissance <span class="field-type">DateField</span></div>
+            <div>sexe <span class="field-type">CharField</span></div>
+            <div>groupe_sanguin <span class="field-type">CharField (A+, A-, B+, B-, AB+, AB-, O+, O-)</span></div>
+            <div>adresse, ville, code_postal, pays, telephone <span class="field-type">CharField</span></div>
+            <div>numero_de_donneur <span class="field-type">CharField (auto-genere)</span></div>
+            <div>user <span class="field-type">OneToOneField &rarr; CustomUser (role=donor)</span></div>
+        </div>
+    </div>
+
+    <div class="model-box">
+        <div class="model-header">ServiceMedicaux (Hopital / Clinique)</div>
+        <div class="model-fields">
+            <div>nom_etablissement, type_etablissement <span class="field-type">CharField</span></div>
+            <div>responsable <span class="field-type">CharField</span></div>
+            <div>adresse, ville, code_postal, pays <span class="field-type">CharField</span></div>
+            <div>email, telephone <span class="field-type">EmailField / CharField</span></div>
+            <div>numero_licence, numero_enregistrement <span class="field-type">CharField</span></div>
+            <div>certificat_enregistrement <span class="field-type">FileField</span></div>
+            <div>user <span class="field-type">OneToOneField &rarr; CustomUser (role=medical)</span></div>
+        </div>
+    </div>
+
+    <div class="model-box">
+        <div class="model-header">BanqueDeSang (Banque de sang)</div>
+        <div class="model-fields">
+            <div>nom_etablissement, responsable <span class="field-type">CharField</span></div>
+            <div>adresse, ville, code_postal, pays, telephone <span class="field-type">CharField</span></div>
+            <div>user <span class="field-type">OneToOneField &rarr; CustomUser (role=blood_bank)</span></div>
+        </div>
+    </div>
+
+    <h3>4.2 Modeles banque de sang (<code>bankDeSang/models.py</code>)</h3>
+
+    <div class="model-box">
+        <div class="model-header">PocheDeSang (Poche de sang)</div>
+        <div class="model-fields">
+            <div>donneur <span class="field-type">ForeignKey &rarr; Donneur</span></div>
+            <div>matricule <span class="field-type">CharField (unique)</span></div>
+            <div>date_de_prelevement <span class="field-type">DateField (defaut: aujourd'hui)</span></div>
+            <div>type_produit <span class="field-type">CharField (Sang total, Globules rouges, Plasma, Plaquettes)</span></div>
+            <div>groupe_sanguin <span class="field-type">CharField (8 groupes)</span></div>
+            <div>date_expiration <span class="field-type">DateField (42 jours apres prelevement)</span></div>
+            <div>code_qr <span class="field-type">ImageField (auto-genere)</span></div>
+            <div>est_disponible <span class="field-type">BooleanField</span></div>
+            <div>en_transition <span class="field-type">BooleanField</span></div>
+            <div>bank_de_sang <span class="field-type">ForeignKey &rarr; BanqueDeSang</span></div>
+            <div>service_medicaux <span class="field-type">ForeignKey &rarr; ServiceMedicaux</span></div>
+        </div>
+    </div>
+
+    <div class="model-box">
+        <div class="model-header">DonDeSang (Don de sang)</div>
+        <div class="model-fields">
+            <div>donneur <span class="field-type">ForeignKey &rarr; Donneur</span></div>
+            <div>poche_de_sang <span class="field-type">ForeignKey &rarr; PocheDeSang</span></div>
+            <div>type_produit <span class="field-type">CharField</span></div>
+            <div>date_don <span class="field-type">DateField (auto)</span></div>
+            <div>date_expiration <span class="field-type">DateField (42 jours)</span></div>
+        </div>
+    </div>
+
+    <div class="model-box">
+        <div class="model-header">StockDeSang (Stock global)</div>
+        <div class="model-fields">
+            <div>groupe_sanguin <span class="field-type">CharField</span></div>
+            <div>nombre_de_poches <span class="field-type">IntegerField</span></div>
+            <div>date_enregistrement <span class="field-type">DateField (auto)</span></div>
+        </div>
+    </div>
+
+    <h3>4.3 Modeles service medical (<code>serviceMedicaux/models.py</code>)</h3>
+
+    <div class="model-box">
+        <div class="model-header">Patient</div>
+        <div class="model-fields">
+            <div>nom_complet <span class="field-type">CharField</span></div>
+            <div>date_de_naissance <span class="field-type">DateField</span></div>
+            <div>proche <span class="field-type">CharField (contact d'urgence)</span></div>
+            <div>groupe_sanguin <span class="field-type">CharField</span></div>
+            <div>relation_proche_patient <span class="field-type">CharField</span></div>
+            <div>telephone_proche <span class="field-type">CharField</span></div>
+        </div>
+    </div>
+
+    <div class="model-box">
+        <div class="model-header">DemandeDeSang (Demande de sang)</div>
+        <div class="model-fields">
+            <div>serviceMedicaux <span class="field-type">ForeignKey &rarr; ServiceMedicaux</span></div>
+            <div>patient <span class="field-type">ForeignKey &rarr; Patient</span></div>
+            <div>groupe_sanguin <span class="field-type">JSONField (liste de groupes demandes)</span></div>
+            <div>type_produit <span class="field-type">CharField</span></div>
+            <div>nombre_poches <span class="field-type">JSONField (quantites par groupe)</span></div>
+            <div>nombre_poches_allouees <span class="field-type">JSONField (poches attribuees)</span></div>
+            <div>poches_recues <span class="field-type">JSONField (poches effectivement recues)</span></div>
+            <div>urgence <span class="field-type">CharField (Immediate, 24 heures, Non urgent)</span></div>
+            <div>motif <span class="field-type">CharField (Chirurgie, Accident, Maladie, Autre)</span></div>
+            <div>etat <span class="field-type">CharField (En attente, Approuvee, Rejetee, Completee)</span></div>
+            <div>etat_groupes <span class="field-type">JSONField (etat par groupe sanguin)</span></div>
+        </div>
+    </div>
+
+    <h3>4.4 Relations entre modeles</h3>
+
+    <div class="info-box note">
+        <strong>Schema simplifie des relations :</strong>
+        <ul style="margin-top:8px;">
+            <li><code>CustomUser</code> &harr; <code>Utilisateur</code>, <code>Donneur</code>, <code>ServiceMedicaux</code>, <code>BanqueDeSang</code> (1 vers 1)</li>
+            <li><code>PocheDeSang</code> &rarr; <code>Donneur</code> + <code>BanqueDeSang</code> + <code>ServiceMedicaux</code> (cles etrangeres)</li>
+            <li><code>DemandeDeSang</code> &rarr; <code>ServiceMedicaux</code> + <code>Patient</code> + <code>Donneur</code> (cles etrangeres)</li>
+            <li><code>DonDeSang</code> &rarr; <code>Donneur</code> + <code>PocheDeSang</code> (cles etrangeres)</li>
+            <li><code>Stock_de_sang</code> &rarr; <code>ServiceMedicaux</code> (cle etrangere)</li>
+        </ul>
+    </div>
+</section>
+
+<!-- 5. URLS -->
+<section id="urls">
+    <h2>5. Structure des URLs</h2>
+
+    <h3>URLs racine (<code>eBloodBank/urls.py</code>)</h3>
+    <table>
+        <thead><tr><th>Prefixe URL</th><th>Application</th><th>Description</th></tr></thead>
+        <tbody>
+            <tr><td><code>/</code></td><td>frontend</td><td>Pages publiques (accueil, hopitaux)</td></tr>
+            <tr><td><code>/admin/</code></td><td>Django admin</td><td>Interface d'administration</td></tr>
+            <tr><td><code>/_auth/</code></td><td>_auth</td><td>Connexion, inscription, activation</td></tr>
+            <tr><td><code>/bankDeSang/</code></td><td>bankDeSang</td><td>Gestion de la banque de sang</td></tr>
+            <tr><td><code>/serviceMedicaux/</code></td><td>serviceMedicaux</td><td>Operations des services medicaux</td></tr>
+            <tr><td><code>/donneur/</code></td><td>donneur</td><td>Espace donneur</td></tr>
+        </tbody>
+    </table>
+
+    <h3>URLs d'authentification (<code>_auth/urls.py</code>)</h3>
+    <table>
+        <thead><tr><th>URL</th><th>Nom</th><th>Action</th></tr></thead>
+        <tbody>
+            <tr><td><code>/_auth/login/</code></td><td>login</td><td>Page de connexion</td></tr>
+            <tr><td><code>/_auth/register/</code></td><td>register</td><td>Inscription utilisateur generique</td></tr>
+            <tr><td><code>/_auth/activate/&lt;uidb64&gt;/&lt;token&gt;</code></td><td>activate</td><td>Activation du compte par email</td></tr>
+            <tr><td><code>/_auth/logout/</code></td><td>logout</td><td>Deconnexion</td></tr>
+            <tr><td><code>/_auth/inscriptionServiceMedicaux/</code></td><td>-</td><td>Inscription d'un service medical</td></tr>
+        </tbody>
+    </table>
+
+    <h3>URLs banque de sang (<code>bankDeSang/urls.py</code>)</h3>
+    <table>
+        <thead><tr><th>URL</th><th>Nom</th><th>Action</th></tr></thead>
+        <tbody>
+            <tr><td><code>/bankDeSang/</code></td><td>accueilBankDeSang</td><td>Tableau de bord</td></tr>
+            <tr><td><code>/bankDeSang/gestionStock/</code></td><td>gestionStock</td><td>Ajouter des poches</td></tr>
+            <tr><td><code>/bankDeSang/detailStock/&lt;id&gt;/</code></td><td>detailStock</td><td>Voir les poches d'un groupe</td></tr>
+            <tr><td><code>/bankDeSang/listeDemandesDeSang/</code></td><td>listeDemandesDeSang</td><td>Demandes en attente</td></tr>
+            <tr><td><code>/bankDeSang/historiqueDemandes/</code></td><td>historiqueDemandes</td><td>Historique des demandes</td></tr>
+            <tr><td><code>/bankDeSang/accepterDemande</code></td><td>accepterDemande</td><td>Accepter une demande</td></tr>
+            <tr><td><code>/bankDeSang/refuserDemande/</code></td><td>refuserDemande</td><td>Refuser une demande</td></tr>
+            <tr><td><code>/bankDeSang/listeDonneurs/</code></td><td>listeDonneurs</td><td>Liste des donneurs</td></tr>
+            <tr><td><code>/bankDeSang/statistiques/</code></td><td>statistiques</td><td>Statistiques</td></tr>
+        </tbody>
+    </table>
+
+    <h3>URLs service medical (<code>serviceMedicaux/urls.py</code>)</h3>
+    <table>
+        <thead><tr><th>URL</th><th>Nom</th><th>Action</th></tr></thead>
+        <tbody>
+            <tr><td><code>/serviceMedicaux/accueil/</code></td><td>accueilServiceMedicaux</td><td>Tableau de bord</td></tr>
+            <tr><td><code>/serviceMedicaux/faireDemandeDeSang/</code></td><td>faireDemandeDeSang</td><td>Creer une demande</td></tr>
+            <tr><td><code>/serviceMedicaux/mesDemandesDeSang/</code></td><td>mesDemandesDeSang</td><td>Mes demandes</td></tr>
+            <tr><td><code>/serviceMedicaux/recevoir_poches/</code></td><td>recevoir_poches</td><td>Confirmer reception</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- 6. AUTHENTIFICATION -->
+<section id="authentification">
+    <h2>6. Systeme d'authentification</h2>
+
+    <h3>6.1 Modele utilisateur personnalise</h3>
+    <p>Django utilise normalement le modele <code>User</code> par defaut. Ce projet le remplace par <code>CustomUser</code> (defini dans <code>_auth/models.py</code>) qui ajoute un champ <strong>role</strong>. Ce role determine ce que l'utilisateur peut faire et ou il est redirige apres connexion.</p>
+
+    <h3>6.2 Backend d'authentification</h3>
+    <p>Le fichier <code>_auth/backends.py</code> contient <code>CustomUserBackend</code>, un backend qui authentifie par nom d'utilisateur. Il est configure dans <code>settings.py</code> aux cotes du backend par defaut de Django.</p>
+
+    <h3>6.3 Controle d'acces par role</h3>
+    <p>Le fichier <code>decorateurs.py</code> (a la racine du projet) contient le decorateur <code>@check_role(role)</code>. Ce decorateur est place sur les vues pour restreindre l'acces :</p>
+
+    <pre><code>@login_required
+@check_role('blood_bank')
+def accueilBankDeSang(request):
+    # Seul un utilisateur avec le role 'blood_bank' peut acceder ici
+    ...</code></pre>
+
+    <p>Si le role ne correspond pas, l'utilisateur est redirige vers la page d'accueil avec un message d'erreur.</p>
+
+    <h3>6.4 Verification par email</h3>
+    <p>A l'inscription, le compte est cree comme <strong>inactif</strong>. Un email contenant un lien d'activation est envoye. Ce lien contient un identifiant encode (uidb64) et un token genere par <code>token.py</code>. Quand l'utilisateur clique sur le lien, son compte est active.</p>
+</section>
+
+<!-- 7. BANQUE DE SANG -->
+<section id="banque-sang">
+    <h2>7. Fonctionnalites : Banque de sang</h2>
+
+    <p>L'utilisateur avec le role <code>blood_bank</code> a acces a ces fonctionnalites :</p>
+
+    <h3>7.1 Tableau de bord</h3>
+    <p>Affiche le nombre total de poches disponibles et le nombre de demandes en attente.</p>
+
+    <h3>7.2 Gestion du stock</h3>
+    <p>Permet d'ajouter de nouvelles poches de sang. Pour chaque poche, on renseigne :</p>
+    <ul>
+        <li>Le donneur (selectionne dans la liste)</li>
+        <li>Le matricule (identifiant unique)</li>
+        <li>Le type de produit (sang total, globules rouges, plasma, plaquettes)</li>
+        <li>Le groupe sanguin</li>
+        <li>La date de prelevement</li>
+    </ul>
+    <p>A la creation, le systeme calcule automatiquement la <strong>date d'expiration</strong> (42 jours) et genere un <strong>code QR</strong> contenant les informations de la poche.</p>
+
+    <h3>7.3 Traitement des demandes</h3>
+    <p>La banque de sang voit toutes les demandes en attente et peut :</p>
+    <ul>
+        <li><strong>Accepter</strong> : selectionner les poches disponibles a attribuer, elles passent en etat <code>en_transition</code>.</li>
+        <li><strong>Refuser</strong> : rejeter une demande pour un groupe sanguin specifique.</li>
+    </ul>
+
+    <h3>7.4 Statistiques</h3>
+    <p>Un tableau de bord avec des statistiques sur le stock et les demandes traitees.</p>
+
+    <h3>7.5 Groupes sanguins geres</h3>
+    <table>
+        <thead><tr><th>Groupe</th><th>Groupe</th><th>Groupe</th><th>Groupe</th></tr></thead>
+        <tbody>
+            <tr><td>A+</td><td>A-</td><td>B+</td><td>B-</td></tr>
+            <tr><td>AB+</td><td>AB-</td><td>O+</td><td>O-</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- 8. SERVICE MEDICAL -->
+<section id="service-medical">
+    <h2>8. Fonctionnalites : Service medical</h2>
+
+    <h3>8.1 Faire une demande de sang</h3>
+    <p>Un service medical peut creer une demande en specifiant :</p>
+    <ul>
+        <li>Un ou plusieurs <strong>groupes sanguins</strong> necessaires</li>
+        <li>Le <strong>nombre de poches</strong> pour chaque groupe</li>
+        <li>Le <strong>type de produit</strong> souhaite</li>
+        <li>Le <strong>niveau d'urgence</strong> : Immediate, 24 heures, ou Non urgent</li>
+        <li>Le <strong>motif</strong> : Chirurgie, Accident, Maladie, Autre</li>
+        <li>Les informations du <strong>patient</strong></li>
+    </ul>
+
+    <div class="info-box note">
+        <strong>Champs JSON :</strong>
+        La demande utilise des champs JSON pour permettre de demander <strong>plusieurs groupes sanguins</strong> dans une seule demande. Par exemple, une demande peut concerner 3 poches de A+ et 2 poches de O- simultanement.
+    </div>
+
+    <h3>8.2 Suivi des demandes</h3>
+    <p>Le service medical peut voir toutes ses demandes et leur etat :</p>
+    <ul>
+        <li><span class="badge badge-warning">En attente</span> : la demande a ete envoyee</li>
+        <li><span class="badge badge-success">Approuvee</span> : la banque a accepte</li>
+        <li><span class="badge badge-role">Rejetee</span> : la banque a refuse</li>
+        <li><span class="badge badge-info">Completee</span> : les poches ont ete recues</li>
+    </ul>
+
+    <h3>8.3 Reception des poches</h3>
+    <p>Quand les poches arrivent, le service medical confirme la reception. Les poches sont alors ajoutees a son propre stock (<code>Stock_de_sang</code>) et retirees du stock de la banque de sang.</p>
+</section>
+
+<!-- 9. DONNEUR -->
+<section id="donneur-app">
+    <h2>9. Fonctionnalites : Espace donneur</h2>
+    <p>L'espace donneur est actuellement minimal. Il contient :</p>
+    <ul>
+        <li>Un tableau de bord d'accueil (<code>accueilDonneur</code>)</li>
+        <li>Une vue pour lister les donneurs (<code>listeDonneur</code>)</li>
+    </ul>
+    <p>Le profil du donneur (nom, groupe sanguin, numero de donneur, etc.) est gere via le modele <code>Donneur</code> dans <code>_auth/models.py</code>.</p>
+</section>
+
+<!-- 10. FRONTEND -->
+<section id="frontend-app">
+    <h2>10. Pages publiques (Frontend)</h2>
+    <p>Ces pages sont accessibles a tous les visiteurs :</p>
+    <ul>
+        <li><strong>Accueil</strong> (<code>/</code>) : page d'accueil du site.</li>
+        <li><strong>Liste des hopitaux</strong> (<code>/listeHopitaux</code>) : liste de tous les services medicaux inscrits.</li>
+        <li><strong>Detail hopital</strong> (<code>/hopital/&lt;id&gt;</code>) : informations detaillees sur un hopital.</li>
+        <li><strong>Mes demandes</strong> (<code>/listeDemandeDeSang</code>) : les demandes de sang liees a l'utilisateur connecte.</li>
+    </ul>
+</section>
+
+<!-- 11. INSTALLATION -->
+<section id="installation">
+    <h2>11. Procedure d'installation</h2>
+
+    <h3>Prerequis</h3>
+    <ul>
+        <li>Python 3.8 ou superieur</li>
+        <li>MySQL installe et en cours d'execution</li>
+        <li>pip (gestionnaire de paquets Python)</li>
+    </ul>
+
+    <h3>Etapes</h3>
+
+    <h4>Etape 1 : Creer la base de donnees MySQL</h4>
+    <pre><code>mysql -u root -p
+CREATE DATABASE ebloodbank CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+EXIT;</code></pre>
+
+    <div class="info-box warning">
+        <strong>Identifiants par defaut :</strong>
+        La configuration actuelle utilise <code>root:root</code> sur <code>localhost:3306</code>. Modifiez <code>eBloodBank/settings.py</code> si vos identifiants sont differents.
+    </div>
+
+    <h4>Etape 2 : Creer un environnement virtuel</h4>
+    <pre><code>python -m venv .venv
+source .venv/bin/activate    # Linux / macOS
+# .venv\Scripts\activate     # Windows</code></pre>
+
+    <h4>Etape 3 : Installer les dependances</h4>
+    <pre><code>pip install -r requirements.txt</code></pre>
+
+    <h4>Etape 4 : Appliquer les migrations</h4>
+    <pre><code>python manage.py makemigrations
+python manage.py migrate</code></pre>
+
+    <h4>Etape 5 : Creer un super utilisateur (optionnel)</h4>
+    <pre><code>python manage.py createsuperuser</code></pre>
+
+    <h4>Etape 6 : Lancer le serveur</h4>
+    <pre><code>python manage.py runserver</code></pre>
+    <p>Le site est accessible sur <code>http://127.0.0.1:8000/</code></p>
+
+    <h4>Etape 7 : Configurer l'envoi d'emails (optionnel)</h4>
+    <p>Modifiez le fichier <code>eBloodBank/info.py</code> avec vos identifiants Gmail pour activer l'envoi d'emails de verification.</p>
+
+    <div class="info-box danger">
+        <strong>Securite :</strong>
+        Le fichier <code>eBloodBank/info.py</code> contient des identifiants email. Ne le partagez jamais publiquement. En production, utilisez des variables d'environnement.
+    </div>
+</section>
+
+<!-- 12. FLUX INSCRIPTION -->
+<section id="flux-inscription">
+    <h2>12. Procedure d'inscription</h2>
+
+    <h3>Inscription d'un utilisateur generique</h3>
+    <div class="flow">
+        <span class="flow-step">1. Aller sur /_auth/register/</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step">2. Remplir le formulaire</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step">3. Email d'activation envoye</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step">4. Cliquer sur le lien</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step">5. Compte actif</span>
+    </div>
+
+    <p><strong>Champs requis :</strong> prenom, nom, email, mot de passe, confirmation du mot de passe.</p>
+    <p>Le compte est cree avec le role <code>generic</code> et reste <strong>inactif</strong> jusqu'a la verification par email.</p>
+
+    <h3>Inscription d'un service medical</h3>
+    <div class="flow">
+        <span class="flow-step">1. Aller sur /_auth/inscriptionServiceMedicaux/</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step">2. Remplir les informations</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step">3. Fournir le certificat</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step">4. Compte cree (role medical)</span>
+    </div>
+
+    <p><strong>Champs requis :</strong> nom de l'etablissement, type, responsable, adresse complete, email, telephone, numero de licence, numero d'enregistrement, certificat d'enregistrement.</p>
+</section>
+
+<!-- 13. FLUX CONNEXION -->
+<section id="flux-connexion">
+    <h2>13. Procedure de connexion</h2>
+
+    <div class="flow">
+        <span class="flow-step">1. Aller sur /_auth/login/</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step">2. Saisir email + mot de passe</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step">3. Redirection selon le role</span>
+    </div>
+
+    <h3>Redirections apres connexion</h3>
+    <table>
+        <thead><tr><th>Role</th><th>Page de destination</th></tr></thead>
+        <tbody>
+            <tr><td><code>generic</code></td><td>Page d'accueil (<code>/</code>)</td></tr>
+            <tr><td><code>medical</code></td><td>Tableau de bord service medical (<code>/serviceMedicaux/accueil/</code>)</td></tr>
+            <tr><td><code>donor</code></td><td>Espace donneur (<code>/donneur/</code>)</td></tr>
+            <tr><td><code>blood_bank</code></td><td>Tableau de bord banque de sang (<code>/bankDeSang/</code>)</td></tr>
+            <tr><td><code>admin</code></td><td>Administration Django (<code>/admin/</code>)</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- 14. FLUX DEMANDE -->
+<section id="flux-demande">
+    <h2>14. Procedure de demande de sang</h2>
+
+    <p>C'est le flux principal de l'application. Voici comment il fonctionne du debut a la fin :</p>
+
+    <h3>Etape 1 : Creation de la demande</h3>
+    <p>Le service medical remplit le formulaire a <code>/serviceMedicaux/faireDemandeDeSang/</code> :</p>
+    <ul>
+        <li>Selectionner un ou plusieurs groupes sanguins</li>
+        <li>Indiquer le nombre de poches pour chaque groupe</li>
+        <li>Choisir le type de produit</li>
+        <li>Indiquer l'urgence et le motif</li>
+        <li>Renseigner les informations du patient</li>
+    </ul>
+    <p>La demande est creee avec l'etat <span class="badge badge-warning">En attente</span>.</p>
+
+    <h3>Etape 2 : Traitement par la banque de sang</h3>
+    <p>La banque de sang voit la demande dans sa liste (<code>/bankDeSang/listeDemandesDeSang/</code>). Elle peut :</p>
+
+    <h4>Accepter la demande :</h4>
+    <ol>
+        <li>Voir les poches disponibles pour le groupe sanguin demande</li>
+        <li>Selectionner les poches a attribuer</li>
+        <li>Les poches selectionnees passent en etat <code>en_transition = True</code> et <code>est_disponible = False</code></li>
+        <li>L'etat de la demande (pour ce groupe) passe a <span class="badge badge-success">Approuvee</span></li>
+        <li>Le stock de la banque est mis a jour</li>
+    </ol>
+
+    <h4>Refuser la demande :</h4>
+    <ol>
+        <li>L'etat du groupe sanguin concerne passe a <span class="badge badge-role">Rejetee</span></li>
+    </ol>
+
+    <h3>Etape 3 : Reception par le service medical</h3>
+    <ol>
+        <li>Le service medical confirme la reception a <code>/serviceMedicaux/recevoir_poches/</code></li>
+        <li>Les poches sont ajoutees au stock du service medical (<code>Stock_de_sang</code>)</li>
+        <li>Les poches ne sont plus <code>en_transition</code></li>
+        <li>L'etat passe a <span class="badge badge-info">Completee</span></li>
+    </ol>
+
+    <h3>Schema du flux complet</h3>
+    <div class="flow">
+        <span class="flow-step">Service medical cree la demande</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step">Banque recoit la demande</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step">Banque accepte / refuse</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step">Service confirme reception</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step">Stock mis a jour</span>
+    </div>
+</section>
+
+<!-- 15. GESTION STOCK -->
+<section id="flux-stock">
+    <h2>15. Procedure de gestion du stock</h2>
+
+    <h3>Ajouter une poche de sang</h3>
+    <ol>
+        <li>Se connecter en tant que <code>blood_bank</code></li>
+        <li>Aller sur <code>/bankDeSang/gestionStock/</code></li>
+        <li>Remplir le formulaire : donneur, matricule, type de produit, groupe sanguin, date de prelevement</li>
+        <li>Le systeme cree la poche avec :
+            <ul>
+                <li>Date d'expiration = date de prelevement + 42 jours</li>
+                <li>Code QR genere automatiquement (sauvegarde dans <code>media/QR code/</code>)</li>
+                <li>Etat : disponible = True, en transition = False</li>
+            </ul>
+        </li>
+        <li>Le stock global (<code>StockDeSang</code>) est incremente pour le groupe sanguin correspondant</li>
+    </ol>
+
+    <h3>Consulter le stock</h3>
+    <ul>
+        <li><strong>Vue globale</strong> : le tableau de bord affiche le total par groupe sanguin</li>
+        <li><strong>Vue detaillee</strong> : <code>/bankDeSang/detailStock/&lt;id&gt;/</code> montre toutes les poches d'un groupe sanguin</li>
+    </ul>
+
+    <h3>Cycle de vie d'une poche</h3>
+    <div class="flow">
+        <span class="flow-step">Creee (disponible)</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step">Attribuee (en transition)</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step">Recue par le service</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="flow-step">Dans le stock du service</span>
+    </div>
+</section>
+
+<!-- 16. CONFIGURATION -->
+<section id="config">
+    <h2>16. Configuration technique</h2>
+
+    <h3>Base de donnees (<code>settings.py</code>)</h3>
+    <pre><code>DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'ebloodbank',
+        'USER': 'root',
+        'PASSWORD': 'root',
+        'HOST': 'localhost',
+        'PORT': '3306',
+    }
+}</code></pre>
+
+    <h3>Modele utilisateur personnalise</h3>
+    <pre><code>AUTH_USER_MODEL = '_auth.CustomUser'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    '_auth.backends.CustomUserBackend',
+]</code></pre>
+
+    <h3>Fichiers media</h3>
+    <p>Les fichiers uploades (profils, certificats, codes QR) sont stockes dans le dossier <code>media/</code> a la racine du projet. L'URL d'acces est <code>/media/</code>.</p>
+
+    <h3>Email (<code>eBloodBank/info.py</code>)</h3>
+    <p>La configuration email utilise Gmail SMTP (port 587, TLS active). Les identifiants sont dans <code>info.py</code> et importes par <code>settings.py</code>.</p>
+
+    <h3>Applications installees</h3>
+    <pre><code>INSTALLED_APPS = [
+    'frontend',
+    'bankDeSang',
+    'serviceMedicaux',
+    'donneur',
+    '_auth',
+    # + apps Django par defaut
+]</code></pre>
+</section>
+
+<!-- 17. SECURITE -->
+<section id="securite">
+    <h2>17. Securite</h2>
+
+    <h3>Mesures en place</h3>
+    <table>
+        <thead><tr><th>Mesure</th><th>Implementation</th></tr></thead>
+        <tbody>
+            <tr><td>Authentification</td><td>Systeme Django + backend personnalise</td></tr>
+            <tr><td>Controle d'acces</td><td>Decorateur <code>@check_role()</code> sur les vues</td></tr>
+            <tr><td>Verification email</td><td>Token d'activation a usage unique</td></tr>
+            <tr><td>Protection CSRF</td><td>Middleware <code>CsrfViewMiddleware</code> actif</td></tr>
+            <tr><td>Hachage mots de passe</td><td>Systeme Django par defaut (PBKDF2)</td></tr>
+            <tr><td>Protection clickjacking</td><td>Middleware <code>XFrameOptionsMiddleware</code></td></tr>
+        </tbody>
+    </table>
+
+    <div class="info-box warning">
+        <strong>Points d'attention :</strong>
+        <ul>
+            <li>Le fichier <code>info.py</code> contient des identifiants en clair &mdash; a remplacer par des variables d'environnement en production.</li>
+            <li><code>DEBUG = True</code> dans <code>settings.py</code> &mdash; a desactiver en production.</li>
+            <li><code>ALLOWED_HOSTS = []</code> &mdash; a configurer en production.</li>
+            <li>Les identifiants MySQL (<code>root:root</code>) sont codes en dur &mdash; a externaliser.</li>
+        </ul>
+    </div>
+</section>
+
+<!-- 18. ARBORESCENCE -->
+<section id="arborescence">
+    <h2>18. Arborescence du projet</h2>
+
+    <pre><code>eBloodBank/
+|
+|-- eBloodBank/               # Configuration du projet Django
+|   |-- settings.py           # Parametres (DB, apps, auth, email)
+|   |-- urls.py               # URLs racine
+|   |-- info.py               # Identifiants email (sensible)
+|   |-- wsgi.py / asgi.py     # Points d'entree serveur
+|
+|-- _auth/                    # Authentification et modeles utilisateurs
+|   |-- models.py             # CustomUser, Utilisateur, Donneur,
+|   |                         # ServiceMedicaux, BanqueDeSang
+|   |-- views.py              # Inscription, connexion, activation
+|   |-- backends.py           # Backend d'authentification personnalise
+|   |-- token.py              # Generateur de token d'activation
+|   |-- roles.py              # Constantes de roles
+|   |-- urls.py               # Routes d'authentification
+|   |-- templates/            # Templates d'auth
+|
+|-- bankDeSang/               # Gestion banque de sang
+|   |-- models.py             # PocheDeSang, DonDeSang, StockDeSang
+|   |-- views.py              # Stock, demandes, statistiques
+|   |-- urls.py               # Routes banque de sang
+|
+|-- serviceMedicaux/          # Operations services medicaux
+|   |-- models.py             # Patient, DemandeDeSang, Stock_de_sang
+|   |-- views.py              # Demandes, reception
+|   |-- urls.py               # Routes service medical
+|
+|-- donneur/                  # Espace donneur
+|   |-- views.py              # Vues donneur
+|   |-- urls.py               # Routes donneur
+|
+|-- frontend/                 # Pages publiques et templates
+|   |-- views.py              # Accueil, hopitaux
+|   |-- urls.py               # Routes publiques
+|   |-- templates/            # Tous les templates HTML
+|   |   |-- frontend/
+|   |       |-- base.html
+|   |       |-- accueil.html
+|   |       |-- bankDeSang/   # Templates banque de sang
+|   |       |-- serviceMedicaux/  # Templates service medical
+|   |       |-- donneur/      # Templates donneur
+|   |-- static/               # CSS, JS, images
+|
+|-- decorateurs.py            # Decorateur @check_role()
+|-- manage.py                 # Script de gestion Django
+|-- requirements.txt          # Dependances Python
+|-- media/                    # Fichiers uploades (profils, QR codes)
+</code></pre>
+</section>
+
+<!-- FOOTER -->
+<section style="background: var(--primary-dark); color: white; text-align: center; padding: 25px;">
+    <p style="margin:0; opacity: 0.9;">Documentation eBloodBank &mdash; Generee le 28 mars 2026</p>
+    <p style="margin:5px 0 0; opacity: 0.6; font-size: 0.85em;">Django 4.2 &bull; Python 3 &bull; MySQL</p>
+</section>
+
+</main>
+
+</body>
+</html>

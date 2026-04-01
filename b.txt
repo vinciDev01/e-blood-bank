@@ -1,0 +1,73 @@
+Collaborer avec quelqu'un sur GitHub implique plusieurs étapes clés. Voici un guide détaillé pour vous aider à démarrer :
+
+### 1. Créer un compte GitHub
+- Rendez-vous sur [github.com](https://github.com) et inscrivez-vous si vous n'avez pas encore de compte.
+
+### 2. Créer un dépôt (repository)
+- Une fois connecté, cliquez sur le signe "+" en haut à droite et sélectionnez "New repository".
+- Donnez un nom à votre dépôt, ajoutez une description, choisissez la visibilité (public ou privé), et cliquez sur "Create repository".
+
+### 3. Ajouter un collaborateur
+- Allez dans les paramètres de votre dépôt en cliquant sur "Settings".
+- Sélectionnez "Collaborators & teams" dans le menu de gauche.
+- Tapez le nom d'utilisateur GitHub de votre collaborateur et envoyez une invitation.
+
+### 4. Accepter l'invitation
+- Votre collaborateur recevra une notification par email et/ou sur GitHub.
+- Il/elle devra accepter l'invitation pour avoir accès au dépôt.
+
+### 5. Cloner le dépôt localement
+- Sur la page du dépôt, cliquez sur le bouton "Code" et copiez l'URL.
+- Dans votre terminal, utilisez la commande suivante pour cloner le dépôt sur votre machine :
+
+  ```bash
+  git clone https://github.com/votre_nom_utilisateur/nom_du_dépôt.git
+  ```
+
+### 6. Créer une branche pour travailler
+- Il est recommandé de travailler sur des branches séparées pour éviter les conflits.
+- Créez une nouvelle branche et basculez dessus :
+
+  ```bash
+  git checkout -b ma_nouvelle_branche
+  ```
+
+### 7. Effectuer des modifications et les valider
+- Modifiez les fichiers nécessaires, puis ajoutez-les et validez vos changements :
+
+  ```bash
+  git add .
+  git commit -m "Message de validation"
+  ```
+
+### 8. Pousser les changements vers GitHub
+- Envoyez vos modifications vers le dépôt distant sur GitHub :
+
+  ```bash
+  git push origin ma_nouvelle_branche
+  ```
+
+### 9. Créer une Pull Request (PR)
+- Allez sur la page de votre dépôt sur GitHub, vous verrez une notification pour créer une Pull Request (PR) pour votre nouvelle branche.
+- Cliquez sur "Compare & pull request".
+- Ajoutez une description de vos changements et cliquez sur "Create pull request".
+
+### 10. Revue et fusion de la PR
+- Votre collaborateur peut maintenant revoir les modifications.
+- Si tout est bon, la PR peut être fusionnée dans la branche principale (généralement `main` ou `master`).
+- Cliquez sur "Merge pull request" et confirmez la fusion.
+
+### 11. Synchroniser votre dépôt local
+- Une fois la PR fusionnée, n'oubliez pas de synchroniser votre dépôt local :
+
+  ```bash
+  git checkout main  # ou master
+  git pull origin main  # ou master
+  ```
+
+### Astuces supplémentaires
+- **Communication** : Utilisez les issues de GitHub pour suivre les tâches et les discussions.
+- **Revue de code** : Utilisez les commentaires dans les PR pour faire des revues de code détaillées.
+- **Intégration continue** : Configurez des outils d'intégration continue comme GitHub Actions pour automatiser les tests et les déploiements.
+
+En suivant ces étapes, vous devriez être bien équipé pour collaborer efficacement avec d'autres développeurs sur GitHub.

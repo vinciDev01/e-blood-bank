@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inscription</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    .step {
+      display: none;
+    }
+
+    .step.active {
+      display: block;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+  <!--Bouton retour-->
+  <a href="{% url 'frontend:accueil' %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">&larr; Retour</a>
+  <div class="container mx-auto py-8 w-full">
+    <!--=================Progress Bar Start==================-->
+    <!-- Progress Bar -->
+    <div class="flex justify-center mb-8">
+      <div class="relative w-full max-w-xl">
+        <div class="absolute inset-0 flex items-center justify-between space-x-2">
+          <div class="step-branche flex-1 h-1 bg-gray-300 transition-all duration-300"></div>
+          <div class="step-branche flex-1 h-1 bg-gray-300 transition-all duration-300"></div>
+          <div class="step-branche flex-1 h-1 bg-gray-300 transition-all duration-300"></div>
+          <div class="step-branche flex-1 h-1 bg-gray-300 transition-all duration-300"></div>
+        </div>
+        <div class="relative flex justify-between items-center">
+          <div
+            class="step-circle w-10 h-10 bg-white border-2 border-gray-300 text-gray-300 rounded-full flex items-center justify-center transition-all duration-300">
+            <svg class="w-5 h-5 checkmark hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            <span class="step-number">1</span>
+          </div>
+          <div
+            class="step-circle w-10 h-10 bg-white border-2 border-gray-300 text-gray-300 rounded-full flex items-center justify-center transition-all duration-300">
+            <svg class="w-5 h-5 checkmark hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            <span class="step-number">2</span>
+          </div>
+          <div
+            class="step-circle w-10 h-10 bg-white border-2 border-gray-300 text-gray-300 rounded-full flex items-center justify-center transition-all duration-300">
+            <svg class="w-5 h-5 checkmark hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            <span class="step-number">3</span>
+          </div>
+          <div
+            class="step-circle w-10 h-10 bg-white border-2 border-gray-300 text-gray-300 rounded-full flex items-center justify-center transition-all duration-300">
+            <svg class="w-5 h-5 checkmark hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            <span class="step-number">4</span>
+          </div>
+          <div
+            class="step-circle w-10 h-10 bg-white border-2 border-gray-300 text-gray-300 rounded-full flex items-center justify-center transition-all duration-300">
+            <svg class="w-5 h-5 checkmark hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            <span class="step-number">5</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--=================End Progress Bar==================-->
+
+
+
+
+    <!--=================Form Start==================-->
+    <section>
+      <div class="px-8 py-24 mx-auto md:px-12 lg:px-32 max-w-7xl">
+        <div class="grid items-center gap-12 lg:grid-cols-2 lg:gap-24">
+          <div class="flex flex-col">
+            <h1 class="text-4xl font-semibold tracking-tighter text-gray-900 lg:text-5xl">
+              Collaborating on single-page projects,
+              <span class="text-gray-600">from any location</span>
+            </h1>
+            <p class="mt-4 text-base font-medium text-gray-500 text-pretty">
+              A rapid approach to collaborate in staging and provisional settings.
+            </p>
+          </div>
+          <div class="p-2 border bg-gray-50 rounded-3xl">
+            <div class="p-10 bg-white border shadow-lg rounded-2xl">
+              <div>
+                <button
+                  class="inline-flex items-center justify-center w-full h-12 gap-3 px-5 py-3 font-medium duration-200 bg-gray-100 rounded-xl hover:bg-gray-200 focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  type="button" aria-label="Sign in with Google">
+                  <ion-icon name="logo-google" role="img" class="md hydrated" aria-label="logo google"></ion-icon>
+                  <span>Sign in with Google</span>
+                </button>
+                <div class="relative py-3">
+                  <div class="absolute inset-0 flex items-center" aria-hidden="true">
+                    <div class="w-full border-t border-gray-300"></div>
+                  </div>
+                  <div class="relative flex justify-center">
+                    <span class="px-2 text-sm text-black bg-white">Or continue with</span>
+                  </div>
+                </div>
+              </div>
+              <!--============== Start Multi-step Form==============-->
+              <form id="multiStepForm" class="space-y-8" method="post" action="{% url '_auth:inscriptionServiceMedicaux' %}">
+                {% csrf_token %}
+                <!--============Étape 1: Informations de l'établissement=================-->
+                <div class="step active">
+                  <h2 class="text-xl font-bold mb-4" style="margin-top: 32px;">Informations sur l'établissement</h2>
+                  <input type="text" name="nom_etablissement" placeholder="Nom de l'établissement médical" class="w-full p-2 border rounded-md">
+                  <!-- <input type="text" name="type_etablissement" placeholder="Type d'établissement" class="w-full p-2 border rounded-md mt-4"> -->
+                  <select name="type_etablissement" class="w-full p-2 border rounded-md mt-4">
+                    <option value="">type d'établissement</option>
+                    <option value="Hôpital">Hôpital</option>
+                    <option value="Clinique">Clinique</option>
+                    <!-- <option value="Cabinet médical">Cabinet médical</option> -->
+                    <option value="Laboratoire">Laboratoire</option>
+                    <!-- <option value="Pharmacie">Pharmacie</option> -->
+                    <option value="Centre de soins">Centre de soins</option>
+                  </select>
+                  <input type="text" name="responsable" placeholder="Nom du responsable" class="w-full p-2 border rounded-md mt-4">
+                  <div class="flex justify-end mt-4">
+                    <button type="button" class="px-4 py-2 bg-black text-white rounded-md"
+                      onclick="nextStep()">Suivant</button>
+                  </div>
+                </div>
+                <!--============Étape 2: Coordonnées=================-->
+                <div class="step">
+                  <h2 class="text-xl font-bold mb-4">Coordonnées de l'établissement</h2>
+                  <input type="text" name="adresse" placeholder="Adresse" class="w-full p-2 border rounded-md">
+                  <input type="text" name="ville" placeholder="Ville" class="w-full p-2 border rounded-md mt-4">
+                  <input type="text" name="code_postal" placeholder="Code postal" class="w-full p-2 border rounded-md mt-4">
+                  <div class="flex justify-between mt-4">
+                    <button type="button" class="px-4 py-2 bg-gray-300 text-black rounded-md"
+                      onclick="prevStep()">Précédent</button>
+                    <button type="button" class="px-4 py-2 bg-black text-white rounded-md"
+                      onclick="nextStep()">Suivant</button>
+                  </div>
+                </div>
+                <div class="step">
+                  <h2 class="text-xl font-bold mb-4">Coordonnées de l'établissement</h2>
+                  <input type="text" name="pays" placeholder="Pays" class="w-full p-2 border rounded-md">
+                  <input type="tel" name="telephone" placeholder="Numéro de téléphone" class="w-full p-2 border rounded-md mt-4">
+                  <input type="email" name="email" placeholder="Email" class="w-full p-2 border rounded-md mt-4">
+                  <div class="flex justify-between mt-4">
+                    <button type="button" class="px-4 py-2 bg-gray-300 text-black rounded-md"
+                      onclick="prevStep()">Précédent</button>
+                    <button type="button" class="px-4 py-2 bg-black text-white rounded-md"
+                      onclick="nextStep()">Suivant</button>
+                  </div>
+                </div>
+                <!--============Étape 3: Documentation=================-->
+                <div class="step">
+                  <h2 class="text-xl font-bold mb-4">Documentation</h2>
+                  <input type="text" name="numero_licence" placeholder="Numéro de licence médicale" class="w-full p-2 border rounded-md">
+                  <input type="text" name="numero_enregistrement" placeholder="Numéro d'enregistrement" class="w-full p-2 border rounded-md mt-4">
+                  <div class="max-w-xl" style="margin-top: 20px;">
+                    <label
+                      class="flex justify-center w-full h-32 px-4 transition bg-white border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:border-gray-400 focus:outline-none">
+                      <span class="flex items-center space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-600" fill="none"
+                          viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                        </svg>
+                        <span class="font-medium text-gray-600">
+                          Joindre le certificat d'enregistrement, ou
+                          <span class="text-blue-600 underline">parcourir</span>
+                        </span>
+                      </span>
+                        <input type="file" name="certificat_enregistrement" class="hidden">
+                    </label>
+                    <!--Le password-->
+                    <input type="password" name="password" placeholder="Mot de passe" class="w-full p-2 border rounded-md mt-4">
+                    
+                    <div class="flex justify-between mt-4">
+                      <button type="button" class="px-4 py-2 bg-gray-300 text-black rounded-md"
+                        onclick="prevStep()">Précédent</button>
+                      <button type="submit" class="px-4 py-2 bg-black text-white rounded-md"
+                      >Submit</button>
+                    </div>
+                  </div>
+                </div>
+                <!--=========Confirmation==========-->
+                <!--On affiche tout ce qui a été saisi-->
+              </form>
+
+
+
+
+
+
+
+
+
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+
+
+
+
+
+  </div>
+
+  <script>
+    let currentStep = 0;
+    const steps = document.querySelectorAll('.step');
+    const stepCircles = document.querySelectorAll('.step-circle');
+    const stepBranches = document.querySelectorAll('.step-branche');
+
+    function showStep(step) {
+      steps.forEach((element, index) => {
+        element.classList.toggle('active', index === step);
+      });
+
+      stepCircles.forEach((circle, index) => {
+        if (index < step) {
+          circle.classList.remove('bg-white', 'border-2', 'border-blue-500', 'text-blue-500');
+          circle.classList.add('bg-black', 'text-white');
+          circle.querySelector('.checkmark').classList.remove('hidden');
+          circle.querySelector('.step-number').classList.add('hidden');
+        } else if (index === step) {
+          circle.classList.remove('bg-white', 'border-2', 'border-gray-3000', 'text-gray-300');
+          circle.classList.add('bg-black', 'text-white');
+          circle.querySelector('.checkmark').classList.add('hidden');
+          circle.querySelector('.step-number').classList.remove('hidden');
+        } else {
+          circle.classList.remove('bg-black', 'text-white');
+          circle.classList.add('bg-white', 'border-2', 'border-gray-300', 'text-gray-300');
+          circle.querySelector('.checkmark').classList.add('hidden');
+          circle.querySelector('.step-number').classList.remove('hidden');
+        }
+      });
+
+      stepBranches.forEach((branche, index) => {
+        branche.style.transition = 'background-color 0.5s ease';
+        if (index <= currentStep - 1) {
+          branche.classList.remove('bg-gray-300');
+          branche.classList.add('bg-black');
+        } else {
+          branche.classList.remove('bg-black');
+          branche.classList.add('bg-gray-300');
+        }
+      });
+    }
+
+    function nextStep() {
+      if (currentStep < steps.length - 1) {
+        currentStep++;
+        showStep(currentStep);
+      } else {
+        document.getElementById('multiStepForm').submit();
+      }
+    }
+
+    function prevStep() {
+      if (currentStep > 0) {
+        currentStep--;
+        showStep(currentStep);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      showStep(currentStep);
+    });
+  </script>
+</body>
+
+</html>

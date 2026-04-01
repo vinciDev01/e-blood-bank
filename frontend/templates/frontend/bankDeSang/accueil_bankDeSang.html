@@ -1,0 +1,1159 @@
+{% extends 'frontend/bankDeSang/base.html' %}
+
+<!-- {% block stylesheet %}
+<style>
+    .sticky-top {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        width: 100%;
+        height: 60px;
+        background-color: #fff;
+        border-bottom: 1px solid #e5e7eb;
+        padding: 0 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 2px 4px rgba(139, 139, 139, 0.1);
+        transition: height 0.3s ease;
+    }
+
+    .sticky-left {
+        position: sticky;
+        top: 60px;
+        height: calc(100vh - 60px);
+        padding: 1rem;
+        overflow-y: auto;
+    }
+
+    /* Pour masquer complètement la barre de défilement */
+    ::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Pour affiner la barre de défilement */
+    ::-webkit-scrollbar {
+        width: 10px;
+        /* Largeur de la barre */
+    }
+
+    ::-webkit-scrollbar-track {
+        background-color: #f1f1f1;
+        /* Couleur de fond de la piste */
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: #888;
+        /* Couleur de la barre de défilement */
+    }
+
+    /* Pour masquer complètement la barre de défilement 
+    ::-webkit-scrollbar {
+      display: none;
+    }*/
+
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: #555;
+        /* Couleur de la barre de défilement au survol */
+    }
+
+
+strong {
+    font-weight: 600;
+}
+
+.notification {
+    width: 360px;
+    padding: 15px;
+    background-color: white;
+    border-radius: 16px;
+    position: fixed;
+    bottom: 15px;
+    left: 15px;
+    transform: translateY(200%);
+    animation: noti 3s forwards alternate ease-in;
+    box-shadow: 0 2px 4px rgba(139, 139, 139, 0.1);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.notification-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.notification-title {
+    font-size: 16px;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.notification-close {
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+    font-size: 14px;
+}
+
+.notification-container {
+    display: flex;
+    align-items: flex-start;
+}
+
+.notification-media {
+    position: relative;
+}
+
+.notification-user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 40px;
+    object-fit: cover;
+}
+
+.notification-reaction {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 30px;
+    color: white;
+    /* background-image: linear-gradient(45deg, #0070E1, #14ABFE); */
+    font-size: 14px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
+.notification-content {
+    width: calc(100% - 60px);
+    padding-left: 20px;
+    line-height: 1.2;
+}
+
+.notification-text {
+    margin-bottom: 5px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 50px;
+}
+
+.notification-timer {
+    color: #1876F2;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.notification-status {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    width: 15px;
+    height: 15px;
+    background-color: #00fc37;
+    border-radius: 50%;
+}
+
+@keyframes noti {
+    50% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+</style>
+{% endblock %} -->
+
+{% block body %}
+<!-- Sidebar Left -->
+<!-- <div class="sticky-left w-1/5 p-4 shadow bg-white">
+    <div class="mb-4 text-center" style="position: -webkit-sticky;">
+        <img class="h-12 w-12 rounded-full mx-auto" src="{{ request.user.profil.url }}" alt="Profile Picture">
+        <h2 class="mt-2 text-xl font-semibold">{{ request.user.banque_de_sang.nom_etablissement }}</h2>
+    </div>
+    <div class="space-y-2">
+        <a href="{% url 'bankDeSang:accueilBankDeSang' %}" class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-300">
+            <svg data-slot="icon" fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z"></path>
+            </svg>
+            <span class="ml-2 text-sm font-medium">Dashboard</span>
+        </a>
+        <a href="{% url 'bankDeSang:gestionStock' %}" class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-300">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                <path
+                    d="M22 8.35V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8.35A2 2 0 0 1 3.26 6.5l8-3.2a2 2 0 0 1 1.48 0l8 3.2A2 2 0 0 1 22 8.35Z">
+                </path>
+                <path d="M6 18h12"></path>
+                <path d="M6 14h12"></path>
+                <rect width="12" height="12" x="6" y="10"></rect>
+            </svg>
+            <span class="ml-2 text-sm font-medium">Stocks</span>
+        </a>
+        <a href="{% url 'bankDeSang:listeDonneurs' %}" class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-300">
+            <?xml version="1.0" encoding="UTF-8"?><svg width="24px" height="24px" viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000"><path d="M12 12C14.2091 12 16 10.2091 16 8C16 5.79086 14.2091 4 12 4C9.79086 4 8 5.79086 8 8C8 10.2091 9.79086 12 12 12Z" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M22 17.2798C22 17.8812 21.7625 18.4588 21.3383 18.8861C20.3619 19.8701 19.415 20.8961 18.4021 21.8443C18.17 22.0585 17.8017 22.0507 17.5795 21.8268L14.6615 18.8861C13.7795 17.9972 13.7795 16.5623 14.6615 15.6734C15.5522 14.7758 17.0032 14.7758 17.8938 15.6734L17.9999 15.7803L18.1059 15.6734C18.533 15.2429 19.1146 15 19.7221 15C20.3297 15 20.9113 15.2428 21.3383 15.6734C21.7625 16.1007 22 16.6784 22 17.2798Z" stroke="#000000" stroke-width="1.5" stroke-linejoin="round"></path><path d="M5 20V19C5 15.134 8.13401 12 12 12C13.0736 12 14.0907 12.2417 15 12.6736" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            <span class="ml-2 text-sm font-medium">Donor</span>
+        </a>
+        <a href="#" class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-300">
+            <?xml version="1.0" encoding="UTF-8"?><svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000"><path d="M6.4 8C6.73137 8 7 7.73137 7 7.4V3.6C7 3.26863 7.26863 3 7.6 3H16.4C16.7314 3 17 3.26863 17 3.6V7.4C17 7.73137 17.2686 8 17.6 8H19.4C19.7314 8 20 8.26863 20 8.6V20.4C20 20.7314 19.7314 21 19.4 21H4.6C4.26863 21 4 20.7314 4 20.4V8.6C4 8.26863 4.26863 8 4.6 8H6.4Z" stroke="#000000" stroke-width="1.5"></path><path d="M9.99219 8H11.9922M13.9922 8H11.9922M11.9922 8V6M11.9922 8V10" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16 17.01L16.01 16.9989" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16 13.01L16.01 12.9989" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12 13.01L12.01 12.9989" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8 13.01L8.01 12.9989" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8 17.01L8.01 16.9989" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12 17.01L12.01 16.9989" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            <span class="ml-2 text-sm font-medium">Hospital</span>
+        </a>
+        <a href="#" class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-300">
+            <?xml version="1.0" encoding="UTF-8"?><svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000"><path d="M16 6.27975C16 6.88118 15.7625 7.45883 15.3383 7.88611C14.3619 8.87007 13.415 9.89605 12.4021 10.8443C12.17 11.0585 11.8017 11.0507 11.5795 10.8268L8.6615 7.88611C7.7795 6.99725 7.7795 5.56225 8.6615 4.67339C9.55218 3.77579 11.0032 3.77579 11.8938 4.67339L11.9999 4.78027L12.1059 4.67345C12.533 4.24286 13.1146 4 13.7221 4C14.3297 4 14.9113 4.24284 15.3383 4.67339C15.7625 5.10073 16 5.67835 16 6.27975Z" stroke="#000000" stroke-width="1.5" stroke-linejoin="round"></path><path d="M18 20L21.8243 16.1757C21.9368 16.0632 22 15.9106 22 15.7515V10.5C22 9.67157 21.3284 9 20.5 9V9C19.6716 9 19 9.67157 19 10.5V15" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M18 16L18.8581 15.1419C18.949 15.051 19 14.9278 19 14.7994V14.7994C19 14.6159 18.8963 14.4482 18.7322 14.3661L18.2893 14.1447C17.5194 13.7597 16.5894 13.9106 15.9807 14.5193L15.0858 15.4142C14.7107 15.7893 14.5 16.298 14.5 16.8284V20" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M6 20L2.17574 16.1757C2.06321 16.0632 2 15.9106 2 15.7515V10.5C2 9.67157 2.67157 9 3.5 9V9C4.32843 9 5 9.67157 5 10.5V15" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M6 16L5.14187 15.1419C5.05103 15.051 5 14.9278 5 14.7994V14.7994C5 14.6159 5.10366 14.4482 5.26776 14.3661L5.71067 14.1447C6.48064 13.7597 7.41059 13.9106 8.01931 14.5193L8.91421 15.4142C9.28929 15.7893 9.5 16.298 9.5 16.8284V20" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            <span class="ml-2 text-sm font-medium">Blood Donation</span>
+        </a>
+
+        <a href="{% url 'bankDeSang:donneurMonetaire' %}" class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-300">
+            <svg data-slot="icon" fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"></path>
+            </svg>
+            <span class="ml-2 text-sm font-medium">Monetary Donor</span>
+        </a>
+
+        <a href="{% url 'bankDeSang:listeDemandesDeSang' %}"
+            class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-300">
+            <?xml version="1.0" encoding="UTF-8"?><svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000"><circle cx="12" cy="12" r="10" stroke="#000000" stroke-width="1.5"></circle><path d="M16.5829 9.66667C15.8095 8.09697 14.043 7 11.9876 7C9.38854 7 7.25148 8.75408 7 11" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M14.4939 9.72222H16.4001C16.7315 9.72222 17.0001 9.45359 17.0001 9.12222V7.5" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7.41707 13.6667C8.19054 15.6288 9.95698 17 12.0124 17C14.6115 17 16.7485 14.8074 17 12" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M9.5061 13.6222H7.59992C7.26855 13.6222 6.99992 13.8909 6.99992 14.2222V16.4" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>                
+            <span class="ml-2 text-sm font-medium">Blood Requests</span>
+        </a>
+        <a href="{% url 'bankDeSang:historiqueDemandes' %}" class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-300">
+            <?xml version="1.0" encoding="UTF-8"?><svg width="22px" height="22px" viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000"><path d="M12 6L12 12L18 12" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M21.8883 10.5C21.1645 5.68874 17.013 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C16.1006 22 19.6248 19.5318 21.1679 16" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M17 16H21.4C21.7314 16 22 16.2686 22 16.6V21" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            <span class="ml-2 text-sm font-medium">Request History</span>
+        </a>
+
+        <a href="{% url 'bankDeSang:statistiques' %}" class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-300">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                <path d="M3 3v18h18"></path>
+                <path d="m19 9-5 5-4-4-3 3"></path>
+            </svg>
+            <span class="ml-2 text-sm font-medium">Statistiques</span>
+        </a>
+
+        <a href="#" class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-300">
+            <?xml version="1.0" encoding="UTF-8"?><svg width="24px" height="24px" stroke-width="1.5"
+                    viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000">
+                    <path
+                        d="M18.1336 11C18.7155 16.3755 21 18 21 18H3C3 18 6 15.8667 6 8.4C6 6.70261 6.63214 5.07475 7.75736 3.87452C8.88258 2.67428 10.4087 2 12 2C12.3373 2 12.6717 2.0303 13 2.08949"
+                        stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <path
+                        d="M19 8C20.6569 8 22 6.65685 22 5C22 3.34315 20.6569 2 19 2C17.3431 2 16 3.34315 16 5C16 6.65685 17.3431 8 19 8Z"
+                        stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <path
+                        d="M13.73 21C13.5542 21.3031 13.3019 21.5547 12.9982 21.7295C12.6946 21.9044 12.3504 21.9965 12 21.9965C11.6496 21.9965 11.3054 21.9044 11.0018 21.7295C10.6982 21.5547 10.4458 21.3031 10.27 21"
+                        stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+            <span class="ml-2 text-sm font-medium">Notifications</span>
+        </a>
+        <a href="#" class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-300">
+            <?xml version="1.0" encoding="UTF-8"?>
+                <svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none"
+                    xmlns="http://www.w3.org/2000/svg" color="#000000">
+                    <path
+                        d="M15 4V2M15 4V6M15 4H10.5M3 10V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V10H3Z"
+                        stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <path d="M3 10V6C3 4.89543 3.89543 4 5 4H7" stroke="#000000" stroke-width="1.5"
+                        stroke-linecap="round" stroke-linejoin="round"></path>
+                    <path d="M7 2V6" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    </path>
+                    <path d="M21 10V6C21 4.89543 20.1046 4 19 4H18.5" stroke="#000000" stroke-width="1.5"
+                        stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+                <span class="ml-2 text-sm font-medium">Calendrier</span>
+        </a>
+        <a href="{% url '_auth:logout' %}" class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-300">
+                <?xml version="1.0" encoding="UTF-8"?><svg width="24px" height="24px" stroke-width="1.5"
+                    viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000">
+                    <path d="M12 12H19M19 12L16 15M19 12L16 9" stroke="#000000" stroke-width="1.5"
+                        stroke-linecap="round" stroke-linejoin="round"></path>
+                    <path
+                        d="M19 6V5C19 3.89543 18.1046 3 17 3H7C5.89543 3 5 3.89543 5 5V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V18"
+                        stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+                <span class="ml-2 text-sm font-medium">Déconnexion</span>
+        </a>
+    </div>
+</div> -->
+
+<!-- <div class="grid min-h-screen w-full overflow-hidden lg:grid-cols-[280px_1fr]">
+    <div class="hidden border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">
+      <div class="flex flex-col gap-2">
+        <div class="flex h-[60px] items-center px-6">
+          <a class="flex items-center gap-2 font-semibold" href="#">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-6 w-6"
+            >
+              <path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z"></path>
+              <path d="m3 9 2.45-4.9A2 2 0 0 1 7.24 3h9.52a2 2 0 0 1 1.8 1.1L21 9"></path>
+              <path d="M12 3v6"></path>
+            </svg>
+            <span class="">E-Blood Bank</span>
+          </a>
+        </div>
+        <div class="flex-1">
+          <nav class="grid items-start px-4 text-sm font-medium">
+            <a
+              href="#"
+              class="flex items-center gap-3 rounded-lg bg-gray-100 px-3 py-2 text-gray-900 transition-all hover:text-gray-900 dark:bg-gray-800 dark:text-gray-50 dark:hover:text-gray-50"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-4 w-4"
+              >
+                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+              </svg>
+              Dashboard
+            </a>
+            <a
+              class="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+              href="#"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-4 w-4"
+              >
+                <path d="m7.5 4.27 9 5.15"></path>
+                <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path>
+                <path d="m3.3 7 8.7 5 8.7-5"></path>
+                <path d="M12 22V12"></path>
+              </svg>
+              Blood Requests
+            </a>
+            <a
+              class="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+              href="#"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-4 w-4"
+              >
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+              Donors
+            </a>
+            <a
+              href="#"
+              class="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-4 w-4"
+              >
+                <path d="M3 3v18h18"></path>
+                <path d="m19 9-5 5-4-4-3 3"></path>
+              </svg>
+              Analytics
+            </a>
+          </nav>
+        </div>
+      </div>
+    </div>
+</div> -->
+
+<!-- Main Content Area -->
+{% block content %}
+<main class="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6 bg-white" style="font-size: 1.125rem;">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="rounded-lg border bg-card text-card-foreground shadow-lg" data-v0-t="card">
+            <div class="flex flex-col space-y-1.5 p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="font-semibold text-lg">Blood Requests</h3>
+                        <p class="text-gray-500 dark:text-gray-400">Total requests received</p>
+                    </div>
+                    <div
+                        class="bg-gray-100 rounded-md flex items-center justify-center aspect-square w-10 md:w-12 dark:bg-gray-800 p-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" class="w-5 h-5">
+                            <path d="m7.5 4.27 9 5.15"></path>
+                            <path
+                                d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z">
+                            </path>
+                            <path d="m3.3 7 8.7 5 8.7-5"></path>
+                            <path d="M12 22V12"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="p-6">
+                <div class="text-4xl font-bold">{{ nombre_demandes }}</div>
+            </div>
+        </div>
+        <div class="rounded-lg border bg-card text-card-foreground shadow-lg" data-v0-t="card">
+            <div class="flex flex-col space-y-1.5 p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="font-semibold text-lg">Donors</h3>
+                        <p class="text-gray-500 dark:text-gray-400">Total donors</p>
+                    </div>
+                    <div
+                        class="bg-gray-100 rounded-md flex items-center justify-center aspect-square w-10 md:w-12 dark:bg-gray-800 p-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" class="w-5 h-5">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="p-6">
+                <div class="text-4xl font-bold">1,250</div>
+            </div>
+        </div>
+        <div class="rounded-lg border bg-card text-card-foreground shadow-lg" data-v0-t="card">
+            <div class="flex flex-col space-y-1.5 p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="font-semibold text-lg">Blood Bags</h3>
+                        <p class="text-gray-500 dark:text-gray-400">Blood bags in stock</p>
+                    </div>
+                    <div
+                        class="bg-gray-100 rounded-md flex items-center justify-center aspect-square w-10 md:w-12 dark:bg-gray-800 p-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" class="w-5 h-5">
+                            <path
+                                d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z">
+                            </path>
+                            <path
+                                d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="p-6">
+                <div class="text-4xl font-bold">{{ nbr_poche|default:"0" }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="rounded-lg border bg-card text-card-foreground shadow-lg" data-v0-t="card">
+            <div class="flex flex-col space-y-1.5 p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="font-semibold text-lg">Don monétaires</h3>
+                        <p class="text-gray-500 dark:text-gray-400">Total Monétaire Donné</p>
+                    </div>
+                    <div
+                        class="bg-gray-100 rounded-md flex items-center justify-center aspect-square w-10 md:w-12 dark:bg-gray-800 p-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" class="w-5 h-5">
+                            <path
+                                d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z">
+                            </path>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="p-6">
+                <div class="text-4xl font-bold">1,456</div>
+            </div>
+        </div>
+        <div class="rounded-lg border bg-card text-card-foreground shadow-lg" data-v0-t="card">
+            <div class="flex flex-col space-y-1.5 p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="font-semibold text-lg">Blood Wastage</h3>
+                        <p class="text-gray-500 dark:text-gray-400">Total blood wasted</p>
+                    </div>
+                    <div
+                        class="bg-gray-100 rounded-md flex items-center justify-center aspect-square w-10 md:w-12 dark:bg-gray-800 p-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" class="w-5 h-5">
+                            <path
+                                d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z">
+                            </path>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="p-6">
+                <div class="text-4xl font-bold">12</div>
+            </div>
+        </div>
+    </div>
+
+    <section class="mx-auto grid max-w-4xl items-start gap-4 lg:gap-8 bg-white">
+        <div class="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="h-6 w-6">
+                <path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z"></path>
+                <path d="m3 9 2.45-4.9A2 2 0 0 1 7.24 3h9.52a2 2 0 0 1 1.8 1.1L21 9"></path>
+                <path d="M12 3v6"></path>
+            </svg>
+            <h2 class="font-semibold text-2xl">Blood Donation Statistics</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
+                <div class="flex flex-col space-y-1.5 p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="font-semibold text-lg">Blood Group Distribution</h3>
+                            <p class="text-gray-500 dark:text-gray-400">Percentage of blood groups among donors</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="aspect-square">
+                        <div style="width: 100%; height: 100%;">
+                            <div style="position: relative;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="346.5" height="346.5"
+                                    role="application">
+                                    <rect width="346.5" height="346.5" fill="transparent"></rect>
+                                    <g transform="translate(10,10)">
+                                        <g transform="translate(163.25,163.25)">
+                                            <path d="M-163.237,-2.085A163.25,163.25,0,0,1,-93.921,-133.527L0,0Z"
+                                                opacity="1" fill="#2563eb" stroke="#ffffff" stroke-width="1"></path>
+                                            <path d="M0,-163.25A163.25,163.25,0,0,1,158.796,-37.873L0,0Z"
+                                                opacity="1" fill="#2563eb" stroke="#ffffff" stroke-width="1"></path>
+                                            <path d="M82.226,141.03A163.25,163.25,0,0,1,-88.153,137.403L0,0Z"
+                                                opacity="1" fill="#2563eb" stroke="#ffffff" stroke-width="1"></path>
+                                            <path d="M158.796,-37.873A163.25,163.25,0,0,1,82.226,141.03L0,0Z"
+                                                opacity="1" fill="#2563eb" stroke="#ffffff" stroke-width="1"></path>
+                                            <path d="M-88.153,137.403A163.25,163.25,0,0,1,-163.237,-2.085L0,0Z"
+                                                opacity="1" fill="#2563eb" stroke="#ffffff" stroke-width="1"></path>
+                                            <path d="M-93.921,-133.527A163.25,163.25,0,0,1,0,-163.25L0,0Z"
+                                                opacity="1" fill="#2563eb" stroke="#ffffff" stroke-width="1"></path>
+                                        </g>
+                                        <g transform="translate(163.25,163.25)">
+                                            <g transform="translate(-93.8608849587215,-49.49744368162509)"
+                                                opacity="1" style="pointer-events: none;">
+                                                <text text-anchor="middle" dominant-baseline="central"
+                                                    style="font-family: sans-serif; font-size: 18px; fill: rgb(255, 255, 255); outline-width: 0px; outline-color: transparent;">
+                                                    111
+                                                </text>
+                                            </g>
+                                            <g transform="translate(65.7556672264388,-83.28298075751037)"
+                                                opacity="1" style="pointer-events: none;">
+                                                <text text-anchor="middle" dominant-baseline="central"
+                                                    style="font-family: sans-serif; font-size: 18px; fill: rgb(255, 255, 255); outline-width: 0px; outline-color: transparent;">
+                                                    157
+                                                </text>
+                                            </g>
+                                            <g transform="translate(-2.258381304224385,106.08846483070027)"
+                                                opacity="1" style="pointer-events: none;">
+                                                <text text-anchor="middle" dominant-baseline="central"
+                                                    style="font-family: sans-serif; font-size: 18px; fill: rgb(255, 255, 255); outline-width: 0px; outline-color: transparent;">
+                                                    129
+                                                </text>
+                                            </g>
+                                            <g transform="translate(97.55308967788777,41.752333474286026)"
+                                                opacity="1" style="pointer-events: none;">
+                                                <text text-anchor="middle" dominant-baseline="central"
+                                                    style="font-family: sans-serif; font-size: 18px; fill: rgb(255, 255, 255); outline-width: 0px; outline-color: transparent;">
+                                                    150
+                                                </text>
+                                            </g>
+                                            <g transform="translate(-93.4360769291069,50.29475304987604)"
+                                                opacity="1" style="pointer-events: none;">
+                                                <text text-anchor="middle" dominant-baseline="central"
+                                                    style="font-family: sans-serif; font-size: 18px; fill: rgb(255, 255, 255); outline-width: 0px; outline-color: transparent;">
+                                                    119
+                                                </text>
+                                            </g>
+                                            <g transform="translate(-32.01632701843234,-101.16727465192882)"
+                                                opacity="1" style="pointer-events: none;">
+                                                <text text-anchor="middle" dominant-baseline="central"
+                                                    style="font-family: sans-serif; font-size: 18px; fill: rgb(255, 255, 255); outline-width: 0px; outline-color: transparent;">
+                                                    72
+                                                </text>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
+                <div class="flex flex-col space-y-1.5 p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="font-semibold text-lg">Donation Trends</h3>
+                            <p class="text-gray-500 dark:text-gray-400">Blood donations over time</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="aspect-[4/3]">
+                        <div style="width: 100%; height: 100%;">
+                            <div style="position: relative;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="346.5" height="259.875"
+                                    role="application">
+                                    <rect width="346.5" height="259.875" fill="transparent"></rect>
+                                    <g transform="translate(40,10)">
+                                        <g>
+                                            <line opacity="1" x1="0" x2="0" y1="0" y2="209.875" stroke="#f3f4f6"
+                                                stroke-width="1"></line>
+                                            <line opacity="1" x1="59.3" x2="59.3" y1="0" y2="209.875"
+                                                stroke="#f3f4f6" stroke-width="1"></line>
+                                            <line opacity="1" x1="118.6" x2="118.6" y1="0" y2="209.875"
+                                                stroke="#f3f4f6" stroke-width="1"></line>
+                                            <line opacity="1" x1="177.89999999999998" x2="177.89999999999998" y1="0"
+                                                y2="209.875" stroke="#f3f4f6" stroke-width="1"></line>
+                                            <line opacity="1" x1="237.2" x2="237.2" y1="0" y2="209.875"
+                                                stroke="#f3f4f6" stroke-width="1"></line>
+                                            <line opacity="1" x1="296.5" x2="296.5" y1="0" y2="209.875"
+                                                stroke="#f3f4f6" stroke-width="1"></line>
+                                        </g>
+                                        <g>
+                                            <line opacity="1" x1="0" x2="296.5" y1="210" y2="210" stroke="#f3f4f6"
+                                                stroke-width="1"></line>
+                                            <line opacity="1" x1="0" x2="296.5" y1="158" y2="158" stroke="#f3f4f6"
+                                                stroke-width="1"></line>
+                                            <line opacity="1" x1="0" x2="296.5" y1="107" y2="107" stroke="#f3f4f6"
+                                                stroke-width="1"></line>
+                                            <line opacity="1" x1="0" x2="296.5" y1="56" y2="56" stroke="#f3f4f6"
+                                                stroke-width="1"></line>
+                                            <line opacity="1" x1="0" x2="296.5" y1="4" y2="4" stroke="#f3f4f6"
+                                                stroke-width="1"></line>
+                                        </g>
+                                        <g transform="translate(0,209.875)">
+                                            <g transform="translate(0,0)" style="opacity: 1;">
+                                                <line x1="0" x2="0" y1="0" y2="0"
+                                                    style="stroke: rgb(119, 119, 119); stroke-width: 1;"></line>
+                                                <text dominant-baseline="text-before-edge" text-anchor="middle"
+                                                    transform="translate(0,16) rotate(0)"
+                                                    style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51);">
+                                                    Jan
+                                                </text>
+                                            </g>
+                                            <g transform="translate(59.3,0)" style="opacity: 1;">
+                                                <line x1="0" x2="0" y1="0" y2="0"
+                                                    style="stroke: rgb(119, 119, 119); stroke-width: 1;"></line>
+                                                <text dominant-baseline="text-before-edge" text-anchor="middle"
+                                                    transform="translate(0,16) rotate(0)"
+                                                    style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51);">
+                                                    Feb
+                                                </text>
+                                            </g>
+                                            <g transform="translate(118.6,0)" style="opacity: 1;">
+                                                <line x1="0" x2="0" y1="0" y2="0"
+                                                    style="stroke: rgb(119, 119, 119); stroke-width: 1;"></line>
+                                                <text dominant-baseline="text-before-edge" text-anchor="middle"
+                                                    transform="translate(0,16) rotate(0)"
+                                                    style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51);">
+                                                    Mar
+                                                </text>
+                                            </g>
+                                            <g transform="translate(177.89999999999998,0)" style="opacity: 1;">
+                                                <line x1="0" x2="0" y1="0" y2="0"
+                                                    style="stroke: rgb(119, 119, 119); stroke-width: 1;"></line>
+                                                <text dominant-baseline="text-before-edge" text-anchor="middle"
+                                                    transform="translate(0,16) rotate(0)"
+                                                    style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51);">
+                                                    Apr
+                                                </text>
+                                            </g>
+                                            <g transform="translate(237.2,0)" style="opacity: 1;">
+                                                <line x1="0" x2="0" y1="0" y2="0"
+                                                    style="stroke: rgb(119, 119, 119); stroke-width: 1;"></line>
+                                                <text dominant-baseline="text-before-edge" text-anchor="middle"
+                                                    transform="translate(0,16) rotate(0)"
+                                                    style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51);">
+                                                    May
+                                                </text>
+                                            </g>
+                                            <g transform="translate(296.5,0)" style="opacity: 1;">
+                                                <line x1="0" x2="0" y1="0" y2="0"
+                                                    style="stroke: rgb(119, 119, 119); stroke-width: 1;"></line>
+                                                <text dominant-baseline="text-before-edge" text-anchor="middle"
+                                                    transform="translate(0,16) rotate(0)"
+                                                    style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51);">
+                                                    Jun
+                                                </text>
+                                            </g>
+                                            <line x1="0" x2="296.5" y1="0" y2="0"
+                                                style="stroke: transparent; stroke-width: 1;"></line>
+                                        </g>
+                                        <g transform="translate(0,0)">
+                                            <g transform="translate(0,210)" style="opacity: 1;">
+                                                <line x1="0" x2="0" y1="0" y2="0"
+                                                    style="stroke: rgb(119, 119, 119); stroke-width: 1;"></line>
+                                                <text dominant-baseline="central" text-anchor="end"
+                                                    transform="translate(-16,0) rotate(0)"
+                                                    style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51);">
+                                                    0
+                                                </text>
+                                            </g>
+                                            <g transform="translate(0,158)" style="opacity: 1;">
+                                                <line x1="0" x2="0" y1="0" y2="0"
+                                                    style="stroke: rgb(119, 119, 119); stroke-width: 1;"></line>
+                                                <text dominant-baseline="central" text-anchor="end"
+                                                    transform="translate(-16,0) rotate(0)"
+                                                    style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51);">
+                                                    50
+                                                </text>
+                                            </g>
+                                            <g transform="translate(0,107)" style="opacity: 1;">
+                                                <line x1="0" x2="0" y1="0" y2="0"
+                                                    style="stroke: rgb(119, 119, 119); stroke-width: 1;"></line>
+                                                <text dominant-baseline="central" text-anchor="end"
+                                                    transform="translate(-16,0) rotate(0)"
+                                                    style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51);">
+                                                    100
+                                                </text>
+                                            </g>
+                                            <g transform="translate(0,56)" style="opacity: 1;">
+                                                <line x1="0" x2="0" y1="0" y2="0"
+                                                    style="stroke: rgb(119, 119, 119); stroke-width: 1;"></line>
+                                                <text dominant-baseline="central" text-anchor="end"
+                                                    transform="translate(-16,0) rotate(0)"
+                                                    style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51);">
+                                                    150
+                                                </text>
+                                            </g>
+                                            <g transform="translate(0,4)" style="opacity: 1;">
+                                                <line x1="0" x2="0" y1="0" y2="0"
+                                                    style="stroke: rgb(119, 119, 119); stroke-width: 1;"></line>
+                                                <text dominant-baseline="central" text-anchor="end"
+                                                    transform="translate(-16,0) rotate(0)"
+                                                    style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51);">
+                                                    200
+                                                </text>
+                                            </g>
+                                            <line x1="0" x2="0" y1="0" y2="209.875"
+                                                style="stroke: transparent; stroke-width: 1;"></line>
+                                        </g>
+                                        <path d="M0,148L59.3,160L118.6,28L177.9,130L237.2,111L296.5,0" fill="none"
+                                            stroke-width="2" stroke="#e11d48"></path>
+                                        <path d="M0,166L59.3,69L118.6,147L177.9,61L237.2,183L296.5,51" fill="none"
+                                            stroke-width="2" stroke="#2563eb"></path>
+                                        <g>
+                                            <g transform="translate(296.5, 0)" style="pointer-events: none;">
+                                                <circle r="3" fill="#e11d48" stroke="transparent" stroke-width="0"
+                                                    style="pointer-events: none;"></circle>
+                                            </g>
+                                            <g transform="translate(237.2, 111)" style="pointer-events: none;">
+                                                <circle r="3" fill="#e11d48" stroke="transparent" stroke-width="0"
+                                                    style="pointer-events: none;"></circle>
+                                            </g>
+                                            <g transform="translate(177.89999999999998, 130)"
+                                                style="pointer-events: none;">
+                                                <circle r="3" fill="#e11d48" stroke="transparent" stroke-width="0"
+                                                    style="pointer-events: none;"></circle>
+                                            </g>
+                                            <g transform="translate(118.6, 28)" style="pointer-events: none;">
+                                                <circle r="3" fill="#e11d48" stroke="transparent" stroke-width="0"
+                                                    style="pointer-events: none;"></circle>
+                                            </g>
+                                            <g transform="translate(59.3, 160)" style="pointer-events: none;">
+                                                <circle r="3" fill="#e11d48" stroke="transparent" stroke-width="0"
+                                                    style="pointer-events: none;"></circle>
+                                            </g>
+                                            <g transform="translate(0, 148)" style="pointer-events: none;">
+                                                <circle r="3" fill="#e11d48" stroke="transparent" stroke-width="0"
+                                                    style="pointer-events: none;"></circle>
+                                            </g>
+                                            <g transform="translate(296.5, 51)" style="pointer-events: none;">
+                                                <circle r="3" fill="#2563eb" stroke="transparent" stroke-width="0"
+                                                    style="pointer-events: none;"></circle>
+                                            </g>
+                                            <g transform="translate(237.2, 183)" style="pointer-events: none;">
+                                                <circle r="3" fill="#2563eb" stroke="transparent" stroke-width="0"
+                                                    style="pointer-events: none;"></circle>
+                                            </g>
+                                            <g transform="translate(177.89999999999998, 61)"
+                                                style="pointer-events: none;">
+                                                <circle r="3" fill="#2563eb" stroke="transparent" stroke-width="0"
+                                                    style="pointer-events: none;"></circle>
+                                            </g>
+                                            <g transform="translate(118.6, 147)" style="pointer-events: none;">
+                                                <circle r="3" fill="#2563eb" stroke="transparent" stroke-width="0"
+                                                    style="pointer-events: none;"></circle>
+                                            </g>
+                                            <g transform="translate(59.3, 69)" style="pointer-events: none;">
+                                                <circle r="3" fill="#2563eb" stroke="transparent" stroke-width="0"
+                                                    style="pointer-events: none;"></circle>
+                                            </g>
+                                            <g transform="translate(0, 166)" style="pointer-events: none;">
+                                                <circle r="3" fill="#2563eb" stroke="transparent" stroke-width="0"
+                                                    style="pointer-events: none;"></circle>
+                                            </g>
+                                        </g>
+                                        <g transform="translate(0,0)">
+                                            <rect data-ref="mesh-interceptor" width="296.5" height="209.875"
+                                                fill="red" opacity="0" style="cursor: auto;"></rect>
+                                        </g>
+                                    </g>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
+                <div class="flex flex-col space-y-1.5 p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="font-semibold text-lg">Urgent Requests</h3>
+                            <p class="text-gray-500 dark:text-gray-400">Blood requests with high urgency</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="relative w-full overflow-auto">
+                        <table class="w-full caption-bottom text-sm">
+                            <thead class="[&amp;_tr]:border-b">
+                                <tr
+                                    class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                    <th
+                                        class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
+                                        Patient
+                                    </th>
+                                    <th
+                                        class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
+                                        Blood Type
+                                    </th>
+                                    <th
+                                        class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
+                                        Bags Needed
+                                    </th>
+                                    <th
+                                        class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
+                                        Urgency
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="[&amp;_tr:last-child]:border-0">
+                                <tr
+                                    class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                    <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">John Doe</td>
+                                    <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">O-</td>
+                                    <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">5</td>
+                                    <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-red-500">High
+                                    </td>
+                                </tr>
+                                <tr
+                                    class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                    <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">Jane Smith</td>
+                                    <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">AB+</td>
+                                    <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">3</td>
+                                    <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-orange-500">
+                                        Medium</td>
+                                </tr>
+                                <tr
+                                    class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                    <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">Michael Johnson
+                                    </td>
+                                    <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">A+</td>
+                                    <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">2</td>
+                                    <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-yellow-500">
+                                        Low
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
+                <div class="flex flex-col space-y-1.5 p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="font-semibold text-lg">Donation Locations</h3>
+                            <p class="text-gray-500 dark:text-gray-400">Blood donation centers by region</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6"></div>
+            </div>
+        </div>
+</main>
+{% endblock %}
+</section>
+
+
+
+<script>
+    // Add any JavaScript here if needed
+    // Pour masquer complètement la barre de défilement
+    document.body.style.overflow = 'hidden';
+
+    // Pour affiner la barre de défilement
+    document.body.style.overflow = 'auto';
+    document.body.style.scrollbarWidth = 'thin'; // Pour Firefox
+
+</script>
+{% endblock %}
+
+
+<!-- <!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accueil - Banque de Sang</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.header {
+    background-color: #ff4757;
+    color: #fff;
+    padding: 1rem 0;
+}
+
+.header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.header .nav ul {
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+}
+
+.header .nav ul li {
+    display: inline;
+}
+
+.header .nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.main-content {
+    padding: 2rem 0;
+}
+
+.hero {
+    background: url('https://images.unsplash.com/photo-1505751172876-fa1923c5c528?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
+    color: #fff;
+    text-align: center;
+    padding: 4rem 0;
+}
+
+.hero .container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.hero h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+.hero .btn {
+    background-color: #ff4757;
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.features {
+    background-color: #fff;
+    padding: 2rem 0;
+}
+
+.features .container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.features .feature {
+    background-color: #f4f4f4;
+    padding: 1.5rem;
+    border-radius: 5px;
+    text-align: center;
+    margin: 1rem;
+    flex: 1 1 200px;
+}
+
+.features .feature i {
+    font-size: 2rem;
+    color: #ff4757;
+    margin-bottom: 1rem;
+}
+
+.features .feature h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.features .feature p {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+.features .feature .btn {
+    background-color: #ff4757;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1rem 0;
+}
+
+.footer .container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">Banque de Sang</h1>
+            <nav class="nav">
+                <ul>
+                    <li><a href="#">Accueil</a></li>
+                    <li><a href="{% url 'bankDeSang:gestionStock' %}">Gestion des Stocks</a></li>
+                    <li><a href="{% url 'bankDeSang:listeDemandesDeSang' %}">Demandes de Sang</a></li>
+                    <li><a href="{% url 'bankDeSang:listeDonneurs' %}">Liste des Donneurs</a></li>
+                    <li><a href="{% url 'bankDeSang:donneurMonetaire' %}">Donneur Monétaire</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <section class="hero">
+            <div class="container">
+                <h2>Bienvenue à la Banque de Sang</h2>
+                <p>Gérez efficacement les stocks de sang et les demandes de sang.</p>
+                <a href="{% url 'bankDeSang:listeDemandesDeSang' %}" class="btn">Voir les Demandes de Sang</a>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="container">
+                <div class="feature">
+                    <i class="fas fa-tint"></i>
+                    <h3>Gestion des Stocks</h3>
+                    <p>Suivez et gérez les stocks de sang disponibles.</p>
+                    <a href="{% url 'bankDeSang:gestionStock' %}" class="btn">Gérer les Stocks</a>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-hand-holding-heart"></i>
+                    <h3>Demandes de Sang</h3>
+                    <p>Consultez et traitez les demandes de sang.</p>
+                    <a href="{% url 'bankDeSang:listeDemandesDeSang' %}" class="btn">Voir les Demandes</a>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-users"></i>
+                    <h3>Liste des Donneurs</h3>
+                    <p>Accédez à la liste des donneurs de sang.</p>
+                    <a href="{% url 'bankDeSang:listeDonneurs' %}" class="btn">Voir les Donneurs</a>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-donate"></i>
+                    <h3>Donneur Monétaire</h3>
+                    <p>Gérez les donneurs monétaires et leurs contributions.</p>
+                    <a href="{% url 'bankDeSang:donneurMonetaire' %}" class="btn">Voir les Donneurs Monétaires</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2023 Banque de Sang. Tous droits réservés.</p>
+        </div>
+    </footer>
+</body>
+</html> -->

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirmation de Compte - E-Blood Bank</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100 font-sans">
+  <div class="max-w-2xl mx-auto mt-10 bg-white shadow-lg rounded-lg overflow-hidden">
+    <div class="bg-blue-600 p-6 text-white text-center">
+      <h1 class="text-2xl font-bold">Bienvenue sur E-Blood Bank</h1>
+    </div>
+    <div class="p-6">
+      <p class="text-gray-700 mb-4">Salut <strong>{{ user.first_name }}</strong>,</p>
+      {% if user.is_staff %}
+      <p class="text-gray-700 mb-4">
+        Merci de vous être inscrit sur E-Blood Bank. Vous êtes désormais un administrateur de notre plateforme et vous
+        avez accès à des fonctionnalités avancées pour gérer les dons de sang et les besoins en sang.
+      </p>
+      {% else %}
+
+      <p class="text-gray-700 mb-4">
+        Merci de vous être inscrit sur E-Blood Bank. Nous sommes ravis de vous compter parmi notre communauté dévouée à
+        sauver des vies par le biais du don de sang.
+      </p>
+      {% endif %}
+      <p class="text-gray-700 mb-4">
+        Pour finaliser votre inscription et activer votre compte, veuillez cliquer sur le bouton ci-dessous :
+      </p>
+      <div class="text-center mb-6">
+        <a href="http://{{ domain }}{% url '_auth:activate' uidb64=uid token=token %}"
+          class="bg-blue-600 text-white py-2 px-4 rounded-full hover:bg-blue-700 transition duration-300">Activer mon
+          compte</a>
+      </div>
+      <p class="text-gray-700 mb-4">
+        Si vous n'avez pas créé de compte, veuillez ignorer cet e-mail. Aucune action supplémentaire ne sera requise de
+        votre part.
+      </p>
+      <p class="text-gray-700 mb-4">
+        En tant que membre de E-Blood Bank, vous pourrez :
+      </p>
+      <ul class="list-disc list-inside text-gray-700 mb-4">
+        <li>Accéder à des informations vitales sur les besoins en dons de sang dans votre région.</li>
+        <li>Recevoir des notifications personnalisées lorsque des dons de sang sont nécessaires.</li>
+        <li>Suivre l'impact de vos dons de sang et voir combien de vies vous avez aidé à sauver.</li>
+        <li>Participer à des événements et campagnes de don de sang organisés par notre communauté.</li>
+      </ul>
+      <p class="text-gray-700 mb-4">
+        Nous vous remercions pour votre engagement et votre générosité. Ensemble, nous pouvons faire une différence
+        significative et sauver des vies.
+      </p>
+      <p class="text-gray-700">
+        Cordialement,<br>
+        L'équipe E-Blood Bank
+      </p>
+    </div>
+    <div class="bg-gray-100 p-6 text-center text-gray-600 text-sm">
+      <p>© 2024 E-Blood Bank. Tous droits réservés.</p>
+      <p>Disponible également sur mobile :</p>
+      <div class="flex justify-center mt-4">
+        <p>Disponible également sur mobile :</p>
+        <a href="#"
+          rel="noopener noreferrer" target="_blank">
+          <img alt="Download on the App Store"
+            src="https://ci3.googleusercontent.com/meips/ADKq_Nb3K_tyUQe5MJXq5TBbkdaPEqtXrdx4s9uorYLmo9huzT4rm90pNvfQ1b9xHBvrhCLEUUUTw3M9s4lohvyz5NVd9E8DT7ISkQbQc4Di_FDKjweYu5I=s0-d-e1-ft#https://static.licdn.com/aero-v1/sc/h/76yzkd0h5kiv27lrd4yaenylk"
+            width="120" height="40">
+        </a>
+        <a href="#"
+          rel="noopener noreferrer" target="_blank">
+          <img alt="Get it on Google Play"
+            src="https://ci3.googleusercontent.com/meips/ADKq_Na4vGlgWbb5d_c0BKM_aoF8r7kcJPwyVTRxmwOvFvH-2PTgZmoPgRHgNxJfriUyoB3gL3BwEmtJqwvRPcuhYUFAgQ8U-unbpAYBdxVRmPzDb1gnZmE=s0-d-e1-ft#https://static.licdn.com/aero-v1/sc/h/142qudwblp58zwmc9vkqfplug"
+            width="134" height="40">
+        </a>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

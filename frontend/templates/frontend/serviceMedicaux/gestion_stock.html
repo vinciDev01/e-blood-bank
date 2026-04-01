@@ -1,0 +1,141 @@
+{% extends 'frontend/serviceMedicaux/base.html' %}
+
+{% load static %}
+
+{% block title %}Gestion des stocks{% endblock %}
+
+{% block content %}
+<div class="rounded-lg border bg-card bg-white text-card-foreground shadow-sm" data-v0-t="card" style="font-size: 1.140rem; font-family: 'Poppins', sans-serif;">
+    <div class="flex flex-col space-y-1.5 p-6">
+        <div class="flex justify-between items-center">
+            <div>
+                <h3 class="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">Statut du Stock</h3>
+                <p class="text-sm text-muted-foreground">Statut actuel de votre inventaire</p>
+            </div>
+            <button onclick="document.getElementById('ajouterStockModal').style.display='block'"
+                class="rounded-lg border bg-black text-white font-semibold px-6 py-2 shadow-sm">Ajouter une poche</button>
+        </div>
+    </div>
+    <div class="p-6">
+        <div class="grid gap-4 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4">
+            {% for stock in stocks %}
+            <a href="{% url 'serviceMedicaux:detailStock' stock.id %}">
+                <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
+                    <div class="p-6 flex items-center gap-4">
+                        <img src="{% static 'img/blood_bag.svg' %}" alt="Blood bag" class="w-12 h-12" />
+                        <div class="grid gap-1.5">
+                            <div class="font-semibold">{{ stock.groupe_sanguin }}</div>
+                            <div>{{ stock.nombre_de_poches }} poches</div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div id="ajouterStockModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span onclick="document.getElementById('ajouterStockModal').style.display='none'" class="close">&times;</span>
+        <form id="ajouterStockForm" method="POST" action="{% url 'serviceMedicaux:gestionStock' %}">
+            {% csrf_token %}
+            <div class="rounded-lg border bg-card bg-white text-card-foreground shadow-sm" data-v0-t="card"
+                style="font-size: 1.140rem; font-family: 'Poppins', sans-serif;">
+                <div class="flex flex-col space-y-1.5 p-6">
+                    <h3 class="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">Ajouter une poche</h3>
+                    <p class="text-sm text-muted-foreground">Ajouter une nouvelle poche à votre inventaire</p>
+                </div>
+                <div class="p-6">
+                    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
+                        <div class="flex flex-col space-y-1.5">
+                            <label for="donneur" class="text-sm font-semibold">Donneur (facultatif)</label>
+                            <input type="text" name="donneur" id="donneur" placeholder="Numéro du donneur" 
+                                class="rounded-lg border bg-white text-black font-semibold px-4 py-2 shadow-sm">
+                        </div>
+                        <div class="flex flex-col space-y-1.5">
+                            <label for="matricule" class="text-sm font-semibold">Matricule</label>
+                            <input type="text" name="matricule" id="matricule" placeholder="Matricule" required
+                                class="rounded-lg border bg-white text-black font-semibold px-4 py-2 shadow-sm">
+                        </div>
+                        <div class="flex flex-col space-y-1.5">
+                            <label for="date_de_prelevement" class="text-sm font-semibold">Date de prélèvement</label>
+                            <input type="date" name="date_de_prelevement" id="date_de_prelevement" required
+                                class="rounded-lg border bg-white text-black font-semibold px-4 py-2 shadow-sm">
+                        </div>
+                        <div class="flex flex-col space-y-1.5">
+                            <label for="type_produit" class="text-sm font-semibold">Type de produit</label>
+                            <select name="type_produit" id="type_produit"
+                                class="rounded-lg border bg-white text-black font-semibold px-4 py-2 shadow-sm">
+                                <option value="">Choisir le type de produit</option>
+                                <option value="Sang total">Sang total</option>
+                                <option value="Concentré de globules rouges">Concentré de globules rouges</option>
+                                <option value="Plasma">Plasma</option>
+                                <option value="Plaquettes">Plaquettes</option>
+                            </select>
+                        </div>
+                        <div class="flex flex-col space-y-1.5">
+                            <label for="groupe_sanguin" class="text-sm font-semibold">Groupe Sanguin</label>
+                            <select name="groupe_sanguin" id="groupe_sanguin"
+                                class="rounded-lg border bg-white text-black font-semibold px-4 py-2 shadow-sm">
+                                <option value="">Choisir groupe sanguin</option>
+                                <option value="O+">O+</option>
+                                <option value="A+">A+</option>
+                                <option value="B+">B+</option>
+                                <option value="AB+">AB+</option>
+                                <option value="O-">O-</option>
+                                <option value="A-">A-</option>
+                                <option value="B-">B-</option>
+                                <option value="AB-">AB-</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex justify-end mt-4">
+                        <button type="submit"
+                            class="rounded-lg border bg-black text-white font-semibold px-6 py-2 shadow-sm">Ajouter</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.502);
+    padding-top: 60px;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 3% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+</style>
+
+{% endblock %}

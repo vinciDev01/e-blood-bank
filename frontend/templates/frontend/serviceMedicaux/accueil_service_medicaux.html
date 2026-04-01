@@ -1,0 +1,1174 @@
+{% extends 'frontend/serviceMedicaux/base.html' %}
+{% load static %}
+
+<!-- Main Content Area -->
+    {% block content %}
+    <div class="grid min-h-screen w-full lg:grid-cols-[280px_1fr] bg-white" style="font-size: 1.140rem; font-family: 'Poppins', sans-serif;">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="rounded-lg border bg-card text-card-foreground shadow-lg" data-v0-t="card">
+                <div class="flex flex-col space-y-1.5 p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="font-semibold text-lg">Blood Requests</h3>
+                            <p class="text-gray-500 dark:text-gray-400">Total requests received</p>
+                        </div>
+                        <div
+                            class="bg-gray-100 rounded-md flex items-center justify-center aspect-square w-10 md:w-12 dark:bg-gray-800 p-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="w-5 h-5">
+                                <path d="m7.5 4.27 9 5.15"></path>
+                                <path
+                                    d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z">
+                                </path>
+                                <path d="m3.3 7 8.7 5 8.7-5"></path>
+                                <path d="M12 22V12"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="text-4xl font-bold">{{ nombre_demandes }}</div>
+                </div>
+            </div>
+            <!-- <div class="rounded-lg border bg-card text-card-foreground shadow-lg" data-v0-t="card">
+                <div class="flex flex-col space-y-1.5 p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="font-semibold text-lg">Donors</h3>
+                            <p class="text-gray-500 dark:text-gray-400">Total donors</p>
+                        </div>
+                        <div
+                            class="bg-gray-100 rounded-md flex items-center justify-center aspect-square w-10 md:w-12 dark:bg-gray-800 p-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="w-5 h-5">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="text-4xl font-bold">1,250</div>
+                </div>
+            </div> -->
+            <div class="rounded-lg border bg-card text-card-foreground shadow-lg" data-v0-t="card">
+                <div class="flex flex-col space-y-1.5 p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="font-semibold text-lg">Blood Bags</h3>
+                            <p class="text-gray-500 dark:text-gray-400">Blood bags in stock</p>
+                        </div>
+                        <div
+                            class="bg-gray-100 rounded-md flex items-center justify-center aspect-square w-10 md:w-12 dark:bg-gray-800 p-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="w-5 h-5">
+                                <path
+                                    d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z">
+                                </path>
+                                <path
+                                    d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97">
+                                </path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="text-4xl font-bold">{{ nbr_poche|default:"0" }}</div>
+                </div>
+            </div>
+            <div class="rounded-lg border bg-card text-card-foreground shadow-lg" data-v0-t="card">
+                <div class="flex flex-col space-y-1.5 p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="font-semibold text-lg">Blood Transfusion</h3>
+                            <p class="text-gray-500 dark:text-gray-400">Total transfusions</p>
+                        </div>
+                        <div
+                            class="bg-gray-100 rounded-md flex items-center justify-center aspect-square w-10 md:w-12 dark:bg-gray-800 p-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="w-5 h-5">
+                                <path
+                                    d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z">
+                                </path>
+                                <line x1="3" y1="6" x2="21" y2="6"></line>
+                                <line x1="3" y1="12" x2="21" y2="12"></line>
+                                <line x1="3" y1="18" x2="21" y2="18"></line>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="text-4xl font-bold">1,456</div>
+                </div>
+            </div>
+            <div class="rounded-lg border bg-card text-card-foreground shadow-lg" data-v0-t="card">
+                <div class="flex flex-col space-y-1.5 p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="font-semibold text-lg">Blood Wastage</h3>
+                            <p class="text-gray-500 dark:text-gray-400">Total blood wasted</p>
+                        </div>
+                        <div
+                            class="bg-gray-100 rounded-md flex items-center justify-center aspect-square w-10 md:w-12 dark:bg-gray-800 p-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="w-5 h-5">
+                                <path
+                                    d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z">
+                                </path>
+                                <line x1="3" y1="6" x2="21" y2="6"></line>
+                                <line x1="3" y1="12" x2="21" y2="12"></line>
+                                <line x1="3" y1="18" x2="21" y2="18"></line>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="text-4xl font-bold">12</div>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        </div>
+        <div class="hidden border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">
+            <div class="flex h-full max-h-screen flex-col gap-2">
+                <div class="flex h-[60px] items-center border-b px-6">
+                    <a class="flex items-center gap-2 font-semibold" href="#" rel="ugc">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="h-6 w-6">
+                            <path
+                                d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z">
+                            </path>
+                            <path
+                                d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97">
+                            </path>
+                        </svg>
+                        <span class="">E-BLOOD BANK</span>
+                    </a>
+                    <button
+                        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground ml-auto h-8 w-8">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="h-4 w-4">
+                            <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path>
+                            <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path>
+                        </svg>
+                        <span class="sr-only">Toggle notifications</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+        <div class="flex flex-col">
+            <main class="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
+                <div class="flex items-center gap-4">
+                    <button
+                        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="h-4 w-4">
+                            <path d="m12 19-7-7 7-7"></path>
+                            <path d="M19 12H5"></path>
+                        </svg>
+                        <span class="sr-only">Retour</span>
+                    </button>
+                    <h1 class="font-semibold text-lg md:text-xl">Transfusions</h1>
+                    <div class="ml-auto flex items-center gap-2">
+                        <button
+                            class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 hidden sm:flex">
+                            Aujourd'hui
+                        </button>
+                        <button
+                            class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 hidden md:flex">
+                            Ce mois
+                        </button>
+                        <button
+                            class="inline-flex items-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-[280px] justify-start text-left font-normal"
+                            id="date" type="button" aria-haspopup="dialog" aria-expanded="false"
+                            aria-controls="radix-:rb:" data-state="closed">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="mr-2 h-4 w-4">
+                                <path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path>
+                                <path d="M16 2v4"></path>
+                                <path d="M8 2v4"></path>
+                                <path d="M3 10h5"></path>
+                                <path d="M17.5 17.5 16 16.3V14"></path>
+                                <circle cx="16" cy="16" r="6"></circle>
+                            </svg>
+                            1 juin 2023 - 30 juin 2023
+                        </button>
+                    </div>
+                </div>
+                <div class="grid gap-6">
+                    <div class="rounded-lg border bg-card text-card-foreground shadow-sm flex flex-col"
+                        data-v0-t="card">
+                        <div class="flex flex-col space-y-1.5 p-6">
+                            <p class="text-sm text-muted-foreground">Transfusions</p>
+                            <h3 class="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">1,456</h3>
+                        </div>
+                        <div class="p-6">
+                            <div class="aspect-[4/3]">
+                                <div style="width: 100%; height: 100%;">
+                                    <div style="position: relative;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="477" height="357.75"
+                                            role="application" aria-label="A stacked bar chart" focusable="false">
+                                            <rect width="477" height="357.75" fill="transparent"></rect>
+                                            <g transform="translate(40,0)">
+                                                <g>
+                                                    <line opacity="1" x1="0" x2="437" y1="318" y2="318" stroke="#f3f4f6"
+                                                        stroke-width="1"></line>
+                                                    <line opacity="1" x1="0" x2="437" y1="224" y2="224" stroke="#f3f4f6"
+                                                        stroke-width="1"></line>
+                                                    <line opacity="1" x1="0" x2="437" y1="130" y2="130" stroke="#f3f4f6"
+                                                        stroke-width="1"></line>
+                                                    <line opacity="1" x1="0" x2="437" y1="36" y2="36" stroke="#f3f4f6"
+                                                        stroke-width="1"></line>
+                                                </g>
+                                                <g transform="translate(0,317.75)">
+                                                    <g transform="translate(46,0)" style="opacity: 1;">
+                                                        <line x1="0" x2="0" y1="0" y2="0"
+                                                            style="stroke: rgb(119, 119, 119); stroke-width: 1;"></line>
+                                                        <text dominant-baseline="text-before-edge" text-anchor="middle"
+                                                            transform="translate(0,16) rotate(0)"
+                                                            style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                            Jan
+                                                        </text>
+                                                    </g>
+                                                    <g transform="translate(115,0)" style="opacity: 1;">
+                                                        <line x1="0" x2="0" y1="0" y2="0"
+                                                            style="stroke: rgb(119, 119, 119); stroke-width: 1;"></line>
+                                                        <text dominant-baseline="text-before-edge" text-anchor="middle"
+                                                            transform="translate(0,16) rotate(0)"
+                                                            style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                            Feb
+                                                        </text>
+                                                    </g>
+                                                    <g transform="translate(184,0)" style="opacity: 1;">
+                                                        <line x1="0" x2="0" y1="0" y2="0"
+                                                            style="stroke: rgb(119, 119, 119); stroke-width: 1;"></line>
+                                                        <text dominant-baseline="text-before-edge" text-anchor="middle"
+                                                            transform="translate(0,16) rotate(0)"
+                                                            style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                            Mar
+                                                        </text>
+                                                    </g>
+                                                    <g transform="translate(253,0)" style="opacity: 1;">
+                                                        <line x1="0" x2="0" y1="0" y2="0"
+                                                            style="stroke: rgb(119, 119, 119); stroke-width: 1;"></line>
+                                                        <text dominant-baseline="text-before-edge" text-anchor="middle"
+                                                            transform="translate(0,16) rotate(0)"
+                                                            style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                            Apr
+                                                        </text>
+                                                    </g>
+                                                    <g transform="translate(322,0)" style="opacity: 1;">
+                                                        <line x1="0" x2="0" y1="0" y2="0"
+                                                            style="stroke: rgb(119, 119, 119); stroke-width: 1;"></line>
+                                                        <text dominant-baseline="text-before-edge" text-anchor="middle"
+                                                            transform="translate(0,16) rotate(0)"
+                                                            style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                            May
+                                                        </text>
+                                                    </g>
+                                                    <g transform="translate(391,0)" style="opacity: 1;">
+                                                        <line x1="0" x2="0" y1="0" y2="0"
+                                                            style="stroke: rgb(119, 119, 119); stroke-width: 1;"></line>
+                                                        <text dominant-baseline="text-before-edge" text-anchor="middle"
+                                                            transform="translate(0,16) rotate(0)"
+                                                            style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                            Jun
+                                                        </text>
+                                                    </g>
+                                                    <line x1="0" x2="437" y1="0" y2="0"
+                                                        style="stroke: transparent; stroke-width: 1;"></line>
+                                                </g>
+                                                <g transform="translate(0,0)">
+                                                    <g transform="translate(0,318)" style="opacity: 1;">
+                                                        <line x1="0" x2="0" y1="0" y2="0"
+                                                            style="stroke: rgb(119, 119, 119); stroke-width: 1;"></line>
+                                                        <text dominant-baseline="central" text-anchor="end"
+                                                            transform="translate(-16,0) rotate(0)"
+                                                            style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                            0
+                                                        </text>
+                                                    </g>
+                                                    <g transform="translate(0,224)" style="opacity: 1;">
+                                                        <line x1="0" x2="0" y1="0" y2="0"
+                                                            style="stroke: rgb(119, 119, 119); stroke-width: 1;"></line>
+                                                        <text dominant-baseline="central" text-anchor="end"
+                                                            transform="translate(-16,0) rotate(0)"
+                                                            style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                            100
+                                                        </text>
+                                                    </g>
+                                                    <g transform="translate(0,130)" style="opacity: 1;">
+                                                        <line x1="0" x2="0" y1="0" y2="0"
+                                                            style="stroke: rgb(119, 119, 119); stroke-width: 1;"></line>
+                                                        <text dominant-baseline="central" text-anchor="end"
+                                                            transform="translate(-16,0) rotate(0)"
+                                                            style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                            200
+                                                        </text>
+                                                    </g>
+                                                    <g transform="translate(0,36)" style="opacity: 1;">
+                                                        <line x1="0" x2="0" y1="0" y2="0"
+                                                            style="stroke: rgb(119, 119, 119); stroke-width: 1;"></line>
+                                                        <text dominant-baseline="central" text-anchor="end"
+                                                            transform="translate(-16,0) rotate(0)"
+                                                            style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                            300
+                                                        </text>
+                                                    </g>
+                                                    <line x1="0" x2="0" y1="0" y2="317.75"
+                                                        style="stroke: transparent; stroke-width: 1;"></line>
+                                                </g>
+                                                <g transform="translate(22, 213)">
+                                                    <rect width="48" height="105" rx="0" ry="0" fill="#2563eb"
+                                                        stroke-width="0" stroke="#2563eb" focusable="false"></rect>
+                                                </g>
+                                                <g transform="translate(91, 170)">
+                                                    <rect width="48" height="148" rx="0" ry="0" fill="#2563eb"
+                                                        stroke-width="0" stroke="#2563eb" focusable="false"></rect>
+                                                </g>
+                                                <g transform="translate(160, 196)">
+                                                    <rect width="48" height="122" rx="0" ry="0" fill="#2563eb"
+                                                        stroke-width="0" stroke="#2563eb" focusable="false"></rect>
+                                                </g>
+                                                <g transform="translate(229, 142)">
+                                                    <rect width="48" height="176" rx="0" ry="0" fill="#2563eb"
+                                                        stroke-width="0" stroke="#2563eb" focusable="false"></rect>
+                                                </g>
+                                                <g transform="translate(298, 206)">
+                                                    <rect width="48" height="112" rx="0" ry="0" fill="#2563eb"
+                                                        stroke-width="0" stroke="#2563eb" focusable="false"></rect>
+                                                </g>
+                                                <g transform="translate(367, 299)">
+                                                    <rect width="48" height="19" rx="0" ry="0" fill="#2563eb"
+                                                        stroke-width="0" stroke="#2563eb" focusable="false"></rect>
+                                                </g>
+                                                <g transform="translate(22, 120)">
+                                                    <rect width="48" height="93" rx="0" ry="0" fill="#e11d48"
+                                                        stroke-width="0" stroke="#e11d48" focusable="false"></rect>
+                                                </g>
+                                                <g transform="translate(91, 88)">
+                                                    <rect width="48" height="82" rx="0" ry="0" fill="#e11d48"
+                                                        stroke-width="0" stroke="#e11d48" focusable="false"></rect>
+                                                </g>
+                                                <g transform="translate(160, 113)">
+                                                    <rect width="48" height="83" rx="0" ry="0" fill="#e11d48"
+                                                        stroke-width="0" stroke="#e11d48" focusable="false"></rect>
+                                                </g>
+                                                <g transform="translate(229, 0)">
+                                                    <rect width="48" height="142" rx="0" ry="0" fill="#e11d48"
+                                                        stroke-width="0" stroke="#e11d48" focusable="false"></rect>
+                                                </g>
+                                                <g transform="translate(298, 86)">
+                                                    <rect width="48" height="120" rx="0" ry="0" fill="#e11d48"
+                                                        stroke-width="0" stroke="#e11d48" focusable="false"></rect>
+                                                </g>
+                                                <g transform="translate(367, 185)">
+                                                    <rect width="48" height="114" rx="0" ry="0" fill="#e11d48"
+                                                        stroke-width="0" stroke="#e11d48" focusable="false"></rect>
+                                                </g>
+                                            </g>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
+                            <div class="flex flex-col space-y-1.5 p-6">
+                                <p class="text-sm text-muted-foreground">Groupes sanguins</p>
+                            </div>
+                            <div class="p-6">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-6 h-6 rounded-full bg-[#ff0000]"></div>
+                                        <div>A+</div>
+                                        <div class="font-semibold ml-auto">25%</div>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-6 h-6 rounded-full bg-[#00ff00]"></div>
+                                        <div>B+</div>
+                                        <div class="font-semibold ml-auto">20%</div>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-6 h-6 rounded-full bg-[#0000ff]"></div>
+                                        <div>AB+</div>
+                                        <div class="font-semibold ml-auto">5%</div>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-6 h-6 rounded-full bg-[#ff00ff]"></div>
+                                        <div>O+</div>
+                                        <div class="font-semibold ml-auto">30%</div>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-6 h-6 rounded-full bg-[#00ffff]"></div>
+                                        <div>A-</div>
+                                        <div class="font-semibold ml-auto">5%</div>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-6 h-6 rounded-full bg-[#ffff00]"></div>
+                                        <div>B-</div>
+                                        <div class="font-semibold ml-auto">5%</div>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-6 h-6 rounded-full bg-[#800080]"></div>
+                                        <div>AB-</div>
+                                        <div class="font-semibold ml-auto">5%</div>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-6 h-6 rounded-full bg-[#008080]"></div>
+                                        <div>O-</div>
+                                        <div class="font-semibold ml-auto">5%</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
+                            <div class="flex flex-col space-y-1.5 p-6">
+                                <p class="text-sm text-muted-foreground">Receveurs réguliers</p>
+                                <h3 class="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">45.2%
+                                </h3>
+                            </div>
+                            <div class="p-6">
+                                <div class="aspect-[4/3]">
+                                    <div style="width: 100%; height: 100%;">
+                                        <div style="position: relative;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="477" height="357.75"
+                                                role="application" aria-label="A grouped bar chart" focusable="false">
+                                                <rect width="477" height="357.75" fill="transparent"></rect>
+                                                <g transform="translate(40,0)">
+                                                    <g>
+                                                        <line opacity="1" x1="0" x2="437" y1="318" y2="318"
+                                                            stroke="#f3f4f6" stroke-width="1"></line>
+                                                        <line opacity="1" x1="0" x2="437" y1="233" y2="233"
+                                                            stroke="#f3f4f6" stroke-width="1"></line>
+                                                        <line opacity="1" x1="0" x2="437" y1="148" y2="148"
+                                                            stroke="#f3f4f6" stroke-width="1"></line>
+                                                        <line opacity="1" x1="0" x2="437" y1="63" y2="63"
+                                                            stroke="#f3f4f6" stroke-width="1"></line>
+                                                    </g>
+                                                    <g transform="translate(0,317.75)">
+                                                        <g transform="translate(46,0)" style="opacity: 1;">
+                                                            <line x1="0" x2="0" y1="0" y2="0"
+                                                                style="stroke: rgb(119, 119, 119); stroke-width: 1;">
+                                                            </line>
+                                                            <text dominant-baseline="text-before-edge"
+                                                                text-anchor="middle"
+                                                                transform="translate(0,16) rotate(0)"
+                                                                style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                                Jan
+                                                            </text>
+                                                        </g>
+                                                        <g transform="translate(115,0)" style="opacity: 1;">
+                                                            <line x1="0" x2="0" y1="0" y2="0"
+                                                                style="stroke: rgb(119, 119, 119); stroke-width: 1;">
+                                                            </line>
+                                                            <text dominant-baseline="text-before-edge"
+                                                                text-anchor="middle"
+                                                                transform="translate(0,16) rotate(0)"
+                                                                style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                                Feb
+                                                            </text>
+                                                        </g>
+                                                        <g transform="translate(184,0)" style="opacity: 1;">
+                                                            <line x1="0" x2="0" y1="0" y2="0"
+                                                                style="stroke: rgb(119, 119, 119); stroke-width: 1;">
+                                                            </line>
+                                                            <text dominant-baseline="text-before-edge"
+                                                                text-anchor="middle"
+                                                                transform="translate(0,16) rotate(0)"
+                                                                style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                                Mar
+                                                            </text>
+                                                        </g>
+                                                        <g transform="translate(253,0)" style="opacity: 1;">
+                                                            <line x1="0" x2="0" y1="0" y2="0"
+                                                                style="stroke: rgb(119, 119, 119); stroke-width: 1;">
+                                                            </line>
+                                                            <text dominant-baseline="text-before-edge"
+                                                                text-anchor="middle"
+                                                                transform="translate(0,16) rotate(0)"
+                                                                style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                                Apr
+                                                            </text>
+                                                        </g>
+                                                        <g transform="translate(322,0)" style="opacity: 1;">
+                                                            <line x1="0" x2="0" y1="0" y2="0"
+                                                                style="stroke: rgb(119, 119, 119); stroke-width: 1;">
+                                                            </line>
+                                                            <text dominant-baseline="text-before-edge"
+                                                                text-anchor="middle"
+                                                                transform="translate(0,16) rotate(0)"
+                                                                style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                                May
+                                                            </text>
+                                                        </g>
+                                                        <g transform="translate(391,0)" style="opacity: 1;">
+                                                            <line x1="0" x2="0" y1="0" y2="0"
+                                                                style="stroke: rgb(119, 119, 119); stroke-width: 1;">
+                                                            </line>
+                                                            <text dominant-baseline="text-before-edge"
+                                                                text-anchor="middle"
+                                                                transform="translate(0,16) rotate(0)"
+                                                                style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                                Jun
+                                                            </text>
+                                                        </g>
+                                                        <line x1="0" x2="437" y1="0" y2="0"
+                                                            style="stroke: transparent; stroke-width: 1;"></line>
+                                                    </g>
+                                                    <g transform="translate(0,0)">
+                                                        <g transform="translate(0,318)" style="opacity: 1;">
+                                                            <line x1="0" x2="0" y1="0" y2="0"
+                                                                style="stroke: rgb(119, 119, 119); stroke-width: 1;">
+                                                            </line>
+                                                            <text dominant-baseline="central" text-anchor="end"
+                                                                transform="translate(-16,0) rotate(0)"
+                                                                style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                                0
+                                                            </text>
+                                                        </g>
+                                                        <g transform="translate(0,233)" style="opacity: 1;">
+                                                            <line x1="0" x2="0" y1="0" y2="0"
+                                                                style="stroke: rgb(119, 119, 119); stroke-width: 1;">
+                                                            </line>
+                                                            <text dominant-baseline="central" text-anchor="end"
+                                                                transform="translate(-16,0) rotate(0)"
+                                                                style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                                50
+                                                            </text>
+                                                        </g>
+                                                        <g transform="translate(0,148)" style="opacity: 1;">
+                                                            <line x1="0" x2="0" y1="0" y2="0"
+                                                                style="stroke: rgb(119, 119, 119); stroke-width: 1;">
+                                                            </line>
+                                                            <text dominant-baseline="central" text-anchor="end"
+                                                                transform="translate(-16,0) rotate(0)"
+                                                                style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                                100
+                                                            </text>
+                                                        </g>
+                                                        <g transform="translate(0,63)" style="opacity: 1;">
+                                                            <line x1="0" x2="0" y1="0" y2="0"
+                                                                style="stroke: rgb(119, 119, 119); stroke-width: 1;">
+                                                            </line>
+                                                            <text dominant-baseline="central" text-anchor="end"
+                                                                transform="translate(-16,0) rotate(0)"
+                                                                style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                                150
+                                                            </text>
+                                                        </g>
+                                                        <line x1="0" x2="0" y1="0" y2="317.75"
+                                                            style="stroke: transparent; stroke-width: 1;"></line>
+                                                    </g>
+                                                    <g transform="translate(22, 129)">
+                                                        <rect width="24" height="189" rx="0" ry="0" fill="#2563eb"
+                                                            stroke-width="0" stroke="#2563eb" focusable="false"></rect>
+                                                    </g>
+                                                    <g transform="translate(91, 51)">
+                                                        <rect width="24" height="267" rx="0" ry="0" fill="#2563eb"
+                                                            stroke-width="0" stroke="#2563eb" focusable="false"></rect>
+                                                    </g>
+                                                    <g transform="translate(160, 99)">
+                                                        <rect width="24" height="219" rx="0" ry="0" fill="#2563eb"
+                                                            stroke-width="0" stroke="#2563eb" focusable="false"></rect>
+                                                    </g>
+                                                    <g transform="translate(229, 0)">
+                                                        <rect width="24" height="318" rx="0" ry="0" fill="#2563eb"
+                                                            stroke-width="0" stroke="#2563eb" focusable="false"></rect>
+                                                    </g>
+                                                    <g transform="translate(298, 116)">
+                                                        <rect width="24" height="202" rx="0" ry="0" fill="#2563eb"
+                                                            stroke-width="0" stroke="#2563eb" focusable="false"></rect>
+                                                    </g>
+                                                    <g transform="translate(367, 284)">
+                                                        <rect width="24" height="34" rx="0" ry="0" fill="#2563eb"
+                                                            stroke-width="0" stroke="#2563eb" focusable="false"></rect>
+                                                    </g>
+                                                    <g transform="translate(46, 150)">
+                                                        <rect width="24" height="168" rx="0" ry="0" fill="#e11d48"
+                                                            stroke-width="0" stroke="#e11d48" focusable="false"></rect>
+                                                    </g>
+                                                    <g transform="translate(115, 170)">
+                                                        <rect width="24" height="148" rx="0" ry="0" fill="#e11d48"
+                                                            stroke-width="0" stroke="#e11d48" focusable="false"></rect>
+                                                    </g>
+                                                    <g transform="translate(184, 167)">
+                                                        <rect width="24" height="151" rx="0" ry="0" fill="#e11d48"
+                                                            stroke-width="0" stroke="#e11d48" focusable="false"></rect>
+                                                    </g>
+                                                    <g transform="translate(253, 61)">
+                                                        <rect width="24" height="257" rx="0" ry="0" fill="#e11d48"
+                                                            stroke-width="0" stroke="#e11d48" focusable="false"></rect>
+                                                    </g>
+                                                    <g transform="translate(322, 102)">
+                                                        <rect width="24" height="216" rx="0" ry="0" fill="#e11d48"
+                                                            stroke-width="0" stroke="#e11d48" focusable="false"></rect>
+                                                    </g>
+                                                    <g transform="translate(391, 112)">
+                                                        <rect width="24" height="206" rx="0" ry="0" fill="#e11d48"
+                                                            stroke-width="0" stroke="#e11d48" focusable="false"></rect>
+                                                    </g>
+                                                </g>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
+                            <div class="flex flex-col space-y-1.5 p-6">
+                                <p class="text-sm text-muted-foreground">Nouveaux receveurs</p>
+                                <h3 class="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">1,234
+                                </h3>
+                            </div>
+                            <div class="p-6">
+                                <div class="aspect-[4/3]">
+                                    <div style="width: 100%; height: 100%;">
+                                        <div style="position: relative;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="477" height="357.75"
+                                                role="application">
+                                                <rect width="477" height="357.75" fill="transparent"></rect>
+                                                <g transform="translate(40,10)">
+                                                    <g>
+                                                        <line opacity="1" x1="0" x2="0" y1="0" y2="307.75"
+                                                            stroke="#f3f4f6" stroke-width="1"></line>
+                                                        <line opacity="1" x1="85.4" x2="85.4" y1="0" y2="307.75"
+                                                            stroke="#f3f4f6" stroke-width="1"></line>
+                                                        <line opacity="1" x1="170.8" x2="170.8" y1="0" y2="307.75"
+                                                            stroke="#f3f4f6" stroke-width="1"></line>
+                                                        <line opacity="1" x1="256.20000000000005"
+                                                            x2="256.20000000000005" y1="0" y2="307.75" stroke="#f3f4f6"
+                                                            stroke-width="1"></line>
+                                                        <line opacity="1" x1="341.6" x2="341.6" y1="0" y2="307.75"
+                                                            stroke="#f3f4f6" stroke-width="1"></line>
+                                                        <line opacity="1" x1="427" x2="427" y1="0" y2="307.75"
+                                                            stroke="#f3f4f6" stroke-width="1"></line>
+                                                    </g>
+                                                    <g>
+                                                        <line opacity="1" x1="0" x2="427" y1="308" y2="308"
+                                                            stroke="#f3f4f6" stroke-width="1"></line>
+                                                        <line opacity="1" x1="0" x2="427" y1="232" y2="232"
+                                                            stroke="#f3f4f6" stroke-width="1"></line>
+                                                        <line opacity="1" x1="0" x2="427" y1="157" y2="157"
+                                                            stroke="#f3f4f6" stroke-width="1"></line>
+                                                        <line opacity="1" x1="0" x2="427" y1="81" y2="81"
+                                                            stroke="#f3f4f6" stroke-width="1"></line>
+                                                        <line opacity="1" x1="0" x2="427" y1="6" y2="6" stroke="#f3f4f6"
+                                                            stroke-width="1"></line>
+                                                    </g>
+                                                    <g transform="translate(0,307.75)">
+                                                        <g transform="translate(0,0)" style="opacity: 1;">
+                                                            <line x1="0" x2="0" y1="0" y2="0"
+                                                                style="stroke: rgb(119, 119, 119); stroke-width: 1;">
+                                                            </line>
+                                                            <text dominant-baseline="text-before-edge"
+                                                                text-anchor="middle"
+                                                                transform="translate(0,16) rotate(0)"
+                                                                style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                                Jan
+                                                            </text>
+                                                        </g>
+                                                        <g transform="translate(85.4,0)" style="opacity: 1;">
+                                                            <line x1="0" x2="0" y1="0" y2="0"
+                                                                style="stroke: rgb(119, 119, 119); stroke-width: 1;">
+                                                            </line>
+                                                            <text dominant-baseline="text-before-edge"
+                                                                text-anchor="middle"
+                                                                transform="translate(0,16) rotate(0)"
+                                                                style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                                Feb
+                                                            </text>
+                                                        </g>
+                                                        <g transform="translate(170.8,0)" style="opacity: 1;">
+                                                            <line x1="0" x2="0" y1="0" y2="0"
+                                                                style="stroke: rgb(119, 119, 119); stroke-width: 1;">
+                                                            </line>
+                                                            <text dominant-baseline="text-before-edge"
+                                                                text-anchor="middle"
+                                                                transform="translate(0,16) rotate(0)"
+                                                                style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                                Mar
+                                                            </text>
+                                                        </g>
+                                                        <g transform="translate(256.20000000000005,0)"
+                                                            style="opacity: 1;">
+                                                            <line x1="0" x2="0" y1="0" y2="0"
+                                                                style="stroke: rgb(119, 119, 119); stroke-width: 1;">
+                                                            </line>
+                                                            <text dominant-baseline="text-before-edge"
+                                                                text-anchor="middle"
+                                                                transform="translate(0,16) rotate(0)"
+                                                                style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                                Apr
+                                                            </text>
+                                                        </g>
+                                                        <g transform="translate(341.6,0)" style="opacity: 1;">
+                                                            <line x1="0" x2="0" y1="0" y2="0"
+                                                                style="stroke: rgb(119, 119, 119); stroke-width: 1;">
+                                                            </line>
+                                                            <text dominant-baseline="text-before-edge"
+                                                                text-anchor="middle"
+                                                                transform="translate(0,16) rotate(0)"
+                                                                style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                                May
+                                                            </text>
+                                                        </g>
+                                                        <g transform="translate(427,0)" style="opacity: 1;">
+                                                            <line x1="0" x2="0" y1="0" y2="0"
+                                                                style="stroke: rgb(119, 119, 119); stroke-width: 1;">
+                                                            </line>
+                                                            <text dominant-baseline="text-before-edge"
+                                                                text-anchor="middle"
+                                                                transform="translate(0,16) rotate(0)"
+                                                                style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                                Jun
+                                                            </text>
+                                                        </g>
+                                                        <line x1="0" x2="427" y1="0" y2="0"
+                                                            style="stroke: transparent; stroke-width: 1;"></line>
+                                                    </g>
+                                                    <g transform="translate(0,0)">
+                                                        <g transform="translate(0,308)" style="opacity: 1;">
+                                                            <line x1="0" x2="0" y1="0" y2="0"
+                                                                style="stroke: rgb(119, 119, 119); stroke-width: 1;">
+                                                            </line>
+                                                            <text dominant-baseline="central" text-anchor="end"
+                                                                transform="translate(-16,0) rotate(0)"
+                                                                style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                                0
+                                                            </text>
+                                                        </g>
+                                                        <g transform="translate(0,232)" style="opacity: 1;">
+                                                            <line x1="0" x2="0" y1="0" y2="0"
+                                                                style="stroke: rgb(119, 119, 119); stroke-width: 1;">
+                                                            </line>
+                                                            <text dominant-baseline="central" text-anchor="end"
+                                                                transform="translate(-16,0) rotate(0)"
+                                                                style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                                50
+                                                            </text>
+                                                        </g>
+                                                        <g transform="translate(0,157)" style="opacity: 1;">
+                                                            <line x1="0" x2="0" y1="0" y2="0"
+                                                                style="stroke: rgb(119, 119, 119); stroke-width: 1;">
+                                                            </line>
+                                                            <text dominant-baseline="central" text-anchor="end"
+                                                                transform="translate(-16,0) rotate(0)"
+                                                                style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                                100
+                                                            </text>
+                                                        </g>
+                                                        <g transform="translate(0,81)" style="opacity: 1;">
+                                                            <line x1="0" x2="0" y1="0" y2="0"
+                                                                style="stroke: rgb(119, 119, 119); stroke-width: 1;">
+                                                            </line>
+                                                            <text dominant-baseline="central" text-anchor="end"
+                                                                transform="translate(-16,0) rotate(0)"
+                                                                style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                                150
+                                                            </text>
+                                                        </g>
+                                                        <g transform="translate(0,6)" style="opacity: 1;">
+                                                            <line x1="0" x2="0" y1="0" y2="0"
+                                                                style="stroke: rgb(119, 119, 119); stroke-width: 1;">
+                                                            </line>
+                                                            <text dominant-baseline="central" text-anchor="end"
+                                                                transform="translate(-16,0) rotate(0)"
+                                                                style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                                200
+                                                            </text>
+                                                        </g>
+                                                        <line x1="0" x2="0" y1="0" y2="307.75"
+                                                            style="stroke: transparent; stroke-width: 1;"></line>
+                                                    </g>
+                                                    <path
+                                                        d="M0,217L85.4,235L170.8,41L256.20000000000005,190L341.6,163L427,0"
+                                                        fill="none" stroke-width="2" stroke="#e11d48"></path>
+                                                    <path
+                                                        d="M0,243L85.4,101L170.8,216L256.20000000000005,89L341.6,269L427,75"
+                                                        fill="none" stroke-width="2" stroke="#2563eb"></path>
+                                                    <g>
+                                                        <g transform="translate(427, 0)" style="pointer-events: none;">
+                                                            <circle r="3" fill="#e11d48" stroke="transparent"
+                                                                stroke-width="0" style="pointer-events: none;"></circle>
+                                                        </g>
+                                                        <g transform="translate(341.6, 163)"
+                                                            style="pointer-events: none;">
+                                                            <circle r="3" fill="#e11d48" stroke="transparent"
+                                                                stroke-width="0" style="pointer-events: none;"></circle>
+                                                        </g>
+                                                        <g transform="translate(256.20000000000005, 190)"
+                                                            style="pointer-events: none;">
+                                                            <circle r="3" fill="#e11d48" stroke="transparent"
+                                                                stroke-width="0" style="pointer-events: none;"></circle>
+                                                        </g>
+                                                        <g transform="translate(170.8, 41)"
+                                                            style="pointer-events: none;">
+                                                            <circle r="3" fill="#e11d48" stroke="transparent"
+                                                                stroke-width="0" style="pointer-events: none;"></circle>
+                                                        </g>
+                                                        <g transform="translate(85.4, 235)"
+                                                            style="pointer-events: none;">
+                                                            <circle r="3" fill="#e11d48" stroke="transparent"
+                                                                stroke-width="0" style="pointer-events: none;"></circle>
+                                                        </g>
+                                                        <g transform="translate(0, 217)" style="pointer-events: none;">
+                                                            <circle r="3" fill="#e11d48" stroke="transparent"
+                                                                stroke-width="0" style="pointer-events: none;"></circle>
+                                                        </g>
+                                                        <g transform="translate(427, 75)" style="pointer-events: none;">
+                                                            <circle r="3" fill="#2563eb" stroke="transparent"
+                                                                stroke-width="0" style="pointer-events: none;"></circle>
+                                                        </g>
+                                                        <g transform="translate(341.6, 269)"
+                                                            style="pointer-events: none;">
+                                                            <circle r="3" fill="#2563eb" stroke="transparent"
+                                                                stroke-width="0" style="pointer-events: none;"></circle>
+                                                        </g>
+                                                        <g transform="translate(256.20000000000005, 89)"
+                                                            style="pointer-events: none;">
+                                                            <circle r="3" fill="#2563eb" stroke="transparent"
+                                                                stroke-width="0" style="pointer-events: none;"></circle>
+                                                        </g>
+                                                        <g transform="translate(170.8, 216)"
+                                                            style="pointer-events: none;">
+                                                            <circle r="3" fill="#2563eb" stroke="transparent"
+                                                                stroke-width="0" style="pointer-events: none;"></circle>
+                                                        </g>
+                                                        <g transform="translate(85.4, 101)"
+                                                            style="pointer-events: none;">
+                                                            <circle r="3" fill="#2563eb" stroke="transparent"
+                                                                stroke-width="0" style="pointer-events: none;"></circle>
+                                                        </g>
+                                                        <g transform="translate(0, 243)" style="pointer-events: none;">
+                                                            <circle r="3" fill="#2563eb" stroke="transparent"
+                                                                stroke-width="0" style="pointer-events: none;"></circle>
+                                                        </g>
+                                                    </g>
+                                                    <g>
+                                                        <rect width="427" height="307.75" fill="red" opacity="0"
+                                                            style="cursor: auto;"></rect>
+                                                    </g>
+                                                </g>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
+                            <div class="flex flex-col space-y-1.5 p-6">
+                                <p class="text-sm text-muted-foreground">Centres de transfusion</p>
+                                <h3 class="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">
+                                    Principaux centres de transfusion
+                                </h3>
+                            </div>
+                            <div class="p-6 grid gap-4">
+                                <div>
+                                    <div class="flex items-center justify-between w-full">
+                                        <div>Hôpital Général</div>
+                                        <div class="font-semibold">3K</div>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 ml-2">
+                                            <path d="m6 9 6 6 6-6"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="p-4 border-t">
+                                            <p>
+                                                L'Hôpital Général est l'un des plus grands centres de transfusion de la
+                                                région. Ils effectuent
+                                                en moyenne 3 000 transfusions par mois.
+                                            </p>
+                                            <div class="mt-4 flex justify-end">
+                                                <button
+                                                    class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3">
+                                                    En savoir plus
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex items-center justify-between w-full">
+                                        <div>Croix-Rouge</div>
+                                        <div class="font-semibold">1.2K</div>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 ml-2">
+                                            <path d="m6 9 6 6 6-6"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="p-4 border-t">
+                                            <p>
+                                                La Croix-Rouge est un acteur majeur dans les collectes et transfusions
+                                                de sang. Ils effectuent
+                                                en moyenne 1 200 transfusions par mois.
+                                            </p>
+                                            <div class="mt-4 flex justify-end">
+                                                <button
+                                                    class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3">
+                                                    En savoir plus
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex items-center justify-between w-full">
+                                        <div>Clinique Universitaire</div>
+                                        <div class="font-semibold">1.1K</div>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 ml-2">
+                                            <path d="m6 9 6 6 6-6"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="p-4 border-t">
+                                            <p>
+                                                La Clinique Universitaire est un centre de transfusion spécialisé dans
+                                                les cas complexes. Ils
+                                                effectuent en moyenne 1 100 transfusions par mois.
+                                            </p>
+                                            <div class="mt-4 flex justify-end">
+                                                <button
+                                                    class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3">
+                                                    En savoir plus
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
+                            <div class="flex flex-col space-y-1.5 p-6">
+                                <p class="text-sm text-muted-foreground">Groupes sanguins rares</p>
+                            </div>
+                            <div class="p-6">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-6 h-6 rounded-full bg-[#800080]"></div>
+                                        <div>AB-</div>
+                                        <div class="font-semibold ml-auto">1%</div>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-6 h-6 rounded-full bg-[#008080]"></div>
+                                        <div>O-</div>
+                                        <div class="font-semibold ml-auto">5%</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
+                            <div class="flex flex-col space-y-1.5 p-6">
+                                <p class="text-sm text-muted-foreground">Transfusions par région</p>
+                            </div>
+                            <div class="p-6">
+                                <div class="aspect-[4/3]">
+                                    <div style="width: 100%; height: 100%;">
+                                        <div style="position: relative;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="477" height="357.75"
+                                                role="application" aria-label="A bar chart showing data"
+                                                focusable="false">
+                                                <rect width="477" height="357.75" fill="transparent"></rect>
+                                                <g transform="translate(40,0)">
+                                                    <g>
+                                                        <line opacity="1" x1="0" x2="437" y1="318" y2="318"
+                                                            stroke="#f3f4f6" stroke-width="1"></line>
+                                                        <line opacity="1" x1="0" x2="437" y1="217" y2="217"
+                                                            stroke="#f3f4f6" stroke-width="1"></line>
+                                                        <line opacity="1" x1="0" x2="437" y1="115" y2="115"
+                                                            stroke="#f3f4f6" stroke-width="1"></line>
+                                                        <line opacity="1" x1="0" x2="437" y1="14" y2="14"
+                                                            stroke="#f3f4f6" stroke-width="1"></line>
+                                                    </g>
+                                                    <g transform="translate(0,317.75)">
+                                                        <g transform="translate(46,0)" style="opacity: 1;">
+                                                            <line x1="0" x2="0" y1="0" y2="0"
+                                                                style="stroke: rgb(119, 119, 119); stroke-width: 1;">
+                                                            </line>
+                                                            <text dominant-baseline="text-before-edge"
+                                                                text-anchor="middle"
+                                                                transform="translate(0,16) rotate(0)"
+                                                                style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                                Jan
+                                                            </text>
+                                                        </g>
+                                                        <g transform="translate(115,0)" style="opacity: 1;">
+                                                            <line x1="0" x2="0" y1="0" y2="0"
+                                                                style="stroke: rgb(119, 119, 119); stroke-width: 1;">
+                                                            </line>
+                                                            <text dominant-baseline="text-before-edge"
+                                                                text-anchor="middle"
+                                                                transform="translate(0,16) rotate(0)"
+                                                                style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                                Feb
+                                                            </text>
+                                                        </g>
+                                                        <g transform="translate(184,0)" style="opacity: 1;">
+                                                            <line x1="0" x2="0" y1="0" y2="0"
+                                                                style="stroke: rgb(119, 119, 119); stroke-width: 1;">
+                                                            </line>
+                                                            <text dominant-baseline="text-before-edge"
+                                                                text-anchor="middle"
+                                                                transform="translate(0,16) rotate(0)"
+                                                                style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                                Mar
+                                                            </text>
+                                                        </g>
+                                                        <g transform="translate(253,0)" style="opacity: 1;">
+                                                            <line x1="0" x2="0" y1="0" y2="0"
+                                                                style="stroke: rgb(119, 119, 119); stroke-width: 1;">
+                                                            </line>
+                                                            <text dominant-baseline="text-before-edge"
+                                                                text-anchor="middle"
+                                                                transform="translate(0,16) rotate(0)"
+                                                                style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                                Apr
+                                                            </text>
+                                                        </g>
+                                                        <g transform="translate(322,0)" style="opacity: 1;">
+                                                            <line x1="0" x2="0" y1="0" y2="0"
+                                                                style="stroke: rgb(119, 119, 119); stroke-width: 1;">
+                                                            </line>
+                                                            <text dominant-baseline="text-before-edge"
+                                                                text-anchor="middle"
+                                                                transform="translate(0,16) rotate(0)"
+                                                                style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                                May
+                                                            </text>
+                                                        </g>
+                                                        <g transform="translate(391,0)" style="opacity: 1;">
+                                                            <line x1="0" x2="0" y1="0" y2="0"
+                                                                style="stroke: rgb(119, 119, 119); stroke-width: 1;">
+                                                            </line>
+                                                            <text dominant-baseline="text-before-edge"
+                                                                text-anchor="middle"
+                                                                transform="translate(0,16) rotate(0)"
+                                                                style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                                Jun
+                                                            </text>
+                                                        </g>
+                                                        <line x1="0" x2="437" y1="0" y2="0"
+                                                            style="stroke: transparent; stroke-width: 1;"></line>
+                                                    </g>
+                                                    <g transform="translate(0,0)">
+                                                        <g transform="translate(0,318)" style="opacity: 1;">
+                                                            <line x1="0" x2="0" y1="0" y2="0"
+                                                                style="stroke: rgb(119, 119, 119); stroke-width: 1;">
+                                                            </line>
+                                                            <text dominant-baseline="central" text-anchor="end"
+                                                                transform="translate(-16,0) rotate(0)"
+                                                                style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                                0
+                                                            </text>
+                                                        </g>
+                                                        <g transform="translate(0,217)" style="opacity: 1;">
+                                                            <line x1="0" x2="0" y1="0" y2="0"
+                                                                style="stroke: rgb(119, 119, 119); stroke-width: 1;">
+                                                            </line>
+                                                            <text dominant-baseline="central" text-anchor="end"
+                                                                transform="translate(-16,0) rotate(0)"
+                                                                style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                                50
+                                                            </text>
+                                                        </g>
+                                                        <g transform="translate(0,115)" style="opacity: 1;">
+                                                            <line x1="0" x2="0" y1="0" y2="0"
+                                                                style="stroke: rgb(119, 119, 119); stroke-width: 1;">
+                                                            </line>
+                                                            <text dominant-baseline="central" text-anchor="end"
+                                                                transform="translate(-16,0) rotate(0)"
+                                                                style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                                100
+                                                            </text>
+                                                        </g>
+                                                        <g transform="translate(0,14)" style="opacity: 1;">
+                                                            <line x1="0" x2="0" y1="0" y2="0"
+                                                                style="stroke: rgb(119, 119, 119); stroke-width: 1;">
+                                                            </line>
+                                                            <text dominant-baseline="central" text-anchor="end"
+                                                                transform="translate(-16,0) rotate(0)"
+                                                                style="font-family: sans-serif; font-size: 11px; fill: rgb(51, 51, 51); outline-width: 0px; outline-color: transparent;">
+                                                                150
+                                                            </text>
+                                                        </g>
+                                                        <line x1="0" x2="0" y1="0" y2="317.75"
+                                                            style="stroke: transparent; stroke-width: 1;"></line>
+                                                    </g>
+                                                    <g transform="translate(22, 93)">
+                                                        <rect width="48" height="225" rx="0" ry="0" fill="#2563eb"
+                                                            stroke-width="0" stroke="#2563eb" focusable="false"></rect>
+                                                    </g>
+                                                    <g transform="translate(91, 0)">
+                                                        <rect width="48" height="318" rx="0" ry="0" fill="#2563eb"
+                                                            stroke-width="0" stroke="#2563eb" focusable="false"></rect>
+                                                    </g>
+                                                    <g transform="translate(160, 57)">
+                                                        <rect width="48" height="261" rx="0" ry="0" fill="#2563eb"
+                                                            stroke-width="0" stroke="#2563eb" focusable="false"></rect>
+                                                    </g>
+                                                    <g transform="translate(229, 14)">
+                                                        <rect width="48" height="304" rx="0" ry="0" fill="#2563eb"
+                                                            stroke-width="0" stroke="#2563eb" focusable="false"></rect>
+                                                    </g>
+                                                    <g transform="translate(298, 77)">
+                                                        <rect width="48" height="241" rx="0" ry="0" fill="#2563eb"
+                                                            stroke-width="0" stroke="#2563eb" focusable="false"></rect>
+                                                    </g>
+                                                    <g transform="translate(367, 172)">
+                                                        <rect width="48" height="146" rx="0" ry="0" fill="#2563eb"
+                                                            stroke-width="0" stroke="#2563eb" focusable="false"></rect>
+                                                    </g>
+                                                </g>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+    // Add any JavaScript here if needed
+    // Pour masquer complètement la barre de défilement
+    document.body.style.overflow = 'hidden';
+
+    // Pour affiner la barre de défilement
+    document.body.style.overflow = 'auto';
+    document.body.style.scrollbarWidth = 'thin'; // Pour Firefox
+
+
+
+</script>
+{% endblock %}

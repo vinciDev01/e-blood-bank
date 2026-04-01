@@ -1,0 +1,90 @@
+{% extends 'frontend/base2.html' %}
+
+{% block title %}Mes demandes{% endblock %}
+
+{% block main %}
+<main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200 dark:bg-boxdark">
+    <div class="container mx-auto px-6 py-8">
+        {% block content %}
+        <div class="bg-white shadow-md rounded-lg overflow-hidden">
+            <div class="text-center py-6 bg-gray-100">
+                <h2 class="text-3xl font-bold text-gray-700">Mes demandes</h2>
+            </div>
+
+            {% if demandes %}
+            <table class="min-w-full bg-white border">
+                <thead>
+                    <tr class="bg-gray-200 border-b">
+                        <th class="px-4 py-2"></th>
+                        <th class="px-4 py-2 text-left">Nom du patient</th>
+                        <th class="px-4 py-2 text-left">Groupes Sanguins</th>
+                        <th class="px-4 py-2 text-left">Quantité</th>
+                        <th class="px-4 py-2 text-left">Date de la demande</th>
+                        <th class="px-4 py-2 text-left">Urgence</th>
+                        <th class="px-4 py-2 text-left">État</th>
+                        <th class="px-4 py-2 text-left">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="text-gray-700">
+                    {% for demande in demandes %}
+                    <tr class="main-row border-b" data-id="{{ demande.id }}">
+                        <td class="px-4 py-2">
+                            <div class="flex items-center justify-center hover:bg-gray-100 cursor-pointer rounded-full w-8 h-8">
+                                <svg class="s" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgb(162, 161, 161);"><path d="m7 17.013 4.413-.015 9.632-9.54c.378-.378.586-.88.586-1.414s-.208-1.036-.586-1.414l-1.586-1.586c-.756-.756-2.075-.752-2.825-.003L7 12.583v4.43zM18.045 4.458l1.589 1.583-1.597 1.582-1.586-1.585 1.594-1.58zM9 13.417l6.03-5.973 1.586 1.586-6.029 5.971L9 15.006v-1.589z"></path><path d="M5 21h14c1.103 0 2-.897 2-2v-8.668l-2 2V19H8.158c-.026 0-.053.01-.079.01-.033 0-.066-.009-.1-.01H5V5h6.847l2-2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2z"></path></svg>
+                                <style>
+                                    .s:hover {
+                                        fill: black;
+                                        transition: fill 0.3s;
+                                        transition-timing-function: ease-in-out;
+                                        color: black;
+                                    }
+                                </style>
+                            </div>
+                        </td>
+                        <td class="px-4 py-2">{{ demande.nom_patient }}</td>
+                        <td class="px-4 py-2">{{ demande.grp_sanguin_patient }}</td>
+                        <td class="px-4 py-2">{{ demande.nbr_poches_patient }}</td>
+                        <td class="px-4 py-2">{{ demande.date_demande|date:"F j, Y" }}</td>
+                        <td class="px-4 py-2">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {% if demande.urgence == 'Immédiate' %}bg-red-100 text-red-800{% elif demande.urgence == '24 heures' %}bg-yellow-100 text-yellow-800{% else %}bg-green-100 text-green-800{% endif %}">{{ demande.urgence }}</span>
+                        </td>
+                        <td class="px-4 py-2">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {% if demande.etat == 'En attente' %}bg-yellow-100 text-yellow-800{% elif demande.etat == 'Acceptée' %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %}">{{ demande.etat }}</span>
+                        </td>
+                        <td class="px-4 py-2">
+                            <button class="text-gray-500 hover:text-gray-700 view-details" data-id="{{ demande.id }}">
+                                <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000" stroke-width="1.5">
+                                    <path d="M3 13C6.6 5 17.4 5 21 13" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    <path d="M12 17C10.3431 17 9 15.6569 9 14C9 12.3431 10.3431 11 12 11C13.6569 11 15 12.3431 15 14C15 15.6569 13.6569 17 12 17Z" fill="#000000" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr id="details-{{ demande.id }}" class="details-row hidden bg-gray-50">
+                        <td colspan="8" class="px-4 py-4">
+                            <p><strong>Motif:</strong> {{ demande.motif }}</p>
+                            <p><strong>Nom du proche ({{ demande.patient.relation_proche_patient }}):</strong> {{ demande.patient.proche }}</p>
+                            <p><strong>Email du proche ({{ demande.patient.relation_proche_patient }}):</strong> {{ demande.patient.utilisateur.email }}</p>
+                            <p><strong>Numéro du proche ({{ demande.patient.relation_proche_patient }}):</strong> {{ demande.patient.telephone_proche }}</p>
+                            <i class="block mt-2 text-sm text-gray-600">Veuillez attendre qu'une institution médicale accepte votre demande.</i>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
+        </div>
+        {% endblock %}
+    </div>
+</main>
+{% endblock %}
+
+<script>
+    document.querySelectorAll('.view-details').forEach(button => {
+        button.addEventListener('click', function() {
+            const id = this.getAttribute('data-id');
+            const detailsRow = document.getElementById('details-' + id);
+            detailsRow.classList.toggle('hidden');
+        });
+    });
+</script>

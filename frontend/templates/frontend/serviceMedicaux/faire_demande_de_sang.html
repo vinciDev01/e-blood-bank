@@ -1,0 +1,497 @@
+{% extends 'frontend/serviceMedicaux/accueil_service_medicaux.html' %}
+{% load static %}
+
+{% block title %}Faire une Demande de Sang{% endblock %}
+
+{% block extrahead %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+
+{% endblock %}
+
+{% block content %}
+<center>
+    <div class="flex flex-col items-center justify-center w-3/5 h-full gap-6 bg-white p-5"
+        style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); border-radius: 10px; text-align: left; font-family: 'Poppins', sans-serif; font-size: 1.140rem;">
+        <?xml version="1.0" encoding="UTF-8"?><svg width="80px" height="80px" viewBox="0 0 24 24" stroke-width="1.5"
+            fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000">
+            <path
+                d="M5.47752 14.8833L3.65376 12.9929C1.44875 10.7072 1.44875 7.01723 3.65376 4.73157C5.88044 2.42345 9.50794 2.42345 11.7346 4.73157L11.9998 5.00642L12.2648 4.73173C13.3324 3.6245 14.7864 3 16.3053 3C17.8242 3 19.2781 3.62444 20.3458 4.73157C21.4063 5.83045 22 7.31577 22 8.86222C22 10.4087 21.4062 11.8941 20.3458 12.9929C19.7427 13.618 19.1442 14.2497 18.5465 14.8833"
+                stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M12 21.5V11" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            </path>
+            <path d="M16 17.5C14.4379 19.0621 13.5621 19.9379 12 21.5C10.4379 19.9379 9.5621 19.0621 8 17.5"
+                stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <h4 class="block font-sans text-2xl antialiased font-semibold leading-snug tracking-normal text-blue-gray-900">
+            Faire une Demande de Sang
+        </h4>
+        <!-- <nav class="w-3/4 mt-4 bg-gray-100 font-family" role="tablist">
+            <ul role="tablist" class="relative z-0 flex flex-row p-1 rounded-lg bg-blue-gray-50 bg-opacity-60">
+                <li role="tab"
+                    class="relative flex items-center justify-center w-full h-full px-2 py-1 font-sans text-base antialiased font-normal leading-relaxed text-center bg-transparent cursor-pointer select-none text-blue-gray-900"
+                    data-value="card">
+                    <div class="z-20 text-inherit">Medical Demande</div>
+                    <div class="absolute inset-0 z-10 h-full bg-white rounded-md shadow" data-projection-id="4"></div>
+                </li>
+                <li role="tab"
+                    class="relative flex items-center justify-center w-full h-full px-2 py-1 font-sans text-base antialiased font-normal leading-relaxed text-center bg-transparent cursor-pointer select-none text-blue-gray-900"
+                    data-value="paypal">
+                    <div class="z-20 text-inherit">Patient Demande</div>
+                </li>
+            </ul>
+        </nav> -->
+        <p class="block mt-1 font-sans text-base antialiased font-normal leading-relaxed text-gray-700">
+            Remplissez le formulaire pour demander un don de sang à la Banque E-Sang.
+        </p>
+
+        <div class="w-3/4">
+            <div class="relative right-0">
+                <ul class="relative flex flex-wrap p-1 list-none rounded-xl bg-blue-gray-50/60 mt-4 bg-gray-100 font-family"
+                    data-tabs="tabs" role="list">
+                    <li class="z-30 flex-auto text-center">
+                        <a class="z-30 flex items-center justify-center w-full px-0 py-1 mb-0 transition-all ease-in-out border-0 rounded-lg cursor-pointer text-slate-700 bg-inherit"
+                            data-tab-target="" active="" role="tab" aria-selected="true" aria-controls="app">
+                            <span class="ml-1">Medical Demande</span>
+                        </a>
+                    </li>
+                    <li class="z-30 flex-auto text-center">
+                        <a class="z-30 flex items-center justify-center w-full px-0 py-1 mb-0 transition-all ease-in-out border-0 rounded-lg cursor-pointer text-slate-700 bg-inherit"
+                            data-tab-target="" role="tab" aria-selected="false" aria-controls="message">
+                            <span class="ml-1">Patient Demande</span>
+                        </a>
+                    </li>
+                </ul>
+                <div data-tab-content="" class="p-5">
+                    <div class="block opacity-100" id="app" role="tabpanel">
+                        <!--=========Demande du service médical==========-->
+                        <form method="post" class="max-w-screen-lg mt-8 mb-2 w-80 sm:w-96">
+                            {% csrf_token %}
+                            <div class="flex flex-col gap-6 mb-1">
+                                <h6 style="display: none;">
+                                Nom de l'établissement
+                                </h6>
+                                <div style="display: none;">
+                                    <input type="text" id="nom_etablissement" name="nom_etablissement" value="{{ request.user.nom_etablissement }}" disabled>
+                                </div>
+                                <h6 style="display: none;">
+                                Type d'établissement
+                                </h6>
+                                <div style="display: none;">
+                                    <input type="text" id="type_etablissement" name="type_etablissement" value="{{ request.user.type_etablissement }}" disabled>
+                                </div>
+                                <h6 style="display: none;">
+                                Responsable
+                                </h6>
+                                <div style="display: none;">
+                                    <input type="text" id="responsable" name="responsable" value="{{ request.user.responsable }}" disabled>
+                                </div>
+                                <h6 style="display: none;">
+                                Adresse
+                                </h6>
+                                <div style="display: none;">
+                                    <input type="text" id="adresse" name="adresse" value="{{ request.user.adresse }}" disabled>
+                                </div>
+                                <h6 style="display: none;">
+                                Email
+                                </h6>
+                                <div style="display: none;">
+                                    <input type="email" id="email" name="email" value="{{ request.user.email }}" disabled>
+                                </div>
+                                <h6 style="display: none;">
+                                Ville
+                                </h6>
+                                <div style="display: none;">
+                                    <input type="text" id="ville" name="ville" value="{{ request.user.ville }}" disabled>
+                                </div>
+                                <h6 style="display: none;">
+                                Code postal
+                                </h6>
+                                <div style="display: none;">
+                                    <input type="text" id="code_postal" name="code_postal" value="{{ request.user.code_postal }}" disabled>
+                                </div>
+                                <h6 style="display: none;">
+                                Pays
+                                </h6>
+                                <div style="display: none;">
+                                    <input type="text" id="pays" name="pays" value="{{ request.user.pays }}" disabled>
+                                </div>
+                                <h6 style="display: none;">
+                                Téléphone
+                                </h6>
+                                <div style="display: none;">
+                                    <input type="text" id="telephone" name="telephone" value="{{ request.user.telephone }}" disabled>
+                                </div>
+                                <h6 style="display: none;">
+                                Numéro de licence
+                                </h6>
+                                <div style="display: none;">
+                                    <input type="text" id="numero_licence" name="numero_licence" value="{{ request.user.numero_licence }}" disabled>
+                                </div>
+                                <h6 style="display: none;">
+                                Numéro d'enregistrement
+                                </h6>
+                                <div style="display: none;">
+                                    <input type="text" id="numero_enregistrement" name="numero_enregistrement" value="{{ request.user.numero_enregistrement }}" disabled>
+                                </div>
+                                <h6 style="display: none;">
+                                Certificat d'enregistrement
+                                </h6>
+                                <div style="display: none;">
+                                    <input type="text" id="certificat_enregistrement" name="certificat_enregistrement" value="{{ request.user.certificat_enregistrement }}" disabled>
+                                </div>
+                                <!--Groupe sanguin-->
+                                <h6
+                                    class="block -mb-3 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-blue-gray-900">
+                                    Groupe Sanguin
+                                </h6>
+                                <div class="relative h-11 w-full min-w-[200px]">
+                                    <select id="groupe_sanguin" name="groupe_sanguin"
+                                        class="peer h-full w-full rounded-md border border-blue-gray-200 border-t-transparent !border-t-blue-gray-200 bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all">
+                                        <option value="A+">A+</option>
+                                        <option value="A-">A-</option>
+                                        <option value="B+">B+</option>
+                                        <option value="B-">B-</option>
+                                        <option value="AB+">AB+</option>
+                                        <option value="AB-">AB-</option>
+                                        <option value="O+">O+</option>
+                                        <option value="O-">O-</option>
+                                    </select>
+                                </div>
+
+                                <!-- Blood Type -->
+                                <h6
+                                    class="block -mb-3 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-blue-gray-900">
+                                    Type de Sang
+                                </h6>
+                                <div class="relative h-11 w-full min-w-[200px]">
+                                    <select id="type_produit" name="type_produit"
+                                        class="peer h-full w-full rounded-md border border-blue-gray-200 border-t-transparent !border-t-blue-gray-200 bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all">
+                                        <option value="Sang total">Sang total</option>
+                                        <option value="Concentré de globules rouges">Concentré de globules rouges
+                                        </option>
+                                        <option value="Plasma">Plasma</option>
+                                        <option value="Plaquettes">Plaquettes</option>
+                                    </select>
+                                </div>
+                                <!-- Bags Required -->
+                                <h6
+                                    class="block -mb-3 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-blue-gray-900">
+                                    Sacs Requis
+                                </h6>
+                                <div class="relative h-11 w-full min-w-[200px]">
+                                    <input type="number" id="quantite" name="quantite" min="1"
+                                        class="peer h-full w-full rounded-md border border-blue-gray-200 border-t-transparent !border-t-blue-gray-200 bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all"
+                                        required>
+                                </div>
+
+                                <!-- Urgency -->
+                                <h6
+                                    class="block -mb-3 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-blue-gray-900">
+                                    Urgence
+                                </h6>
+                                <div class="relative h-11 w-full min-w-[200px]">
+                                    <div class="mt-1 flex space-x-3">
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" class="form-radio h-4 w-4 text-indigo-600"
+                                                name="urgence" value="Immédiate">
+                                            <span class="ml-2">Haute</span>
+                                        </label>
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" class="form-radio h-4 w-4 text-indigo-600"
+                                                name="urgence" value="24 heures">
+                                            <span class="ml-2">Moyenne</span>
+                                        </label>
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" class="form-radio h-4 w-4 text-indigo-600"
+                                                name="urgence" value="Non urgent">
+                                            <span class="ml-2">Basse</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Comment -->
+                                <h6
+                                    class="block -mb-3 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-blue-gray-900">
+                                    Commentaire
+                                </h6>
+                                <div class="relative h-11 w-full min-w-[200px]">
+                                    <textarea id="commentaire" name="commentaire" rows="3"
+                                        class="peer h-full w-full rounded-md border border-blue-gray-200 border-t-transparent !border-t-blue-gray-200 bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all"></textarea>
+                                </div>
+
+                                <center>
+                                    <!-- Submit Button -->
+                                    <button type="submit" onclick="showLoading()" id="submitBtn"
+                                        class="mt-6 block w-1/3 select-none rounded-lg bg-black text-white font-semibold p-2 text-center">
+                                        <span id="btnText">Soumettre</span>
+                                        <svg id="loadingIcon" class="hidden animate-spin h-5 w-5 ml-2"
+                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                        </svg>
+                                    </button>
+
+                                    <script>
+                                        function showLoading() {
+                                            var submitBtn = document.getElementById("submitBtn");
+                                            var btnText = document.getElementById("btnText");
+                                            var loadingIcon = document.getElementById("loadingIcon");
+
+                                            submitBtn.disabled = true; // Disable button click
+                                            btnText.style.display = "none"; // Hide button text
+                                            loadingIcon.style.display = "inline-block"; // Show loading icon
+                                            // retirer le pointeur de la souris
+                                            submitBtn.style.cursor = "not-allowed";
+
+                                        }
+                                    </script>
+                            </div>
+                        </form>
+
+
+                    </div>
+                    <div class="hidden opacity-0" id="message" role="tabpanel">
+                        <!--=========Demande du patient==========-->
+                        <form method="post" class="max-w-screen-lg mt-8 mb-2 w-80 sm:w-96">
+                            {% csrf_token %}
+                            <div class="flex flex-col gap-6 mb-1">
+                                <!-- Patient Name -->
+                                <h6
+                                    class="block -mb-3 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-blue-gray-900">
+                                    Nom du Patient
+                                </h6>
+                                <div class="relative h-11 w-full min-w-[200px]">
+                                    <input type="text" id="nom_patient" name="nom_patient"
+                                        class="peer h-full w-full rounded-md border border-blue-gray-200 border-t-transparent !border-t-blue-gray-200 bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all"
+                                        required>
+                                </div>
+
+                                <!--Patient last Name-->
+                                <h6
+                                    class="block -mb-3 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-blue-gray-900">
+                                    Prénom du Patient
+                                </h6>
+                                <div class="relative h-11 w-full min-w-[200px]">
+                                    <input type="text" id="prenom_patient" name="prenom_patient"
+                                        class="peer h-full w-full rounded-md border border-blue-gray-200 border-t-transparent !border-t-blue-gray-200 bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all"
+                                        required>
+                                </div>
+
+                                <!--date de naissance-->
+                                <h6
+                                    class="block -mb-3 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-blue-gray-900">
+                                    Date de Naissance
+                                </h6>
+                                <div class="relative h-11 w-full min-w-[200px]">
+
+                                    <div class="relative h-10 w-full min-w-[200px]">
+                                        <input id="date-picker"
+                                            class="peer h-full w-full rounded-[7px] border border-blue-gray-200 border-t-transparent bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
+                                            placeholder="Select a Date" />
+                                    </div>
+
+                                    <script>
+                                        const datepicker = flatpickr("#date-picker", {});
+
+                                        // styling the date picker
+                                        const calendarContainer = datepicker.calendarContainer;
+                                        const calendarMonthNav = datepicker.monthNav;
+                                        const calendarNextMonthNav = datepicker.nextMonthNav;
+                                        const calendarPrevMonthNav = datepicker.prevMonthNav;
+                                        const calendarDaysContainer = datepicker.daysContainer;
+
+                                        calendarContainer.className = `${calendarContainer.className} bg-white p-4 border border-blue-gray-50 rounded-lg shadow-lg shadow-blue-gray-500/10 font-sans text-sm font-normal text-blue-gray-500 focus:outline-none break-words whitespace-normal`;
+
+                                        calendarMonthNav.className = `${calendarMonthNav.className} flex items-center justify-between mb-4 [&>div.flatpickr-month]:-translate-y-3`;
+
+                                        calendarNextMonthNav.className = `${calendarNextMonthNav.className} absolute !top-2.5 !right-1.5 h-6 w-6 bg-transparent hover:bg-blue-gray-50 !p-1 rounded-md transition-colors duration-300`;
+
+                                        calendarPrevMonthNav.className = `${calendarPrevMonthNav.className} absolute !top-2.5 !left-1.5 h-6 w-6 bg-transparent hover:bg-blue-gray-50 !p-1 rounded-md transition-colors duration-300`;
+
+                                        calendarDaysContainer.className = `${calendarDaysContainer.className} [&_span.flatpickr-day]:!rounded-md [&_span.flatpickr-day.selected]:!bg-gray-900 [&_span.flatpickr-day.selected]:!border-gray-900`;
+                                    </script>
+
+                                </div>
+
+                                <!--Groupe sanguin-->
+                                <h6
+                                    class="block -mb-3 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-blue-gray-900">
+                                    Groupe Sanguin
+                                </h6>
+                                <div class="relative h-11 w-full min-w-[200px]">
+                                    <select id="groupe_sanguin" name="groupe_sanguin"
+                                        class="peer h-full w-full rounded-md border border-blue-gray-200 border-t-transparent !border-t-blue-gray-200 bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all">
+                                        <option value="A+">A+</option>
+                                        <option value="A-">A-</option>
+                                        <option value="B+">B+</option>
+                                        <option value="B-">B-</option>
+                                        <option value="AB+">AB+</option>
+                                        <option value="AB-">AB-</option>
+                                        <option value="O+">O+</option>
+                                        <option value="O-">O-</option>
+                                    </select>
+                                </div>
+
+
+
+                                <!-- Blood Type -->
+                                <h6
+                                    class="block -mb-3 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-blue-gray-900">
+                                    Type de Sang
+                                </h6>
+                                <div class="relative h-11 w-full min-w-[200px]">
+                                    <select id="type_produit" name="type_produit"
+                                        class="peer h-full w-full rounded-md border border-blue-gray-200 border-t-transparent !border-t-blue-gray-200 bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all">
+                                        <option value="Sang total">Sang total</option>
+                                        <option value="Concentré de globules rouges">Concentré de globules rouges
+                                        </option>
+                                        <option value="Plasma">Plasma</option>
+                                        <option value="Plaquettes">Plaquettes</option>
+                                    </select>
+                                </div>
+                                <!-- Hospital Name -->
+                                <!-- <h6
+                                    class="block -mb-3 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-blue-gray-900">
+                                    Nom de l'Hôpital
+                                </h6>
+                                <div class="relative h-11 w-full min-w-[200px]">
+                                    <input type="text" id="nom_hopital" name="nom_hopital"
+                                        class="peer h-full w-full rounded-md border border-blue-gray-200 border-t-transparent !border-t-blue-gray-200 bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all"
+                                        required>
+                                </div> -->
+
+                                <!-- Hospital Address -->
+                                <!-- <h6
+                                    class="block -mb-3 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-blue-gray-900">
+                                    Adresse de l'Hôpital
+                                </h6>
+                                <div class="relative h-11 w-full min-w-[200px]">
+                                    <textarea id="adresse" name="adresse" rows="2"
+                                        class="peer h-full w-full rounded-md border border-blue-gray-200 border-t-transparent !border-t-blue-gray-200 bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all"
+                                        required></textarea>
+                                </div> -->
+
+                                <!-- Bags Required -->
+                                <h6
+                                    class="block -mb-3 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-blue-gray-900">
+                                    Sacs Requis
+                                </h6>
+                                <div class="relative h-11 w-full min-w-[200px]">
+                                    <input type="number" id="quantite" name="quantite" min="1"
+                                        class="peer h-full w-full rounded-md border border-blue-gray-200 border-t-transparent !border-t-blue-gray-200 bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all"
+                                        required>
+                                </div>
+
+                                <!-- Urgency -->
+                                <h6
+                                    class="block -mb-3 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-blue-gray-900">
+                                    Urgence
+                                </h6>
+                                <div class="relative h-11 w-full min-w-[200px]">
+                                    <div class="mt-1 flex space-x-3">
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" class="form-radio h-4 w-4 text-indigo-600"
+                                                name="urgence" value="Immédiate">
+                                            <span class="ml-2">Haute</span>
+                                        </label>
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" class="form-radio h-4 w-4 text-indigo-600"
+                                                name="urgence" value="24 heures">
+                                            <span class="ml-2">Moyenne</span>
+                                        </label>
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" class="form-radio h-4 w-4 text-indigo-600"
+                                                name="urgence" value="Non urgent">
+                                            <span class="ml-2">Basse</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Comment -->
+                                <h6
+                                    class="block -mb-3 font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-blue-gray-900">
+                                    Commentaire
+                                </h6>
+                                <div class="relative h-11 w-full min-w-[200px]">
+                                    <textarea id="commentaire" name="commentaire" rows="3"
+                                        class="peer h-full w-full rounded-md border border-blue-gray-200 border-t-transparent !border-t-blue-gray-200 bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all"></textarea>
+                                </div>
+
+                                <center>
+                                    <!-- Submit Button -->
+                                    <button type="submit" onclick="showLoading()" id="submitBtn"
+                                        class="mt-6 block w-1/3 select-none rounded-lg bg-black text-white font-semibold p-2 text-center">
+                                        <span id="btnText">Soumettre</span>
+                                        <svg id="loadingIcon" class="hidden animate-spin h-5 w-5 ml-2"
+                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                        </svg>
+                                    </button>
+
+                                    <script>
+                                        function showLoading() {
+                                            var submitBtn = document.getElementById("submitBtn");
+                                            var btnText = document.getElementById("btnText");
+                                            var loadingIcon = document.getElementById("loadingIcon");
+
+                                            submitBtn.disabled = true; // Disable button click
+                                            btnText.style.display = "none"; // Hide button text
+                                            loadingIcon.style.display = "inline-block"; // Show loading icon
+                                        }
+                                    </script>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</center>
+<!-- from node_modules -->
+<script src="node_modules/@material-tailwind/html/scripts/tabs.js"></script>
+
+<!-- from cdn -->
+<script src="https://unpkg.com/@material-tailwind/html@latest/scripts/tabs.js"></script>
+<script>
+    const onglets = document.querySelectorAll('[role="tab"]');
+    const listeOnglets = document.querySelector('[role="tablist"]');
+
+    onglets.forEach(onglet => {
+        onglet.addEventListener('click', () => {
+            onglets.forEach(o => o.classList.remove('bg-white', 'shadow'));
+            onglet.classList.add('bg-white', 'shadow');
+        });
+    });
+
+    listeOnglets.addEventListener('click', (e) => {
+        if (e.target.tagName === 'LI') {
+            onglets.forEach(onglet => onglet.classList.remove('bg-white', 'shadow', 'z-10', 'border-b', 'border-gray-200', 'rounded-t-lg'));
+            e.target.classList.add('bg-white', 'shadow', 'z-10', 'border-b', 'border-gray-200', 'rounded-t-lg');
+        }
+    });
+
+    const formulaires = document.querySelectorAll('form');
+    formulaires.forEach(form => {
+        form.style.display = 'none';
+    });
+
+    onglets[0].addEventListener('click', () => {
+        formulaires[0].style.display = 'block';
+        formulaires[1].style.display = 'none';
+    });
+
+    onglets[1].addEventListener('click', () => {
+        formulaires[1].style.display = 'block';
+        formulaires[0].style.display = 'none';
+    });
+
+    onglets[0].click();
+
+</script>
+{% endblock %}

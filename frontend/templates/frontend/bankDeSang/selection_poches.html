@@ -1,0 +1,9 @@
+{% block content %}
+    <h1>Selection de poches</h1>
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="demande_id" value="{{ demande.id }}">
+        <input type="hidden" name="poche_id" value="{{ poche.id }}">
+        <button type="submit">Valider</button>
+    </form>
+{% endblock %}
