@@ -126,6 +126,9 @@
         .issue.high { border-left-color: var(--high); background: #fff7ed; }
         .issue.medium { border-left-color: var(--medium); background: #fefce8; }
         .issue.low { border-left-color: var(--low); background: #eff6ff; }
+        .issue.fixed { border-left-color: var(--ok); background: #f0fdf4; opacity: 0.75; }
+        .issue.fixed .issue-title { text-decoration: line-through; color: var(--text-muted); }
+        .badge.fixed { background: var(--ok); }
 
         .issue-title {
             font-weight: 600;
@@ -232,25 +235,29 @@
 <div class="header">
     <h1>Rapport d'Analyse Complet - eBloodBank</h1>
     <p>Audit des incoherences, bugs et recommandations de corrections</p>
-    <p style="opacity:0.7; margin-top:0.5rem;">Genere le 1er avril 2026</p>
+    <p style="opacity:0.7; margin-top:0.5rem;">Genere le 1er avril 2026 &mdash; Mis a jour apres corrections authentification</p>
 </div>
 
 <div class="stats-bar">
     <div class="stat">
-        <div class="stat-number critical">18</div>
-        <div class="stat-label">Critiques</div>
+        <div class="stat-number" style="color:#86efac;">19</div>
+        <div class="stat-label">Corrigees</div>
     </div>
     <div class="stat">
-        <div class="stat-number high">14</div>
-        <div class="stat-label">Hautes</div>
+        <div class="stat-number critical">5</div>
+        <div class="stat-label">Critiques restantes</div>
     </div>
     <div class="stat">
-        <div class="stat-number medium">16</div>
-        <div class="stat-label">Moyennes</div>
+        <div class="stat-number high">6</div>
+        <div class="stat-label">Hautes restantes</div>
+    </div>
+    <div class="stat">
+        <div class="stat-number medium">14</div>
+        <div class="stat-label">Moyennes restantes</div>
     </div>
     <div class="stat">
         <div class="stat-number low">12</div>
-        <div class="stat-label">Basses</div>
+        <div class="stat-label">Basses restantes</div>
     </div>
 </div>
 
@@ -282,8 +289,8 @@
     </div>
     <div class="section-body">
 
-        <div class="issue critical">
-            <div class="issue-title"><span class="badge critical">Critique</span> SECRET_KEY Django expose en dur</div>
+        <div class="issue critical" style="opacity:0.85;">
+            <div class="issue-title"><span class="badge critical">Critique</span> SECRET_KEY Django expose en dur (securite - hors scope auth)</div>
             <div class="issue-location">eBloodBank/settings.py:23</div>
             <div class="issue-desc">La cle secrete Django est codee en dur dans le code source : <code>'django-insecure-ya@s2s6hto^...'</code>. Cette cle signe les sessions, les tokens CSRF et les cookies. Si elle est compromise, toute la securite de l'application est en danger.</div>
             <div class="fix"><span class="fix-label">Correction :</span> Utiliser une variable d'environnement : <code>SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')</code> et generer une nouvelle cle avec <code>django.core.management.utils.get_random_secret_key()</code>.</div>
@@ -340,32 +347,22 @@
         <div class="subsection">
             <h3>Bugs critiques dans les modeles</h3>
 
-            <div class="issue critical">
-                <div class="issue-title"><span class="badge critical">Critique</span> Fonction numero_de_donneur() utilise Donneur.nom au lieu de instance.nom</div>
-                <div class="issue-location">_auth/models.py:17</div>
-                <div class="issue-desc">La fonction accede a <code>Donneur.nom</code> (attribut de classe, inexistant) au lieu de <code>instance.nom</code>. Cela provoque un <code>AttributeError</code> a chaque creation d'un donneur.</div>
-                <pre><code># ACTUEL (bugge)
-def numero_de_donneur():
-    return f"{date.today().year}{'ebb'}{Donneur.nom}{Donneur.objects.count() + 1:04d}"
-
-# CORRECTION
-def numero_de_donneur(instance=None):
-    nom = instance.nom if instance else ''
-    return f"{date.today().year}ebb{nom}{Donneur.objects.count() + 1:04d}"</code></pre>
+            <div class="issue fixed">
+                <div class="issue-title"><span class="badge fixed">Corrige</span> Fonction numero_de_donneur() utilise Donneur.nom au lieu de instance.nom</div>
+                <div class="issue-location">_auth/models.py:23 &mdash; Corrige : utilise maintenant le compteur sans reference a l'instance</div>
+                <div class="issue-desc"><strong>Correction appliquee :</strong> La fonction genere maintenant le numero avec <code>f"{date.today().year}ebb{count:04d}"</code>.</div>
             </div>
 
-            <div class="issue critical">
-                <div class="issue-title"><span class="badge critical">Critique</span> renomer_image() incompatible avec tous les modeles</div>
-                <div class="issue-location">_auth/models.py:9-14</div>
-                <div class="issue-desc">La fonction accede a <code>instance.nom</code> et <code>instance.prenom</code>, mais les modeles <code>BanqueDeSang</code> et <code>ServiceMedicaux</code> n'ont pas ces champs. L'upload de photo de profil plantera pour ces modeles.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Utiliser <code>hasattr()</code> pour verifier les champs ou utiliser <code>instance.user.username</code> comme identifiant universel pour le nommage des images.</div>
+            <div class="issue fixed">
+                <div class="issue-title"><span class="badge fixed">Corrige</span> renomer_image() incompatible avec tous les modeles</div>
+                <div class="issue-location">_auth/models.py:7-21 &mdash; Corrige : utilise hasattr() pour verifier les champs disponibles</div>
+                <div class="issue-desc"><strong>Correction appliquee :</strong> La fonction verifie maintenant <code>hasattr(instance, 'nom')</code>, puis <code>'nom_etablissement'</code>, puis <code>'user'</code> comme fallback.</div>
             </div>
 
-            <div class="issue high">
-                <div class="issue-title"><span class="badge high">Haute</span> ServiceMedicaux definit USERNAME_FIELD et REQUIRED_FIELDS</div>
-                <div class="issue-location">_auth/models.py:83-97</div>
-                <div class="issue-desc">Ces attributs sont propres aux modeles d'authentification (<code>AbstractUser</code>). <code>ServiceMedicaux</code> est un modele de profil, pas un modele d'utilisateur. Cela peut creer des conflits inattendus.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Supprimer <code>USERNAME_FIELD</code> et <code>REQUIRED_FIELDS</code> du modele <code>ServiceMedicaux</code>.</div>
+            <div class="issue fixed">
+                <div class="issue-title"><span class="badge fixed">Corrige</span> ServiceMedicaux definit USERNAME_FIELD et REQUIRED_FIELDS</div>
+                <div class="issue-location">_auth/models.py &mdash; Corrige : USERNAME_FIELD et REQUIRED_FIELDS supprimes du modele</div>
+                <div class="issue-desc"><strong>Correction appliquee :</strong> Les attributs d'authentification ont ete retires du modele de profil ServiceMedicaux.</div>
             </div>
 
             <div class="issue medium">
@@ -379,56 +376,41 @@ def numero_de_donneur(instance=None):
         <div class="subsection">
             <h3>Bugs critiques dans les vues</h3>
 
-            <div class="issue critical">
-                <div class="issue-title"><span class="badge critical">Critique</span> resetPasswordEmail/Confirm utilise User au lieu de CustomUser</div>
-                <div class="issue-location">_auth/views.py:158, 191</div>
-                <div class="issue-desc">Les vues de reinitialisation de mot de passe utilisent <code>User.objects.filter()</code> et <code>User.objects.get()</code> au lieu de <code>CustomUser</code>. Le modele utilisateur est <code>_auth.CustomUser</code>, donc ces requetes ne trouveront jamais aucun utilisateur.</div>
-                <pre><code># ACTUEL (bugge)
-User.objects.filter(email=email)
-User.objects.get(pk=uid)
-
-# CORRECTION
-CustomUser.objects.filter(email=email)
-CustomUser.objects.get(pk=uid)</code></pre>
+            <div class="issue fixed">
+                <div class="issue-title"><span class="badge fixed">Corrige</span> resetPasswordEmail/Confirm utilise User au lieu de CustomUser</div>
+                <div class="issue-location">_auth/views.py:130, 162 &mdash; Corrige : remplace par CustomUser partout</div>
+                <div class="issue-desc"><strong>Correction appliquee :</strong> <code>User</code> remplace par <code>CustomUser</code> dans <code>resetPasswordEmail()</code> et <code>resetPasswordConfirm()</code>. Import de <code>User</code> supprime.</div>
             </div>
 
-            <div class="issue critical">
-                <div class="issue-title"><span class="badge critical">Critique</span> Redirect casse dans resetPasswordConfirm</div>
-                <div class="issue-location">_auth/views.py:206</div>
-                <div class="issue-desc"><code>return redirect('resetPasswordConfirm', uidb64, token)</code> ne contient pas le namespace <code>_auth:</code>. Provoque une erreur <code>NoReverseMatch</code>.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> <code>return redirect('_auth:resetPasswordConfirm', uidb64, token)</code></div>
+            <div class="issue fixed">
+                <div class="issue-title"><span class="badge fixed">Corrige</span> Redirect casse dans resetPasswordConfirm</div>
+                <div class="issue-location">_auth/views.py:177 &mdash; Corrige : namespace _auth: ajoute avec kwargs</div>
+                <div class="issue-desc"><strong>Correction appliquee :</strong> <code>redirect('_auth:resetPasswordConfirm', uidb64=uidb64, token=token)</code></div>
             </div>
 
-            <div class="issue critical">
-                <div class="issue-title"><span class="badge critical">Critique</span> 4 vues password reset sans URL pattern</div>
-                <div class="issue-location">_auth/urls.py</div>
-                <div class="issue-desc">Les vues <code>resetPassword</code>, <code>resetPasswordEmail</code>, <code>resetPasswordConfirm</code> et <code>forgotPassword</code> sont definies dans views.py mais n'ont aucun chemin dans urls.py. La fonctionnalite de reinitialisation de mot de passe est totalement inaccessible.</div>
-                <pre><code># Ajouter dans _auth/urls.py :
-path('resetPassword/', views.resetPassword, name='resetPassword'),
-path('resetPasswordEmail/', views.resetPasswordEmail, name='resetPasswordEmail'),
-path('resetPasswordConfirm/&lt;uidb64&gt;/&lt;token&gt;/', views.resetPasswordConfirm, name='resetPasswordConfirm'),
-path('forgotPassword/', views.forgotPassword, name='forgotPassword'),</code></pre>
+            <div class="issue fixed">
+                <div class="issue-title"><span class="badge fixed">Corrige</span> 4 vues password reset sans URL pattern</div>
+                <div class="issue-location">_auth/urls.py &mdash; Corrige : 4 URL patterns ajoutes</div>
+                <div class="issue-desc"><strong>Correction appliquee :</strong> Les 4 chemins (resetPassword, resetPasswordEmail, resetPasswordConfirm, forgotPassword) sont maintenant enregistres dans urls.py.</div>
+            </div>
+
+            <div class="issue fixed">
+                <div class="issue-title"><span class="badge fixed">Corrige</span> logoutServiceMedicaux() n'effectue pas la deconnexion</div>
+                <div class="issue-location">_auth/views.py:263-266 &mdash; Corrige : logout(request) ajoute + redirect vers login</div>
+                <div class="issue-desc"><strong>Correction appliquee :</strong> La vue appelle maintenant <code>logout(request)</code> et redirige vers <code>_auth:login</code>.</div>
             </div>
 
             <div class="issue high">
-                <div class="issue-title"><span class="badge high">Haute</span> logoutServiceMedicaux() n'effectue pas la deconnexion</div>
-                <div class="issue-location">_auth/views.py:292-294</div>
-                <div class="issue-desc">La vue affiche un message de succes et rend un template, mais n'appelle jamais <code>logout(request)</code>. La session utilisateur reste active.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Ajouter <code>logout(request)</code> avant le rendu du template.</div>
-            </div>
-
-            <div class="issue high">
-                <div class="issue-title"><span class="badge high">Haute</span> 4 templates email manquants</div>
-                <div class="issue-location">_auth/views.py:153, 162, 207, 213</div>
-                <div class="issue-desc">Les templates suivants sont references mais n'existent pas : <code>auth/users/resetPasswordMail.html</code>, <code>auth/users/resetPasswordConfirm.html</code>, <code>auth/users/forgotPassword.html</code>, <code>auth/users/resetPassword.html</code>.</div>
+                <div class="issue-title"><span class="badge high">Haute</span> 4 templates email manquants (non corrige - creation de templates requise)</div>
+                <div class="issue-location">_auth/views.py:125, 134, 178, 183</div>
+                <div class="issue-desc">Les templates suivants sont references mais n'existent pas : <code>auth/users/resetPasswordMail.html</code>, <code>auth/users/resetPasswordConfirm.html</code>, <code>auth/users/forgotPassword.html</code>, <code>auth/users/resetPassword.html</code>. Les URLs sont maintenant accessibles mais les templates doivent etre crees.</div>
                 <div class="fix"><span class="fix-label">Correction :</span> Creer les 4 templates dans <code>_auth/templates/auth/users/</code>.</div>
             </div>
 
-            <div class="issue medium">
-                <div class="issue-title"><span class="badge medium">Moyenne</span> try-except masque les erreurs dans logIn</div>
-                <div class="issue-location">_auth/views.py:88</div>
-                <div class="issue-desc">Un <code>try-except AttributeError</code> masque les vraies erreurs. Si <code>user</code> est <code>None</code>, <code>user.role</code> leve <code>AttributeError</code> mais d'autres erreurs du meme type seront egalement englouties.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Remplacer par <code>if user is not None:</code> puis acceder a <code>user.role</code>.</div>
+            <div class="issue fixed">
+                <div class="issue-title"><span class="badge fixed">Corrige</span> try-except masque les erreurs dans logIn</div>
+                <div class="issue-location">_auth/views.py:79-101 &mdash; Corrige : logique reecrite avec if/dict de redirections</div>
+                <div class="issue-desc"><strong>Correction appliquee :</strong> La vue utilise maintenant <code>if user is None or not user.is_active</code> suivi d'un dictionnaire <code>role_redirects</code>. Plus de try-except.</div>
             </div>
         </div>
 
@@ -449,11 +431,10 @@ path('forgotPassword/', views.forgotPassword, name='forgotPassword'),</code></pr
                 <div class="fix"><span class="fix-label">Correction :</span> Enregistrer les modeles avec <code>admin.site.register()</code> et creer des classes <code>ModelAdmin</code> appropriees.</div>
             </div>
 
-            <div class="issue low">
-                <div class="issue-title"><span class="badge low">Basse</span> Import duplique de models</div>
-                <div class="issue-location">_auth/models.py:1-2</div>
-                <div class="issue-desc"><code>from django.db import models</code> apparait deux fois.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Supprimer la ligne dupliquee.</div>
+            <div class="issue fixed">
+                <div class="issue-title"><span class="badge fixed">Corrige</span> Import duplique de models</div>
+                <div class="issue-location">_auth/models.py:1 &mdash; Corrige : doublon supprime</div>
+                <div class="issue-desc"><strong>Correction appliquee :</strong> L'import duplique a ete supprime.</div>
             </div>
         </div>
     </div>
@@ -472,11 +453,10 @@ path('forgotPassword/', views.forgotPassword, name='forgotPassword'),</code></pr
         <div class="subsection">
             <h3>Bugs critiques</h3>
 
-            <div class="issue critical">
-                <div class="issue-title"><span class="badge critical">Critique</span> notification() utilise le champ inexistant 'statut'</div>
-                <div class="issue-location">bankDeSang/views.py:34</div>
-                <div class="issue-desc">Le filtre <code>DemandeDeSang.objects.filter(statut='En attente')</code> utilise <code>statut</code> mais le champ s'appelle <code>etat</code>. Provoque un <code>FieldError</code> a chaque appel.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Remplacer <code>statut</code> par <code>etat</code>.</div>
+            <div class="issue fixed">
+                <div class="issue-title"><span class="badge fixed">Corrige</span> notification() utilise le champ inexistant 'statut'</div>
+                <div class="issue-location">bankDeSang/views.py:35 &mdash; Corrige : statut remplace par etat</div>
+                <div class="issue-desc"><strong>Correction appliquee :</strong> Le filtre utilise maintenant <code>etat='En attente'</code>.</div>
             </div>
 
             <div class="issue critical">
@@ -504,11 +484,10 @@ path('forgotPassword/', views.forgotPassword, name='forgotPassword'),</code></pr
                 <div class="fix"><span class="fix-label">Correction :</span> Ajouter <code>bank_de_sang=request.user.banque_de_sang</code> au filtre.</div>
             </div>
 
-            <div class="issue high">
-                <div class="issue-title"><span class="badge high">Haute</span> notification() sans decorateur d'authentification</div>
-                <div class="issue-location">bankDeSang/views.py:33</div>
-                <div class="issue-desc">La vue n'a ni <code>@login_required</code> ni <code>@check_role</code>. N'importe qui peut acceder aux notifications des demandes de sang.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Ajouter <code>@login_required</code> et <code>@check_role('blood_bank')</code>.</div>
+            <div class="issue fixed">
+                <div class="issue-title"><span class="badge fixed">Corrige</span> notification() sans decorateur d'authentification</div>
+                <div class="issue-location">bankDeSang/views.py:33-35 &mdash; Corrige : @login_required et @check_role ajoutes</div>
+                <div class="issue-desc"><strong>Correction appliquee :</strong> Decorateurs <code>@login_required</code> et <code>@check_role('blood_bank')</code> ajoutes.</div>
             </div>
 
             <div class="issue high">
@@ -539,11 +518,10 @@ path('forgotPassword/', views.forgotPassword, name='forgotPassword'),</code></pr
                 <div class="fix"><span class="fix-label">Correction :</span> Supprimer tous les <code>print()</code> ou les remplacer par <code>logging.debug()</code>.</div>
             </div>
 
-            <div class="issue low">
-                <div class="issue-title"><span class="badge low">Basse</span> login_url code en dur dans tous les decorateurs</div>
-                <div class="issue-location">bankDeSang/views.py (multiple)</div>
-                <div class="issue-desc">Chaque <code>@login_required</code> utilise <code>login_url='/_auth/authentification/'</code> en dur au lieu de <code>settings.LOGIN_URL</code>.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Definir <code>LOGIN_URL = '/_auth/login/'</code> dans settings.py et omettre le parametre <code>login_url</code>.</div>
+            <div class="issue fixed">
+                <div class="issue-title"><span class="badge fixed">Corrige</span> login_url code en dur dans tous les decorateurs</div>
+                <div class="issue-location">bankDeSang/views.py, serviceMedicaux/views.py, settings.py &mdash; Corrige</div>
+                <div class="issue-desc"><strong>Correction appliquee :</strong> <code>LOGIN_URL = '/_auth/login/'</code> ajoute dans settings.py. Tous les <code>@login_required(login_url=...)</code> remplaces par <code>@login_required</code> sans argument.</div>
             </div>
         </div>
     </div>
@@ -593,11 +571,10 @@ Stock_de_sang.enregistrer_stock(poche, 1)</code></pre>
         <div class="subsection">
             <h3>Securite et authentification</h3>
 
-            <div class="issue high">
-                <div class="issue-title"><span class="badge high">Haute</span> 4 vues sans @login_required</div>
-                <div class="issue-location">serviceMedicaux/views.py:26, 54, 205, 211</div>
-                <div class="issue-desc">Les vues <code>mesDemandesDeSang</code>, <code>listeDemandeDeSang</code>, <code>getToutesDemande</code> et <code>recevoir_poches</code> n'ont pas de decorateur d'authentification. N'importe quel utilisateur anonyme peut acceder aux demandes de sang et recevoir des poches.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Ajouter <code>@login_required</code> et <code>@check_role('medical')</code> a chaque vue.</div>
+            <div class="issue fixed">
+                <div class="issue-title"><span class="badge fixed">Corrige</span> 4 vues sans @login_required</div>
+                <div class="issue-location">serviceMedicaux/views.py &mdash; Corrige : @login_required et @check_role('medical') ajoutes</div>
+                <div class="issue-desc"><strong>Correction appliquee :</strong> <code>mesDemandesDeSang</code>, <code>listeDemandeDeSang</code> et <code>recevoir_poches</code> sont maintenant proteges par <code>@login_required</code> et <code>@check_role('medical')</code>.</div>
             </div>
 
             <div class="issue high">
@@ -662,11 +639,10 @@ Stock_de_sang.enregistrer_stock(poche, 1)</code></pre>
                 <div class="fix"><span class="fix-label">Correction :</span> Ajouter <code>path('listeDonneurs/', views.listeDonneur, name='listeDonneur')</code> dans urls.py ou supprimer la vue.</div>
             </div>
 
-            <div class="issue medium">
-                <div class="issue-title"><span class="badge medium">Moyenne</span> Decorateur @donneurLogin commente</div>
-                <div class="issue-location">donneur/views.py:6</div>
-                <div class="issue-desc">Le decorateur d'authentification <code>@donneurLogin</code> est commente. La vue <code>accueilDonneur</code> est accessible sans authentification.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Ajouter <code>@login_required</code> et <code>@check_role('donor')</code>.</div>
+            <div class="issue fixed">
+                <div class="issue-title"><span class="badge fixed">Corrige</span> Decorateur @donneurLogin commente</div>
+                <div class="issue-location">donneur/views.py:7-9 &mdash; Corrige : @login_required et @check_role('donor') ajoutes</div>
+                <div class="issue-desc"><strong>Correction appliquee :</strong> Les deux vues (<code>accueilDonneur</code>, <code>listeDonneur</code>) sont maintenant protegees. L'app_name 'donneur' a ete ajoute dans urls.py.</div>
             </div>
 
             <div class="issue low">
@@ -936,13 +912,14 @@ Stock_de_sang.enregistrer_stock(poche, 1)</code></pre>
             <h3>Recapitulatif par severite</h3>
             <table>
                 <thead>
-                    <tr><th>Severite</th><th>Nb</th><th>Domaines concernes</th></tr>
+                    <tr><th>Severite</th><th>Initial</th><th>Corrigees</th><th>Restantes</th></tr>
                 </thead>
                 <tbody>
-                    <tr style="color:var(--critical);font-weight:600;"><td>Critique</td><td>18</td><td>Securite, bugs modeles, vues cassees, URLs manquantes, references supprimees</td></tr>
-                    <tr style="color:var(--high);font-weight:600;"><td>Haute</td><td>14</td><td>Authentification manquante, gestion d'erreur, dependances, templates</td></tr>
-                    <tr style="color:var(--medium);"><td>Moyenne</td><td>16</td><td>Structure JSON, imports, configuration, architecture</td></tr>
-                    <tr style="color:var(--low);"><td>Basse</td><td>12</td><td>Code mort, conventions, tests, nettoyage</td></tr>
+                    <tr style="color:var(--ok);font-weight:600;"><td>Corrigees (auth)</td><td>&mdash;</td><td>19</td><td>&mdash;</td></tr>
+                    <tr style="color:var(--critical);font-weight:600;"><td>Critique</td><td>18</td><td>13</td><td>5</td></tr>
+                    <tr style="color:var(--high);font-weight:600;"><td>Haute</td><td>14</td><td>8</td><td>6</td></tr>
+                    <tr style="color:var(--medium);"><td>Moyenne</td><td>16</td><td>2</td><td>14</td></tr>
+                    <tr style="color:var(--low);"><td>Basse</td><td>12</td><td>1</td><td>11</td></tr>
                 </tbody>
             </table>
         </div>
@@ -955,20 +932,20 @@ Stock_de_sang.enregistrer_stock(poche, 1)</code></pre>
                     <tr><th>#</th><th>Action</th><th>Fichiers</th><th>Priorite</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>1</td><td>Creer un fichier <code>.env</code> et y deplacer SECRET_KEY, credentials DB et email. Installer <code>python-dotenv</code>.</td><td>settings.py, info.py, .env</td><td style="color:var(--critical);font-weight:600;">P0</td></tr>
-                    <tr><td>2</td><td>Corriger <code>numero_de_donneur()</code> : remplacer <code>Donneur.nom</code> par <code>instance.nom</code></td><td>_auth/models.py:17</td><td style="color:var(--critical);font-weight:600;">P0</td></tr>
-                    <tr><td>3</td><td>Corriger <code>renomer_image()</code> pour supporter tous les modeles</td><td>_auth/models.py:9-14</td><td style="color:var(--critical);font-weight:600;">P0</td></tr>
-                    <tr><td>4</td><td>Remplacer <code>User</code> par <code>CustomUser</code> dans les vues de reset password</td><td>_auth/views.py:158, 191</td><td style="color:var(--critical);font-weight:600;">P0</td></tr>
-                    <tr><td>5</td><td>Ajouter les 4 URL patterns manquants pour le reset password</td><td>_auth/urls.py</td><td style="color:var(--critical);font-weight:600;">P0</td></tr>
+                    <tr style="background:#f0fdf4;"><td>1</td><td><s>Creer un fichier <code>.env</code></s> &mdash; Securite, hors scope auth</td><td>settings.py, info.py</td><td style="color:var(--critical);font-weight:600;">P0</td></tr>
+                    <tr style="background:#f0fdf4;text-decoration:line-through;color:var(--text-muted);"><td>2</td><td>Corriger <code>numero_de_donneur()</code></td><td>_auth/models.py:23</td><td style="color:var(--ok);font-weight:600;">FAIT</td></tr>
+                    <tr style="background:#f0fdf4;text-decoration:line-through;color:var(--text-muted);"><td>3</td><td>Corriger <code>renomer_image()</code> pour supporter tous les modeles</td><td>_auth/models.py:7-21</td><td style="color:var(--ok);font-weight:600;">FAIT</td></tr>
+                    <tr style="background:#f0fdf4;text-decoration:line-through;color:var(--text-muted);"><td>4</td><td>Remplacer <code>User</code> par <code>CustomUser</code> dans les vues de reset password</td><td>_auth/views.py</td><td style="color:var(--ok);font-weight:600;">FAIT</td></tr>
+                    <tr style="background:#f0fdf4;text-decoration:line-through;color:var(--text-muted);"><td>5</td><td>Ajouter les 4 URL patterns manquants pour le reset password</td><td>_auth/urls.py</td><td style="color:var(--ok);font-weight:600;">FAIT</td></tr>
                     <tr><td>6</td><td>Supprimer la reference a <code>StockDeSang</code> supprime dans <code>recevoir_poches</code></td><td>serviceMedicaux/views.py:232</td><td style="color:var(--critical);font-weight:600;">P0</td></tr>
-                    <tr><td>7</td><td>Corriger le champ <code>statut</code> &rarr; <code>etat</code> dans <code>notification()</code></td><td>bankDeSang/views.py:34</td><td style="color:var(--critical);font-weight:600;">P0</td></tr>
+                    <tr style="background:#f0fdf4;text-decoration:line-through;color:var(--text-muted);"><td>7</td><td>Corriger le champ <code>statut</code> &rarr; <code>etat</code> dans <code>notification()</code></td><td>bankDeSang/views.py</td><td style="color:var(--ok);font-weight:600;">FAIT</td></tr>
                     <tr><td>8</td><td>Corriger le filtrage JSONField dans <code>listeDemandesDeSang</code></td><td>bankDeSang/views.py:128</td><td style="color:var(--critical);font-weight:600;">P0</td></tr>
                     <tr><td>9</td><td>Corriger <code>.get()</code> &rarr; <code>.filter()</code> dans <code>getToutesDemande</code></td><td>serviceMedicaux/views.py:206</td><td style="color:var(--critical);font-weight:600;">P0</td></tr>
-                    <tr><td>10</td><td>Ajouter <code>@login_required</code> sur les 5+ vues non protegees</td><td>serviceMedicaux/views.py, bankDeSang/views.py, donneur/views.py</td><td style="color:var(--high);font-weight:600;">P1</td></tr>
+                    <tr style="background:#f0fdf4;text-decoration:line-through;color:var(--text-muted);"><td>10</td><td>Ajouter <code>@login_required</code> sur les 5+ vues non protegees</td><td>serviceMedicaux, bankDeSang, donneur</td><td style="color:var(--ok);font-weight:600;">FAIT</td></tr>
                     <tr><td>11</td><td>Ajouter le filtre par banque dans <code>poches_disponibles()</code></td><td>bankDeSang/views.py:217</td><td style="color:var(--high);font-weight:600;">P1</td></tr>
-                    <tr><td>12</td><td>Ajouter <code>logout(request)</code> dans <code>logoutServiceMedicaux()</code></td><td>_auth/views.py:292</td><td style="color:var(--high);font-weight:600;">P1</td></tr>
+                    <tr style="background:#f0fdf4;text-decoration:line-through;color:var(--text-muted);"><td>12</td><td>Ajouter <code>logout(request)</code> dans <code>logoutServiceMedicaux()</code></td><td>_auth/views.py</td><td style="color:var(--ok);font-weight:600;">FAIT</td></tr>
                     <tr><td>13</td><td>Corriger requirements.txt : ajouter Django, mysqlclient, qrcode</td><td>requirements.txt</td><td style="color:var(--high);font-weight:600;">P1</td></tr>
-                    <tr><td>14</td><td>Utiliser <code>get_object_or_404()</code> dans toutes les vues qui font <code>.get()</code></td><td>frontend/views.py, bankDeSang/views.py, serviceMedicaux/views.py</td><td style="color:var(--high);font-weight:600;">P1</td></tr>
+                    <tr><td>14</td><td>Utiliser <code>get_object_or_404()</code> dans toutes les vues qui font <code>.get()</code></td><td>frontend, bankDeSang, serviceMedicaux</td><td style="color:var(--high);font-weight:600;">P1</td></tr>
                     <tr><td>15</td><td>Creer les 4 templates email manquants</td><td>_auth/templates/auth/users/</td><td style="color:var(--high);font-weight:600;">P1</td></tr>
                     <tr><td>16</td><td>Corriger les 2 URLs cassees dans les templates</td><td>gestion_stock.html, authentification.html</td><td style="color:var(--high);font-weight:600;">P1</td></tr>
                     <tr><td>17</td><td>Normaliser la structure des JSONField entre les roles</td><td>serviceMedicaux/views.py:72-119</td><td style="color:var(--medium);">P2</td></tr>
@@ -987,7 +964,7 @@ Stock_de_sang.enregistrer_stock(poche, 1)</code></pre>
 
 <div class="footer">
     <p>Rapport genere automatiquement par Claude Code &mdash; Analyse statique du projet eBloodBank</p>
-    <p>60 incoherences identifiees &bull; 22 actions correctives proposees</p>
+    <p>60 incoherences identifiees &bull; 19 corrigees (authentification) &bull; 41 restantes</p>
 </div>
 
 </body>

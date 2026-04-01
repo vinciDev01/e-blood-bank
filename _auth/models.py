@@ -1,8 +1,6 @@
 from django.db import models
-from django.db import models
 from datetime import date
 from django.contrib.auth.models import AbstractUser, Group, Permission
-# from .roles import *
 import os
 
 # Create your models here.
@@ -10,11 +8,21 @@ def renomer_image(instance, filename):
     model_name = instance.__class__.__name__.lower()
     upload_to = f'images/{model_name}/'
     ext = filename.split('.')[-1]
-    filename = f'photo_profile/{instance.nom}_{instance.prenom}.{ext}'
+    # Utiliser nom/prenom si disponibles, sinon le username du user lie
+    if hasattr(instance, 'nom') and hasattr(instance, 'prenom'):
+        nom_fichier = f'{instance.nom}_{instance.prenom}'
+    elif hasattr(instance, 'nom_etablissement'):
+        nom_fichier = instance.nom_etablissement
+    elif hasattr(instance, 'user'):
+        nom_fichier = instance.user.username
+    else:
+        nom_fichier = f'{model_name}_{instance.pk}'
+    filename = f'photo_profile/{nom_fichier}.{ext}'
     return os.path.join(upload_to, filename)
 
 def numero_de_donneur():
-    return f"{date.today().year}{'ebb'}{Donneur.nom}{Donneur.objects.count() + 1:04d}"
+    count = Donneur.objects.count() + 1
+    return f"{date.today().year}ebb{count:04d}"
 
 
 
@@ -79,22 +87,6 @@ class ServiceMedicaux(models.Model):
 
     groups = models.ManyToManyField(Group, related_name="services_medicaux")
     user_permissions = models.ManyToManyField(Permission, related_name="services_medicaux_permissions")
-
-    USERNAME_FIELD = 'email'
-    
-    REQUIRED_FIELDS = [
-        'nom_etablissement', 
-        'type_etablissement', 
-        'responsable', 
-        'adresse', 
-        'ville', 
-        'code_postal', 
-        'pays', 
-        'telephone', 
-        'numero_licence', 
-        'numero_enregistrement', 
-        'certificat_enregistrement'
-    ]
 
     def __str__(self):
         return self.nom_etablissement

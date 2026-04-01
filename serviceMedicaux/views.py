@@ -17,12 +17,14 @@ from django.shortcuts import get_object_or_404
 # Create your views here.
 
 # @serviceMedicaux
-@login_required(login_url='/_auth/authentification/')
+@login_required
 def accueilServiceMedicaux(request):
     # `request.user` contient l'utilisateur authentifié
     hopital = request.user.service_medical.nom_etablissement
     return render(request, 'frontend/serviceMedicaux/accueil_service_medicaux.html', {'hopital': hopital})
 
+@login_required
+@check_role('medical')
 def mesDemandesDeSang(request):
     demandes = DemandeDeSang.objects.filter(serviceMedicaux=request.user.service_medical)
     service_medical = request.user.service_medical
@@ -51,12 +53,14 @@ def mesDemandesDeSang(request):
     return render(request, 'frontend/serviceMedicaux/liste_demande_de_sang.html', context)
 
 #demande des utilisateurs
+@login_required
+@check_role('medical')
 def listeDemandeDeSang(request):
     demandes = DemandeDeSang.objects.filter(etat='En attente', patient__isnull=False)
     return render(request, 'frontend/serviceMedicaux/liste_demande_de_sang.html', {'demandes': demandes})
 
 
-@login_required(login_url='/_auth/authentification/')
+@login_required
 def faireDemandeDeSang(request):
     if request.method == 'POST':
         type_produit = request.POST.get('typeProduit', '')
@@ -208,6 +212,8 @@ def getToutesDemande(request):
 
 
 
+@login_required
+@check_role('medical')
 def recevoir_poches(request):
     if request.method == 'POST':
         demande_id = request.POST.get('demande_id')
@@ -237,7 +243,7 @@ def recevoir_poches(request):
         messages.success(request, 'Les poches ont été reçues avec succès')
     return redirect('serviceMedicaux:mesDemandesDeSang')
 
-# @login_required(login_url='/_auth/authentification/')
+# @login_required
 # @check_role('blood_bank')
 # def gestionStock(request):
 #     if request.method == 'POST':

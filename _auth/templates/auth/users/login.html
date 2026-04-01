@@ -1,344 +1,440 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="node_modules/@material-tailwind/html@latest/scripts/ripple.js"></script>
-    <script src="https://unpkg.com/@material-tailwind/html@latest/scripts/ripple.js"></script>
-    <!-- from node_modules -->
-    <script type="module" src="node_modules/@material-tailwind/html@latest/scripts/popover.js"></script>
+    <title>Connexion - eBloodBank</title>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-    <!-- from cdn -->
-    <script type="module" src="https://unpkg.com/@material-tailwind/html@latest/scripts/popover.js"></script>
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            background: #f5f5f7;
+            color: #1d1d1f;
+        }
 
+        /* --- Left panel (image) --- */
+        .panel-left {
+            display: none;
+            width: 50%;
+            position: relative;
+            overflow: hidden;
+        }
+        @media (min-width: 960px) {
+            .panel-left { display: block; }
+        }
+        .panel-left img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .panel-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(160deg, rgba(185,28,28,0.82) 0%, rgba(30,30,30,0.7) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 3.5rem;
+        }
+        .panel-overlay h2 {
+            color: #fff;
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1.25;
+            margin-bottom: 0.75rem;
+            animation: fadeUp 0.7s ease-out both;
+        }
+        .panel-overlay p {
+            color: rgba(255,255,255,0.8);
+            font-size: 1rem;
+            line-height: 1.6;
+            max-width: 380px;
+            animation: fadeUp 0.7s 0.15s ease-out both;
+        }
+
+        /* --- Right panel (form) --- */
+        .panel-right {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .form-wrapper {
+            width: 100%;
+            max-width: 420px;
+            animation: fadeUp 0.5s ease-out both;
+        }
+
+        /* Logo & header */
+        .logo-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 2rem;
+        }
+        .logo-row img { height: 38px; width: auto; }
+        .logo-row span {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #b91c1c;
+            letter-spacing: -0.02em;
+        }
+        .form-header h1 {
+            font-size: 1.65rem;
+            font-weight: 700;
+            margin-bottom: 0.35rem;
+        }
+        .form-header p {
+            color: #6e6e73;
+            font-size: 0.92rem;
+            margin-bottom: 1.75rem;
+        }
+
+        /* Fields */
+        .field { margin-bottom: 1.25rem; }
+        .field label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #3a3a3c;
+            margin-bottom: 0.4rem;
+            letter-spacing: 0.01em;
+        }
+        .input-group {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            border: 1.5px solid #d2d2d7;
+            border-radius: 10px;
+            padding: 0 14px;
+            height: 48px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .input-group:focus-within {
+            border-color: #b91c1c;
+            box-shadow: 0 0 0 3px rgba(185,28,28,0.08);
+        }
+        .input-group svg {
+            flex-shrink: 0;
+            width: 18px;
+            height: 18px;
+            color: #8e8e93;
+        }
+        .input-group input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 0.92rem;
+            padding: 0 10px;
+            height: 100%;
+            color: #1d1d1f;
+        }
+        .input-group input::placeholder { color: #aeaeb2; }
+        .eye-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            color: #8e8e93;
+            transition: color 0.15s;
+        }
+        .eye-btn:hover { color: #3a3a3c; }
+
+        /* Row between fields */
+        .options-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            font-size: 0.82rem;
+        }
+        .options-row label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #3a3a3c;
+            cursor: pointer;
+        }
+        .options-row input[type="checkbox"] {
+            width: 15px;
+            height: 15px;
+            accent-color: #b91c1c;
+            cursor: pointer;
+        }
+        .options-row a {
+            color: #b91c1c;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.15s;
+        }
+        .options-row a:hover { color: #991b1b; text-decoration: underline; }
+
+        /* Submit button */
+        .btn-submit {
+            width: 100%;
+            height: 48px;
+            border: none;
+            border-radius: 10px;
+            background: #b91c1c;
+            color: #fff;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            letter-spacing: 0.01em;
+        }
+        .btn-submit:hover { background: #991b1b; }
+        .btn-submit:active { transform: scale(0.985); }
+
+        /* Separator */
+        .separator {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin: 1.5rem 0;
+            color: #aeaeb2;
+            font-size: 0.8rem;
+        }
+        .separator::before, .separator::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #d2d2d7;
+        }
+
+        /* Social buttons */
+        .social-row { display: flex; gap: 12px; }
+        .btn-social {
+            flex: 1;
+            height: 46px;
+            border-radius: 10px;
+            border: 1.5px solid #d2d2d7;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: #1d1d1f;
+            cursor: pointer;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .btn-social:hover {
+            border-color: #b91c1c;
+            box-shadow: 0 0 0 3px rgba(185,28,28,0.06);
+        }
+        .btn-social svg { width: 18px; height: 18px; }
+
+        /* Footer link */
+        .form-footer {
+            text-align: center;
+            margin-top: 1.75rem;
+            font-size: 0.88rem;
+            color: #6e6e73;
+        }
+        .form-footer a {
+            color: #b91c1c;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.15s;
+        }
+        .form-footer a:hover { text-decoration: underline; }
+
+        /* --- Toast --- */
+        #toast-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .toast {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 300px;
+            max-width: 400px;
+            padding: 14px 18px;
+            border-radius: 10px;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+            font-size: 0.88rem;
+            font-weight: 500;
+            animation: slideIn 0.35s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+        .toast.out { opacity: 0; transform: translateX(60px); transition: all 0.25s; }
+        .toast-error { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+        .toast-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
+        .toast svg { flex-shrink: 0; width: 20px; height: 20px; }
+        .toast-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: inherit;
+            opacity: 0.4;
+            font-size: 16px;
+            padding: 0;
+        }
+        .toast-close:hover { opacity: 1; }
+        .toast-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            border-radius: 0 0 10px 10px;
+            animation: shrink 4s linear forwards;
+        }
+        .toast-error .toast-bar { background: #f87171; }
+        .toast-success .toast-bar { background: #4ade80; }
+
+        /* Animations */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(18px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(60px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes shrink {
+            from { width: 100%; }
+            to { width: 0%; }
+        }
+    </style>
 </head>
-<style>
-    .form {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        background-color: #ffffff;
-        padding: 30px;
-        width: 450px;
-        border-radius: 20px;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    }
-
-    ::placeholder {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    }
-
-    .form button {
-        align-self: flex-end;
-    }
-
-    .flex-column>label {
-        color: #151717;
-        font-weight: 600;
-    }
-
-    .inputForm {
-        border: 1.5px solid #ecedec;
-        border-radius: 10px;
-        height: 50px;
-        display: flex;
-        align-items: center;
-        padding-left: 10px;
-        transition: 0.2s ease-in-out;
-    }
-
-    .input {
-        margin-left: 10px;
-        border-radius: 10px;
-        border: none;
-        width: 85%;
-        height: 100%;
-    }
-
-    .input:focus {
-        outline: none;
-    }
-
-    .inputForm:focus-within {
-        border: 1.5px solid #2d79f3;
-    }
-
-    .flex-row {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        gap: 10px;
-        justify-content: space-between;
-    }
-
-    .flex-row>div>label {
-        font-size: 14px;
-        color: black;
-        font-weight: 400;
-    }
-
-    .span {
-        font-size: 14px;
-        margin-left: 5px;
-        color: #2d79f3;
-        font-weight: 500;
-        cursor: pointer;
-    }
-
-    .button-submit {
-        margin: 20px 0 10px 0;
-        background-color: #151717;
-        border: none;
-        color: white;
-        font-size: 15px;
-        font-weight: 500;
-        border-radius: 10px;
-        height: 50px;
-        width: 100%;
-        cursor: pointer;
-    }
-
-    .button-submit:hover {
-        background-color: #252727;
-    }
-
-    .p {
-        text-align: center;
-        color: black;
-        font-size: 14px;
-        margin: 5px 0;
-    }
-
-    .btn {
-        margin-top: 10px;
-        width: 100%;
-        height: 50px;
-        border-radius: 10px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-weight: 500;
-        gap: 10px;
-        border: 1px solid #ededef;
-        background-color: white;
-        cursor: pointer;
-        transition: 0.2s ease-in-out;
-    }
-
-    .btn:hover {
-        border: 1px solid #2d79f3;
-        ;
-    }
-
-    /* .google {
-  color: #151717; 
-}*/
-</style>
-
 <body>
 
-    <section style="font-size: 1.125rem;">
-        
-        <div class="px-8 py-24 mx-auto md:px-12 lg:px-32 max-w-7xl flex box-shadow">
-            <div class="max-w-md mx-auto md:max-w-sm md:w-96">
-                <form class="form" action="{% url '_auth:login' %}" method="post" style="box-sizing: border-box; box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);">
+    <!-- Left panel -->
+    <div class="panel-left">
+        <img src="{% static 'img/bg_login.jpg' %}" alt="">
+        <div class="panel-overlay">
+            <h2>Chaque don compte.<br>Chaque vie aussi.</h2>
+            <p>eBloodBank connecte les donneurs, les banques de sang et les services medicaux pour sauver des vies ensemble.</p>
+        </div>
+    </div>
 
-                    {% if messages %}
-                    {% for message in messages %}
-                        {% if message.tags == 'success' %}
-                            <div role="alert" class="rounded-xl border border-gray-100 bg-white p-4">
-                                <div class="flex items-start gap-4">
-                                    <span class="text-green-600">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                            stroke="currentColor" class="h-6 w-6">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                    </span>
+    <!-- Right panel -->
+    <div class="panel-right">
+        <div class="form-wrapper">
+            <div class="logo-row">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#b91c1c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"/>
+                    <path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97"/>
+                </svg>
+                <span>eBloodBank</span>
+            </div>
 
-                                    <div class="flex-1">
-                                        <strong class="block font-medium text-gray-900"> Success! </strong>
+            <div class="form-header">
+                <h1>Connexion</h1>
+                <p>Entrez vos identifiants pour acceder a votre espace</p>
+            </div>
 
-                                        <p class="mt-1 text-sm text-gray-700">
-                                            {{ message }}
-                                        </p>
-                                    </div>
+            <form action="{% url '_auth:login' %}" method="post">
+                {% csrf_token %}
 
-                                    <button class="text-gray-500 transition hover:text-gray-600">
-                                        <span class="sr-only">Dismiss popup</span>
-
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                            stroke="currentColor" class="h-6 w-6">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                        {% endif %}
-                        {% if message.tags == 'error' %}
-                            <div role="alert" class="rounded border-s-4 border-red-500 bg-red-50 p-4">
-                                <div class="flex items-center gap-2 text-red-800">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5">
-                                        <path fill-rule="evenodd"
-                                            d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-
-                                    <strong class="block font-medium"> Something went wrong </strong>
-                                </div>
-
-                                <p class="mt-2 text-sm text-red-700">
-                                    {{ message }}
-                                </p>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                    {% endif %}
-                    {% csrf_token %}
-                    <div class="flex-column">
-                        <label>Email </label>
-                    </div>
-                    <div class="inputForm">
-                        <svg height="20" viewBox="0 0 32 32" width="20" xmlns="http://www.w3.org/2000/svg">
-                            <g id="Layer_3" data-name="Layer 3">
-                                <path
-                                    d="m30.853 13.87a15 15 0 0 0 -29.729 4.082 15.1 15.1 0 0 0 12.876 12.918 15.6 15.6 0 0 0 2.016.13 14.85 14.85 0 0 0 7.715-2.145 1 1 0 1 0 -1.031-1.711 13.007 13.007 0 1 1 5.458-6.529 2.149 2.149 0 0 1 -4.158-.759v-10.856a1 1 0 0 0 -2 0v1.726a8 8 0 1 0 .2 10.325 4.135 4.135 0 0 0 7.83.274 15.2 15.2 0 0 0 .823-7.455zm-14.853 8.13a6 6 0 1 1 6-6 6.006 6.006 0 0 1 -6 6z">
-                                </path>
-                            </g>
+                <div class="field">
+                    <label for="email">Adresse email</label>
+                    <div class="input-group">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="4" width="20" height="16" rx="2"/>
+                            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
                         </svg>
-                        <input type="text" name="email" class="input" placeholder="Enter your Email">
+                        <input type="email" name="email" id="email" placeholder="nom@exemple.com" required autocomplete="email">
                     </div>
+                </div>
 
-                    <div class="flex-column">
-                        <label>Password </label>
-                    </div>
-                    <div class="inputForm">
-                        <svg height="20" viewBox="-64 0 512 512" width="20" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="m336 512h-288c-26.453125 0-48-21.523438-48-48v-224c0-26.476562 21.546875-48 48-48h288c26.453125 0 48 21.523438 48 48v224c0 26.476562-21.546875 48-48 48zm-288-288c-8.8125 0-16 7.167969-16 16v224c0 8.832031 7.1875 16 16 16h288c8.8125 0 16-7.167969 16-16v-224c0-8.832031-7.1875-16-16-16zm0 0">
-                            </path>
-                            <path
-                                d="m304 224c-8.832031 0-16-7.167969-16-16v-80c0-52.929688-43.070312-96-96-96s-96 43.070312-96 96v80c0 8.832031-7.167969 16-16 16s-16-7.167969-16-16v-80c0-70.59375 57.40625-128 128-128s128 57.40625 128 128v80c0 8.832031-7.167969 16-16 16zm0 0">
-                            </path>
+                <div class="field">
+                    <label for="password-input">Mot de passe</label>
+                    <div class="input-group">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                         </svg>
-                        <input type="password" name="password" id="password-input" class="input"
-                            placeholder="Enter your Password">
-                        <svg id="eye-icon" onclick="togglePasswordVisibility()" width="24px" height="24px"
-                            viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg"
-                            color="#000000">
-                            <path d="M19.5 16L17.0248 12.6038" stroke="#000000" stroke-width="1.5"
-                                stroke-linecap="round" stroke-linejoin="round"></path>
-                            <path d="M12 17.5V14" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                                stroke-linejoin="round"></path>
-                            <path d="M4.5 16L6.96895 12.6124" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                                stroke-linejoin="round"></path>
-                            <path d="M3 8C6.6 16 17.4 16 21 8" stroke="#000000" stroke-width="1.5"
-                                stroke-linecap="round" stroke-linejoin="round"></path>
-                        </svg>
-                    </div>
-
-                    <script>
-                        function togglePasswordVisibility() {
-                            var passwordInput = document.getElementById('password-input');
-                            var type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                            passwordInput.setAttribute('type', type);
-
-                            var svg = document.getElementById('eye-icon');
-                            // Clear current SVG paths
-                            while (svg.firstChild) {
-                                svg.removeChild(svg.firstChild);
-                            }
-
-                            // Add paths based on the new type
-                            if (type === 'password') {
-                                svg.innerHTML = `
-                                    <path d="M19.5 16L17.0248 12.6038" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                                    <path d="M12 17.5V14" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                                    <path d="M4.5 16L6.96895 12.6124" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                                    <path d="M3 8C6.6 16 17.4 16 21 8" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                                `;
-                            } else {
-                                svg.innerHTML = `
-                                    <?xml version="1.0" encoding="UTF-8"?><svg width="24px" height="24px" viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000"><path d="M3 13C6.6 5 17.4 5 21 13" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12 17C10.3431 17 9 15.6569 9 14C9 12.3431 10.3431 11 12 11C13.6569 11 15 12.3431 15 14C15 15.6569 13.6569 17 12 17Z" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-                                `;
-                            }
-                        }
-                    </script>
-                    <div class="flex-row">
-                        <div>
-                            <input type="checkbox">
-                            <label>Remember me </label>
-                        </div>
-                        <span class="span">Forgot password?</span>
-                    </div>
-                    <button type="submit" class="button-submit">Sign In</button>
-                    <p class="p">Don't have an account? <span class="span"><a href="{% url '_auth:register' %}">Sign Up</a></span>
-
-                    </p>
-                    <p class="p line">Or With</p>
-
-                    <div class="flex-row">
-                        <button class="btn google"> <svg version="1.1" width="20" id="Layer_1"
-                                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-                                y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;"
-                                xml:space="preserve">
-                                <path style="fill:#FBBB00;" d="M113.47,309.408L95.648,375.94l-65.139,1.378C11.042,341.211,0,299.9,0,256
-                    c0-42.451,10.324-82.483,28.624-117.732h0.014l57.992,10.632l25.404,57.644c-5.317,15.501-8.215,32.141-8.215,49.456
-                    C103.821,274.792,107.225,292.797,113.47,309.408z"></path>
-                                <path style="fill:#518EF8;"
-                                    d="M507.527,208.176C510.467,223.662,512,239.655,512,256c0,18.328-1.927,36.206-5.598,53.451
-                    c-12.462,58.683-45.025,109.925-90.134,146.187l-0.014-0.014l-73.044-3.727l-10.338-64.535
-                    c29.932-17.554,53.324-45.025,65.646-77.911h-136.89V208.176h138.887L507.527,208.176L507.527,208.176z"></path>
-                                <path style="fill:#28B446;" d="M416.253,455.624l0.014,0.014C372.396,490.901,316.666,512,256,512
-                    c-97.491,0-182.252-54.491-225.491-134.681l82.961-67.91c21.619,57.698,77.278,98.771,142.53,98.771
-                    c28.047,0,54.323-7.582,76.87-20.818L416.253,455.624z"></path>
-                                <path style="fill:#F14336;" d="M419.404,58.936l-82.933,67.896c-23.335-14.586-50.919-23.012-80.471-23.012
-                    c-66.729,0-123.429,42.957-143.965,102.724l-83.397-68.276h-0.014C71.23,56.123,157.06,0,256,0
-                    C318.115,0,375.068,22.126,419.404,58.936z"></path>
-
+                        <input type="password" name="password" id="password-input" placeholder="Votre mot de passe" required autocomplete="current-password">
+                        <button type="button" class="eye-btn" onclick="togglePwd()" aria-label="Afficher le mot de passe">
+                            <svg id="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+                                <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+                                <line x1="1" y1="1" x2="23" y2="23"/>
                             </svg>
-
-                            Google
-
-                        </button><button class="btn apple">
-                            <svg version="1.1" height="20" width="20" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
-                                xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 22.773 22.773"
-                                style="enable-background:new 0 0 22.773 22.773;" xml:space="preserve">
-                                <g>
-                                    <g>
-                                        <path
-                                            d="M15.769,0c0.053,0,0.106,0,0.162,0c0.13,1.606-0.483,2.806-1.228,3.675c-0.731,0.863-1.732,1.7-3.351,1.573 c-0.108-1.583,0.506-2.694,1.25-3.561C13.292,0.879,14.557,0.16,15.769,0z">
-                                        </path>
-                                        <path
-                                            d="M20.67,16.716c0,0.016,0,0.03,0,0.045c-0.455,1.378-1.104,2.559-1.896,3.655c-0.723,0.995-1.609,2.334-3.191,2.334 c-1.367,0-2.275-0.879-3.676-0.903c-1.482-0.024-2.297,0.735-3.652,0.926c-0.155,0-0.31,0-0.462,0 c-0.995-0.144-1.798-0.932-2.383-1.642c-1.725-2.098-3.058-4.808-3.306-8.276c0-0.34,0-0.679,0-1.019 c0.105-2.482,1.311-4.5,2.914-5.478c0.846-0.52,2.009-0.963,3.304-0.765c0.555,0.086,1.122,0.276,1.619,0.464 c0.471,0.181,1.06,0.502,1.618,0.485c0.378-0.011,0.754-0.208,1.135-0.347c1.116-0.403,2.21-0.865,3.652-0.648 c1.733,0.262,2.963,1.032,3.723,2.22c-1.466,0.933-2.625,2.339-2.427,4.74C17.818,14.688,19.086,15.964,20.67,16.716z">
-                                        </path>
-                                    </g>
-                                </g>
-                            </svg>
-
-                            Apple
-
                         </button>
                     </div>
-                </form>
+                </div>
+
+                <div class="options-row">
+                    <label>
+                        <input type="checkbox"> Se souvenir de moi
+                    </label>
+                    <a href="{% url '_auth:forgotPassword' %}">Mot de passe oublie ?</a>
+                </div>
+
+                <button type="submit" class="btn-submit">Se connecter</button>
+            </form>
+
+            <div class="separator">ou</div>
+
+            <div class="social-row">
+                <button type="button" class="btn-social">
+                    <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                    Google
+                </button>
+                <button type="button" class="btn-social">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.51-3.23 0-1.44.64-2.2.46-3.06-.4C3.79 16.17 4.36 9.02 8.9 8.75c1.27.06 2.15.72 2.91.76.99-.2 1.94-.78 3-.72 1.27.1 2.23.6 2.84 1.52-2.6 1.55-1.98 4.97.37 5.92-.46 1.2-1.06 2.38-1.97 4.05zM12.03 8.67c-.12-2.35 1.84-4.38 4.04-4.56.3 2.63-2.37 4.63-4.04 4.56z"/></svg>
+                    Apple
+                </button>
             </div>
-            <div>
-                <!-- <img src="static/img/istockphoto-1344475882-612x612.jpg " alt="bg_login" class="w-100 h-full ml-29" style="border-radius: 20px;"> -->
-            
+
+            <div class="form-footer">
+                Pas encore de compte ? <a href="{% url '_auth:register' %}">Creer un compte</a>
             </div>
         </div>
-    </section>
+    </div>
 
+    <!-- Toast -->
+    <div id="toast-container"></div>
+    <script>
+        function togglePwd() {
+            var inp = document.getElementById('password-input');
+            var icon = document.getElementById('eye-icon');
+            var show = inp.type === 'password';
+            inp.type = show ? 'text' : 'password';
+            icon.innerHTML = show
+                ? '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>'
+                : '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>';
+        }
 
+        function showToast(msg, type) {
+            var c = document.getElementById('toast-container');
+            var t = document.createElement('div');
+            t.className = 'toast toast-' + type;
+            t.innerHTML = (type === 'error'
+                ? '<svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm-1.72 6.97a.75.75 0 10-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 101.06 1.06L12 13.06l1.72 1.72a.75.75 0 101.06-1.06L13.06 12l1.72-1.72a.75.75 0 10-1.06-1.06L12 10.94l-1.72-1.72z" clip-rule="evenodd"/></svg>'
+                : '<svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd"/></svg>')
+                + '<span>' + msg + '</span><button class="toast-close" onclick="dismiss(this.parentElement)">&times;</button><div class="toast-bar"></div>';
+            c.appendChild(t);
+            setTimeout(function(){ dismiss(t); }, 4000);
+        }
+        function dismiss(t) {
+            if (!t || t.classList.contains('out')) return;
+            t.classList.add('out');
+            setTimeout(function(){ t.remove(); }, 250);
+        }
 
-
-
-
-
+        {% if messages %}{% for message in messages %}
+        showToast("{{ message|escapejs }}", "{{ message.tags }}");
+        {% endfor %}{% endif %}
+    </script>
 </body>
-
 </html>

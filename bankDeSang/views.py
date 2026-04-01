@@ -14,7 +14,7 @@ import random
 # Create your views here.
 
 # @bankDeSang
-@login_required(login_url='/_auth/authentification/')
+@login_required
 @check_role('blood_bank')
 def accueilBankDeSang(request):
     nbr_poche = StockDeSang.objects.aggregate(total_poches=models.Sum('nombre_de_poches'))['total_poches']
@@ -30,12 +30,13 @@ def accueilBankDeSang(request):
     #     poche.save()
     return render(request, 'frontend/bankDeSang/accueil_bankDeSang.html', {'nbr_poche': nbr_poche, 'nombre_demandes': nombre_demandes})
 
+@login_required
+@check_role('blood_bank')
 def notification(request):
-    demandes_non_notifiees = DemandeDeSang.objects.filter(notification_envoyee=False, statut='En attente', serviceMedicaux__isnull=False)
-    print(demandes_non_notifiees)
+    demandes_non_notifiees = DemandeDeSang.objects.filter(notification_envoyee=False, etat='En attente', serviceMedicaux__isnull=False)
     return render(request, 'frontend/bankDeSang/base.html', {'demandes': demandes_non_notifiees})
 
-@login_required(login_url='/_auth/authentification/')
+@login_required
 @check_role('blood_bank')
 def refuser_demande(request):
     demande_id = request.GET.get('demande_id')
@@ -59,7 +60,7 @@ def refuser_demande(request):
 
 
 
-@login_required(login_url='/_auth/authentification/')
+@login_required
 @check_role('blood_bank')
 def gestionStock(request):
     if request.method == 'POST':
@@ -91,7 +92,7 @@ def gestionStock(request):
     stocks = StockDeSang.objects.all()
     return render(request, 'frontend/bankDeSang/gestion_stock.html', {'stocks': stocks})
 
-@login_required(login_url='/_auth/authentification/')
+@login_required
 @check_role('blood_bank')
 def detailStock(request, stock_id):
     stock = StockDeSang.objects.get(id=stock_id)
@@ -99,18 +100,18 @@ def detailStock(request, stock_id):
     return render(request, 'frontend/bankDeSang/detail_stock.html', {'stock': stock, 'poches': poches})
 
 
-@login_required(login_url='/_auth/authentification/')
+@login_required
 @check_role('blood_bank')
 def listeDonneurs(request):
     return render(request, 'frontend/bankDeSang/liste_donneurs.html')
 
 
-@login_required(login_url='/_auth/authentification/')
+@login_required
 @check_role('blood_bank')
 def donneurMonetaire(request):
     return render(request, 'frontend/bankDeSang/donneur_monetaire.html')
 
-@login_required(login_url='/_auth/authentification/')
+@login_required
 @check_role('blood_bank')
 def listeDemandesDeSang(request):
     demandes = DemandeDeSang.objects.filter(etat__in=['En attente', '1/2 Approuvée'], serviceMedicaux__isnull=False)
@@ -163,7 +164,7 @@ def listeDemandesDeSang(request):
     }
     return render(request, 'frontend/bankDeSang/liste_demandes_de_sang.html', context)
 
-@login_required(login_url='/_auth/authentification/')
+@login_required
 @check_role('blood_bank')
 def historiqueDemandesDeSang(request):
     demandes = DemandeDeSang.objects.filter(serviceMedicaux__isnull=False, etat__in=['Approuvée', 'Rejetée'])
@@ -200,13 +201,13 @@ def historiqueDemandesDeSang(request):
     return render(request, 'frontend/bankDeSang/historique_demandes_de_sang.html', context)
 
 
-@login_required(login_url='/_auth/authentification/')
+@login_required
 @check_role('blood_bank')
 def statistiques(request):
     return render(request, 'frontend/bankDeSang/statistiques.html')
 
 
-@login_required(login_url='/_auth/authentification/')
+@login_required
 @check_role('blood_bank')
 def poches_disponibles(request):
     demande_id = request.GET.get('demande_id')
@@ -227,7 +228,7 @@ def poches_disponibles(request):
 
 
 
-@login_required(login_url='/_auth/authentification/')
+@login_required
 @check_role('blood_bank')
 def accepter_demande(request):
     if request.method == 'POST':

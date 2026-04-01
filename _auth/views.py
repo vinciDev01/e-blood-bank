@@ -2,17 +2,14 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.encoding import force_bytes, force_str
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
-from django.core.mail import send_mail
-from eBloodBank import settings
+from django.conf import settings
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from .models import *
-from django.urls import reverse
+from .models import CustomUser, Utilisateur, ServiceMedicaux
 
 from .token import generatorToken
 
@@ -62,7 +59,7 @@ def register(request):
                     msg['To'] = email
                     msg['Subject'] = mail_subject
                     msg.attach(MIMEText(message, 'html'))
-                    with smtplib.SMTP('smtp.gmail.com', 587) as server:
+                    with smtplib.SMTP(settings.EMAIL_HOST, settings.EMAIL_PORT) as server:
                         server.starttls()
                         server.login(settings.EMAIL_HOST_USER, settings.EMAIL_HOST_PASSWORD)
                         server.sendmail(settings.EMAIL_HOST_USER, email, msg.as_string())
@@ -84,48 +81,23 @@ def logIn(request):
         username = request.POST.get('email')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
-        
-        try:
-            if user.role == 'medical':
-                if user is not None and user.is_active:
-                    login(request, user)
-                    return redirect('serviceMedicaux:accueilServiceMedicaux')
-                else:
-                    messages.error(request, 'Nom d\'utilisateur ou mot de passe incorrect')
-                    return redirect('_auth:login')
-            elif user.role == 'generic':
-                if user is not None and user.is_active:
-                    login(request, user)                
-                    #firstname = my_user.first_name
-                    #messages.success(request, f'Bienvenue {firstname}')
-                    return redirect('frontend:accueil')
-                else:
-                    messages.error(request, 'Nom d\'utilisateur ou mot de passe incorrect')
-                    return redirect('_auth:login')
-            elif user.role == 'donor':
-                if user is not None and user.is_active:
-                    login(request, user)
-                    return redirect('donor:accueilDonneur')
-                else:
-                    messages.error(request, 'Nom d\'utilisateur ou mot de passe incorrect')
-                    return redirect('_auth:login')
-            elif user.role == 'blood_bank':
-                if user is not None and user.is_active:
-                    login(request, user)
-                    return redirect('bankDeSang:accueilBankDeSang')
-                else:
-                    messages.error(request, 'Nom d\'utilisateur ou mot de passe incorrect')
-                    return redirect('_auth:login')
-            elif user.role == 'admin':
-                if user is not None and user.is_active:
-                    login(request, user)
-                    return redirect('admin:accueilAdmin')
-                else:
-                    messages.error(request, 'Nom d\'utilisateur ou mot de passe incorrect')
-                    return redirect('_auth:login')
-        except AttributeError:
+
+        if user is None or not user.is_active:
             messages.error(request, 'Nom d\'utilisateur ou mot de passe incorrect')
             return redirect('_auth:login')
+
+        login(request, user)
+
+        role_redirects = {
+            'medical': 'serviceMedicaux:accueilServiceMedicaux',
+            'generic': 'frontend:accueil',
+            'donor': 'donneur:accueilDonneur',
+            'blood_bank': 'bankDeSang:accueilBankDeSang',
+            'admin': 'frontend:accueil',
+        }
+        redirect_url = role_redirects.get(user.role, 'frontend:accueil')
+        return redirect(redirect_url)
+
     return render(request, 'auth/users/login.html')
 
 def logOut(request):
@@ -155,8 +127,8 @@ def resetPassword(request):
 def resetPasswordEmail(request):
     if request.method == 'POST':
         email = request.POST['email']
-        if User.objects.filter(email=email).exists():
-            user = User.objects.get(email=email)
+        if CustomUser.objects.filter(email=email).exists():
+            user = CustomUser.objects.get(email=email)
             current_site = get_current_site(request)
             mail_subject = 'Réinitialisation de votre mot de passe'
             message = render_to_string('auth/users/resetPasswordMail.html', {
@@ -171,11 +143,10 @@ def resetPasswordEmail(request):
                 msg['To'] = email
                 msg['Subject'] = mail_subject
                 msg.attach(MIMEText(message, 'html'))
-                with smtplib.SMTP('smtp.gmail.com', 587) as server:
+                with smtplib.SMTP(settings.EMAIL_HOST, settings.EMAIL_PORT) as server:
                     server.starttls()
                     server.login(settings.EMAIL_HOST_USER, settings.EMAIL_HOST_PASSWORD)
                     server.sendmail(settings.EMAIL_HOST_USER, email, msg.as_string())
-                    print("Email Sent Successfully")
             except Exception as e:
                 print(f"Error: {e}")
             messages.success(request, 'Un email de réinitialisation de mot de passe a été envoyé à votre adresse email')
@@ -188,8 +159,8 @@ def resetPasswordEmail(request):
 def resetPasswordConfirm(request, uidb64, token):
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
-        user = User.objects.get(pk=uid)
-    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = CustomUser.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):
         user = None
 
     if user is not None and generatorToken.check_token(user, token):
@@ -203,7 +174,7 @@ def resetPasswordConfirm(request, uidb64, token):
                 return redirect('_auth:login')
             else:
                 messages.error(request, 'Les mots de passe ne correspondent pas')
-                return redirect('resetPasswordConfirm', uidb64, token)
+                return redirect('_auth:resetPasswordConfirm', uidb64=uidb64, token=token)
         return render(request, 'auth/users/resetPasswordConfirm.html')
     else:
         messages.error(request, 'Le lien de réinitialisation de mot de passe est invalide\n Réinitialisation echoué')
@@ -290,5 +261,6 @@ def inscriptionServiceMedicaux(request):
     
     
 def logoutServiceMedicaux(request):
+    logout(request)
     messages.success(request, 'Vous avez bien été déconnecté')
-    return render(request, 'auth/serviceMedicaux/authentification.html')
+    return redirect('_auth:login')
