@@ -22,13 +22,14 @@
             overflow: hidden;
             display: -webkit-box;
             -webkit-line-clamp: 3;
+            line-clamp: 3;
             -webkit-box-orient: vertical;
         }
-        
+
         .to-cyan-400 {
             --tw-gradient-to: #22d3ee;
         }
-        
+
         .via-cyan-500 {
             --tw-gradient-stops: var(--tw-gradient-from), #06b6d4, var(--tw-gradient-to, rgba(6, 182, 212, 0));
         }
@@ -131,220 +132,327 @@
     <!-- ===== Page Wrapper Start ===== -->
     <div class="flex h-screen overflow-hidden">
         <!-- ===== Sidebar Start ===== -->
+        <style>
+            .ebb-sidebar {
+                width: 270px;
+                background: #ffffff;
+                border-right: 1px solid #f1f5f9;
+                font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif;
+            }
+
+            .ebb-sidebar-header {
+                padding: 20px 20px 16px;
+                border-bottom: 1px solid #f1f5f9;
+                background: #fff;
+                position: relative;
+            }
+
+            .ebb-brand {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 14px;
+            }
+
+            .ebb-brand img {
+                height: 64px;
+                width: auto;
+                object-fit: contain;
+            }
+
+            .ebb-user-card {
+                background: #f8fafc;
+                border: 1px solid #e2e8f0;
+                border-radius: 10px;
+                padding: 10px 12px;
+            }
+
+            .ebb-user-name {
+                font-size: 0.88rem;
+                font-weight: 600;
+                line-height: 1.2;
+                margin-bottom: 2px;
+                color: #1e293b;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .ebb-user-email {
+                font-size: 0.72rem;
+                color: #64748b;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .ebb-nav {
+                padding: 14px 12px;
+                overflow-y: auto;
+                flex: 1;
+            }
+
+            .ebb-nav-group {
+                margin-bottom: 18px;
+            }
+
+            .ebb-nav-group-label {
+                font-size: 0.68rem;
+                font-weight: 700;
+                color: #94a3b8;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                padding: 0 12px 8px;
+            }
+
+            .ebb-nav-item {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 10px 12px;
+                margin-bottom: 2px;
+                border-radius: 9px;
+                color: #334155;
+                text-decoration: none;
+                font-size: 0.9rem;
+                font-weight: 500;
+                transition: background 0.15s, color 0.15s, transform 0.1s;
+                position: relative;
+            }
+
+            .ebb-nav-item:hover {
+                background: #fef2f2;
+                color: #b91c1c;
+            }
+
+            .ebb-nav-item svg {
+                flex-shrink: 0;
+                width: 20px;
+                height: 20px;
+                stroke-width: 1.8;
+            }
+
+            .ebb-nav-item.active {
+                background: #fef2f2;
+                color: #b91c1c;
+                font-weight: 600;
+            }
+
+            .ebb-nav-item.danger {
+                color: #64748b;
+            }
+
+            .ebb-nav-item.danger:hover {
+                background: #fef2f2;
+                color: #b91c1c;
+            }
+
+            .ebb-nav-badge {
+                margin-left: auto;
+                background: #b91c1c;
+                color: #fff;
+                font-size: 0.68rem;
+                font-weight: 700;
+                padding: 2px 7px;
+                border-radius: 10px;
+                min-width: 20px;
+                text-align: center;
+            }
+
+            .ebb-sidebar-footer {
+                padding: 14px 16px 18px;
+                border-top: 1px solid #f1f5f9;
+            }
+
+            .ebb-help-card {
+                background: linear-gradient(135deg, #fef2f2 0%, #fff5f5 100%);
+                border: 1px solid #fecaca;
+                border-radius: 12px;
+                padding: 14px;
+                text-align: center;
+            }
+
+            .ebb-help-title {
+                font-size: 0.85rem;
+                font-weight: 700;
+                color: #991b1b;
+                margin-bottom: 4px;
+            }
+
+            .ebb-help-text {
+                font-size: 0.75rem;
+                color: #b91c1c;
+                line-height: 1.4;
+                margin-bottom: 10px;
+            }
+
+            .ebb-help-btn {
+                display: inline-block;
+                background: #b91c1c;
+                color: #fff;
+                padding: 7px 14px;
+                border-radius: 8px;
+                font-size: 0.78rem;
+                font-weight: 600;
+                text-decoration: none;
+                transition: background 0.2s;
+            }
+
+            .ebb-help-btn:hover {
+                background: #991b1b;
+            }
+
+            .ebb-close-btn {
+                position: absolute;
+                top: 14px;
+                right: 14px;
+                background: #f1f5f9;
+                border: none;
+                color: #475569;
+                width: 30px;
+                height: 30px;
+                border-radius: 8px;
+                cursor: pointer;
+                display: none;
+                z-index: 2;
+            }
+
+            .ebb-close-btn:hover {
+                background: #e2e8f0;
+                color: #1e293b;
+            }
+
+            @media (max-width: 1023px) {
+                .ebb-close-btn {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+            }
+        </style>
         <aside :class="sidebarToggle ? 'translate-x-0' : '-translate-x-full'" @click.outside="sidebarToggle = false"
-            class="absolute left-0 top-0 z-9999 flex h-screen w-70 flex-col overflow-y-hidden bg-white duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0 p-0">
+            class="ebb-sidebar absolute left-0 top-0 z-9999 flex h-screen flex-col overflow-y-hidden duration-300 ease-linear lg:static lg:translate-x-0">
             <!-- SIDEBAR HEADER -->
-            <div class="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
-                <a href="{% url 'serviceMedicaux:accueilServiceMedicaux' %}"></a>
-                    <img src="{% static 'img/Logo_eBloodBank_Banka_Titipo.png' %}" alt="Logo"
-                    style="aspect-ratio: 50 / 50; object-fit: cover; width: 153px; height: 80px; margin-right: 30px;" />
-                </a>
-                <button @click.stop="sidebarToggle = !sidebarToggle" class="block lg:hidden">
-                    <svg class="fill-current" fill="none" height="18" viewbox="0 0 20 18" width="20"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M19 8.175H2.98748L9.36248 1.6875C9.69998 1.35 9.69998 0.825 9.36248 0.4875C9.02498 0.15 8.49998 0.15 8.16248 0.4875L0.399976 8.3625C0.0624756 8.7 0.0624756 9.225 0.399976 9.5625L8.16248 17.4375C8.31248 17.5875 8.53748 17.7 8.76248 17.7C8.98748 17.7 9.17498 17.625 9.36248 17.475C9.69998 17.1375 9.69998 16.6125 9.36248 16.275L3.02498 9.8625H19C19.45 9.8625 19.825 9.4875 19.825 9.0375C19.825 8.55 19.45 8.175 19 8.175Z"
-                            fill=""></path>
+            <div class="ebb-sidebar-header">
+                <button @click.stop="sidebarToggle = !sidebarToggle" class="ebb-close-btn" aria-label="Fermer">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
                     </svg>
                 </button>
+                <a href="{% url 'bankDeSang:accueilBankDeSang' %}" class="ebb-brand">
+                    <img src="{% static 'img/Logo_eBloodBank_Banka_Titipo.png' %}" alt="eBloodBank">
+                </a>
+                <!-- <div class="ebb-user-card">
+                    <div class="ebb-user-name">{{ request.user.banque_de_sang.nom_etablissement|default:"Utilisateur" }}
+                    </div>
+                    <div class="ebb-user-email">{{ request.user.email }}</div>
+                </div> -->
             </div>
             <!-- SIDEBAR HEADER -->
 
-            <div class="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
-                <!-- Sidebar Menu -->
-                <nav class="mt-2 px-4 py-1 lg:mt-9 lg:px-6 text-black">
-                    <!-- Menu Group -->
-                    <div class="mr-6">
-                        <h3 class="mb-2 ml-4 text-sm font-medium text-bodydark2">MENU</h3>
-                        <ul class="mb-3 flex flex-col gap-1.5" x-data="{ selected: 'Dashboard' }">
-                            <div class="space-y-2">
-                                <style>
-                                    .active {
-                                        background-color: #f3f4f6;
-                                    }
+            <nav class="ebb-nav">
+                {% with url_name=request.resolver_match.url_name %}
 
-                                    .ho:hover {
-                                        background-color: #c2c2c2;
-                                        transition: 0.1s;
-                                    }
-                                </style>
-                            </div>
-                            <a href="{% url 'bankDeSang:accueilBankDeSang' %}"
-                                class="flex items-center w-full h-12 px-3 rounded ho"
-                                :class="{ 'active': selected === 'Dashboard' }" x-on:click="selected = 'Dashboard'">
-                                <svg class="w-6 h-6 stroke-black" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                    viewBox="0 0 24 24" stroke="black">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="m3 9 2.45-4.9A2 2 0 0 1 7.24 3h9.52a2 2 0 0 1 1.8 1.1L21 9"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 3v6"></path>
-                                </svg>
-                                <span class="ml-4 text-black"
-                                    style="font-size: 17px; font-weight: 600;">Dashboard</span>
-                            </a>
-                            <a href="{% url 'bankDeSang:gestionStock' %}"
-                                class="flex items-center w-full h-12 px-3 mt-1 rounded ho"
-                                :class="{ 'active': selected === 'Stocks' }" x-on:click="selected = 'Stocks'">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="h-4 w-4">
-                                    <path
-                                        d="M22 8.35V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8.35A2 2 0 0 1 3.26 6.5l8-3.2a2 2 0 0 1 1.48 0l8 3.2A2 2 0 0 1 22 8.35Z">
-                                    </path>
-                                    <path d="M6 18h12"></path>
-                                    <path d="M6 14h12"></path>
-                                    <rect width="12" height="12" x="6" y="10"></rect>
-                                </svg>
-                                <span class="ml-4 text-black" style="font-size: 17px; font-weight: 600;">Stocks</span>
-                            </a>
-                            <a href="{% url 'bankDeSang:listeDonneurs' %}"
-                                class="flex items-center w-full h-12 px-3 mt-1 rounded ho"
-                                :class="{ 'active': selected === 'Donor' }" x-on:click="selected = 'Donor'">
-                                <?xml version="1.0" encoding="UTF-8"?><svg width="24px" height="24px"
-                                    viewBox="0 0 24 24" stroke-width="1.5" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg" color="#000000">
-                                    <path
-                                        d="M12 12C14.2091 12 16 10.2091 16 8C16 5.79086 14.2091 4 12 4C9.79086 4 8 5.79086 8 8C8 10.2091 9.79086 12 12 12Z"
-                                        stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                                        stroke-linejoin="round"></path>
-                                    <path
-                                        d="M22 17.2798C22 17.8812 21.7625 18.4588 21.3383 18.8861C20.3619 19.8701 19.415 20.8961 18.4021 21.8443C18.17 22.0585 17.8017 22.0507 17.5795 21.8268L14.6615 18.8861C13.7795 17.9972 13.7795 16.5623 14.6615 15.6734C15.5522 14.7758 17.0032 14.7758 17.8938 15.6734L17.9999 15.7803L18.1059 15.6734C18.533 15.2429 19.1146 15 19.7221 15C20.3297 15 20.9113 15.2428 21.3383 15.6734C21.7625 16.1007 22 16.6784 22 17.2798Z"
-                                        stroke="#000000" stroke-width="1.5" stroke-linejoin="round"></path>
-                                    <path d="M5 20V19C5 15.134 8.13401 12 12 12C13.0736 12 14.0907 12.2417 15 12.6736"
-                                        stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                                        stroke-linejoin="round"></path>
-                                </svg>
-                                <span class="ml-4 text-black" style="font-size: 17px; font-weight: 600;">Donor</span>
-                            </a>
-                            <a href="{% url 'bankDeSang:listeDemandesDeSang' %}"
-                                class="flex items-center w-full h-12 px-3 mt-1 rounded ho"
-                                :class="{ 'active': selected === 'Blood Requests' }" x-on:click="selected = 'Blood Requests'">
-                                <?xml version="1.0" encoding="UTF-8"?><svg width="24px" height="24px" stroke-width="1.5"
-                                    viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000">
-                                    <circle cx="12" cy="12" r="10" stroke="#000000" stroke-width="1.5"></circle>
-                                    <path
-                                        d="M16.5829 9.66667C15.8095 8.09697 14.043 7 11.9876 7C9.38854 7 7.25148 8.75408 7 11"
-                                        stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                                        stroke-linejoin="round"></path>
-                                    <path
-                                        d="M14.4939 9.72222H16.4001C16.7315 9.72222 17.0001 9.45359 17.0001 9.12222V7.5"
-                                        stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                                        stroke-linejoin="round"></path>
-                                    <path
-                                        d="M7.41707 13.6667C8.19054 15.6288 9.95698 17 12.0124 17C14.6115 17 16.7485 14.8074 17 12"
-                                        stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                                        stroke-linejoin="round"></path>
-                                    <path
-                                        d="M9.5061 13.6222H7.59992C7.26855 13.6222 6.99992 13.8909 6.99992 14.2222V16.4"
-                                        stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                                        stroke-linejoin="round"></path>
-                                </svg>
-                                <span class="ml-4 text-black" style="font-size: 17px; font-weight: 600;">Blood Requests</span>
-                            </a>
-                            <a href="{% url 'bankDeSang:historiqueDemandes' %}"
-                                class="flex items-center w-full h-12 px-3 mt-1 rounded ho"
-                                :class="{ 'active': selected === 'Request History' }" x-on:click="selected = 'Request History'">
-                                <?xml version="1.0" encoding="UTF-8"?><svg width="22px" height="22px"
-                                    viewBox="0 0 24 24" stroke-width="1.5" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg" color="#000000">
-                                    <path d="M12 6L12 12L18 12" stroke="#000000" stroke-width="1.5"
-                                        stroke-linecap="round" stroke-linejoin="round"></path>
-                                    <path
-                                        d="M21.8883 10.5C21.1645 5.68874 17.013 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C16.1006 22 19.6248 19.5318 21.1679 16"
-                                        stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                                        stroke-linejoin="round"></path>
-                                    <path d="M17 16H21.4C21.7314 16 22 16.2686 22 16.6V21" stroke="#000000"
-                                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                                </svg>
-                                <span class="ml-4 text-black" style="font-size: 17px; font-weight: 600;">Request History</span>
-                            </a>
+                <div class="ebb-nav-group">
+                    <div class="ebb-nav-group-label">Général</div>
 
-                            <a href="{% url 'bankDeSang:statistiques' %}"
-                                class="flex items-center w-full h-12 px-3 mt-1 rounded ho"
-                                :class="{ 'active': selected === 'Statistiques' }" x-on:click="selected = 'Statistiques'">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="h-4 w-4">
-                                    <path d="M3 3v18h18"></path>
-                                    <path d="m19 9-5 5-4-4-3 3"></path>
-                                </svg>
-                                <span class="ml-4 text-black"
-                                    style="font-size: 17px; font-weight: 600;">Statistiques</span>
-                            </a>
+                    <a href="{% url 'bankDeSang:accueilBankDeSang' %}"
+                        class="ebb-nav-item {% if url_name == 'accueilBankDeSang' %}active{% endif %}">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="9" rx="1" />
+                            <rect x="14" y="3" width="7" height="5" rx="1" />
+                            <rect x="14" y="12" width="7" height="9" rx="1" />
+                            <rect x="3" y="16" width="7" height="5" rx="1" />
+                        </svg>
+                        <span>Tableau de bord</span>
+                    </a>
 
-                            <a href="#" class="flex items-center w-full h-12 px-3 mt-1 rounded ho"
-                                :class="{ 'active': selected === 'Notifications' }" x-on:click="selected = 'Notifications'">
-                                <?xml version="1.0" encoding="UTF-8"?><svg width="24px" height="24px" stroke-width="1.5"
-                                    viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000">
-                                    <path
-                                        d="M18.1336 11C18.7155 16.3755 21 18 21 18H3C3 18 6 15.8667 6 8.4C6 6.70261 6.63214 5.07475 7.75736 3.87452C8.88258 2.67428 10.4087 2 12 2C12.3373 2 12.6717 2.0303 13 2.08949"
-                                        stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                                        stroke-linejoin="round"></path>
-                                    <path
-                                        d="M19 8C20.6569 8 22 6.65685 22 5C22 3.34315 20.6569 2 19 2C17.3431 2 16 3.34315 16 5C16 6.65685 17.3431 8 19 8Z"
-                                        stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                                        stroke-linejoin="round"></path>
-                                    <path
-                                        d="M13.73 21C13.5542 21.3031 13.3019 21.5547 12.9982 21.7295C12.6946 21.9044 12.3504 21.9965 12 21.9965C11.6496 21.9965 11.3054 21.9044 11.0018 21.7295C10.6982 21.5547 10.4458 21.3031 10.27 21"
-                                        stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                                        stroke-linejoin="round"></path>
-                                </svg>
-                                <span class="ml-4 text-black"
-                                    style="font-size: 17px; font-weight: 600;">Notifications</span>
-                            </a>
-                            <a href="#" class="flex items-center w-full h-12 px-3 mt-1 rounded ho"
-                                :class="{ 'active': selected === 'Calendrier' }" x-on:click="selected = 'Calendrier'">
-                                <?xml version="1.0" encoding="UTF-8"?>
-                                <svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg" color="#000000">
-                                    <path
-                                        d="M15 4V2M15 4V6M15 4H10.5M3 10V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V10H3Z"
-                                        stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                                        stroke-linejoin="round"></path>
-                                    <path d="M3 10V6C3 4.89543 3.89543 4 5 4H7" stroke="#000000" stroke-width="1.5"
-                                        stroke-linecap="round" stroke-linejoin="round"></path>
-                                    <path d="M7 2V6" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                                        stroke-linejoin="round">
-                                    </path>
-                                    <path d="M21 10V6C21 4.89543 20.1046 4 19 4H18.5" stroke="#000000"
-                                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                                </svg>
-                                <span class="ml-4 text-black"
-                                    style="font-size: 17px; font-weight: 600;">Calendrier</span>
-                            </a>
-                            <a href="{% url '_auth:logout' %}"
-                                class="flex items-center w-full h-12 px-3 mt-1 rounded ho"
-                                :class="{ 'active': selected === 'Déconnexion' }" x-on:click="selected = 'Déconnexion'">
-                                <?xml version="1.0" encoding="UTF-8"?><svg width="24px" height="24px" stroke-width="1.5"
-                                    viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000">
-                                    <path d="M12 12H19M19 12L16 15M19 12L16 9" stroke="#000000" stroke-width="1.5"
-                                        stroke-linecap="round" stroke-linejoin="round"></path>
-                                    <path
-                                        d="M19 6V5C19 3.89543 18.1046 3 17 3H7C5.89543 3 5 3.89543 5 5V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V18"
-                                        stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                                        stroke-linejoin="round"></path>
-                                </svg>
-                                <span class="ml-4 text-black"
-                                    style="font-size: 17px; font-weight: 600;">Déconnexion</span>
-                            </a>
-
-                        </ul>
-                    </div>
-                </nav>
-                <!-- Sidebar Menu -->
-                <!-- Promo Box -->
-                <div
-                    class="mx-auto mb-10 w-full max-w-60 rounded-sm border border-strokedark bg-boxdark px-4 py-6 text-center shadow-default">
-                    <h3 class="mb-4 text-lg font-medium text-bodydark2">Besoin d'aide?</h3>
-                    <p class="text-sm text-bodydark2">Si vous avez des questions ou des préoccupations, n'hésitez pas à
-                        nous contacter.</p>
-                    <a href="#"
-                        class="inline-block mt-4 px-6 py-2 text-white bg-blue-600 rounded hover:bg-blue-700">Contactez-nous</a>
-
+                    <a href="{% url 'bankDeSang:statistiques' %}"
+                        class="ebb-nav-item {% if url_name == 'statistiques' %}active{% endif %}">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M3 3v18h18" />
+                            <path d="m19 9-5 5-4-4-3 3" />
+                        </svg>
+                        <span>Statistiques</span>
+                    </a>
                 </div>
-                <!-- Promo Box -->
+
+                <div class="ebb-nav-group">
+                    <div class="ebb-nav-group-label">Gestion</div>
+
+                    <a href="{% url 'bankDeSang:gestionStock' %}"
+                        class="ebb-nav-item {% if url_name == 'gestionStock' or url_name == 'detailStock' %}active{% endif %}">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path
+                                d="M22 8.35V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8.35A2 2 0 0 1 3.26 6.5l8-3.2a2 2 0 0 1 1.48 0l8 3.2A2 2 0 0 1 22 8.35Z" />
+                            <path d="M6 18h12M6 14h12" />
+                        </svg>
+                        <span>Stocks</span>
+                    </a>
+
+                    <a href="{% url 'bankDeSang:listeDonneurs' %}"
+                        class="ebb-nav-item {% if url_name == 'listeDonneurs' or url_name == 'donneurMonetaire' %}active{% endif %}">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        </svg>
+                        <span>Donneurs</span>
+                    </a>
+
+                    <a href="{% url 'bankDeSang:listeDemandesDeSang' %}"
+                        class="ebb-nav-item {% if url_name == 'listeDemandesDeSang' %}active{% endif %}">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <line x1="9" y1="13" x2="15" y2="13" />
+                            <line x1="9" y1="17" x2="15" y2="17" />
+                        </svg>
+                        <span>Demandes de sang</span>
+                    </a>
+
+                    <a href="{% url 'bankDeSang:historiqueDemandes' %}"
+                        class="ebb-nav-item {% if url_name == 'historiqueDemandes' %}active{% endif %}">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10" />
+                            <polyline points="12 6 12 12 16 14" />
+                        </svg>
+                        <span>Historique</span>
+                    </a>
+                </div>
+
+                <div class="ebb-nav-group">
+                    <div class="ebb-nav-group-label">Compte</div>
+
+                    <a href="{% url '_auth:logout' %}" class="ebb-nav-item danger">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                            <polyline points="16 17 21 12 16 7" />
+                            <line x1="21" y1="12" x2="9" y2="12" />
+                        </svg>
+                        <span>Déconnexion</span>
+                    </a>
+                </div>
+
+                {% endwith %}
+            </nav>
+
+            <div class="ebb-sidebar-footer">
+                <div class="ebb-help-card">
+                    <div class="ebb-help-title">Besoin d'aide&nbsp;?</div>
+                    <div class="ebb-help-text">Notre équipe répond à vos questions 7j/7.</div>
+                    <a href="#" class="ebb-help-btn">Nous contacter</a>
+                </div>
             </div>
         </aside>
         <!-- ===== Sidebar End ===== -->
@@ -612,7 +720,8 @@
                         <div @click.away="dropdownOpen = false" class="relative" x-data="{ dropdownOpen: false }">
                             <a @click.prevent="dropdownOpen = ! dropdownOpen" class="flex items-center gap-4" href="#">
                                 <span class="hidden text-right lg:block">
-                                    <span class="block text-sm font-medium text-black dark:text-white">{{ user.first_name }} {{ user.last_name }}</span>
+                                    <span class="block text-sm font-medium text-black dark:text-white">{{
+                                        user.first_name }} {{ user.last_name }}</span>
                                     <span class="block text-xs font-medium">{{ user.username }}</span>
                                 </span>
                                 <span class="h-12 w-12 rounded-full">
@@ -946,7 +1055,8 @@
 
     </script> -->
 
-    <div x-data="{openNotify: {{ demandes.count|add:0|yesno:'true,false' }}}" class="relative min-h-screen py-6 flex flex-col justify-center sm:py-12 items-center" style="display: none;">
+    <div x-data="{openNotify: {{ demandes.count|add:0|yesno:'true,false' }}}"
+        class="relative min-h-screen py-6 flex flex-col justify-center sm:py-12 items-center" style="display: none;">
         <template x-if="openNotify">
             <div x-transition:enter="transition ease-out duration-200"
                 x-transition:enter-start="opacity-0 transform translate-y-4"
@@ -960,20 +1070,28 @@
                     <!-- Header -->
                     <div class="flex justify-between items-center w-full">
                         <div class="font-semibold text-sm">Nouvelle Notification</div>
-                        <div @click="openNotify = false" class="h-6 w-6 flex justify-center items-center bg-gray-200 rounded-full cursor-pointer hover:bg-gray-300">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        <div @click="openNotify = false"
+                            class="h-6 w-6 flex justify-center items-center bg-gray-200 rounded-full cursor-pointer hover:bg-gray-300">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12"></path>
                             </svg>
                         </div>
                     </div>
                     <!-- Content -->
                     <div class="flex justify-start items-start space-x-4">
                         <div class="relative flex flex-shrink-0">
-                            <img src="https://images.unsplash.com/photo-1582789991349-8f8e6eb15308?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MjN8fGFuaW1lfGVufDB8fDB8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Meow" class="w-14 h-14 rounded-full object-cover">
-                            <div class="absolute -bottom-1 -right-2 h-7 w-7 bg-gradient-to-t from-blue-600 via-cyan-500 to-cyan-400 rounded-full text-white flex justify-center items-start">
+                            <img src="https://images.unsplash.com/photo-1582789991349-8f8e6eb15308?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MjN8fGFuaW1lfGVufDB8fDB8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                                alt="Meow" class="w-14 h-14 rounded-full object-cover">
+                            <div
+                                class="absolute -bottom-1 -right-2 h-7 w-7 bg-gradient-to-t from-blue-600 via-cyan-500 to-cyan-400 rounded-full text-white flex justify-center items-start">
                                 <div class="">
-                                    <svg class="w-5 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"></path>
+                                    <svg class="w-5 h-6" fill="currentColor" viewBox="0 0 20 20"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z">
+                                        </path>
                                     </svg>
                                 </div>
                             </div>
@@ -985,7 +1103,8 @@
                                     - Consultez les détails et répondez.
                                 </div>
                             </div>
-                            <div class="text-blue-600 font-semibold text-xs leading-loose">{{ demande.date_demande }}</div>
+                            <div class="text-blue-600 font-semibold text-xs leading-loose">{{ demande.date_demande }}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -994,6 +1113,99 @@
     </div>
 
 
+<!-- Popup de confirmation de déconnexion -->
+<style>
+    .logout-backdrop {
+        position: fixed; inset: 0;
+        background: rgba(15, 23, 42, 0.55);
+        display: none;
+        align-items: center; justify-content: center;
+        z-index: 99999;
+        padding: 20px;
+        backdrop-filter: blur(3px);
+        font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif;
+    }
+    .logout-backdrop.active { display: flex; }
+    .logout-box {
+        background: #fff;
+        border-radius: 16px;
+        width: 100%;
+        max-width: 420px;
+        padding: 28px 26px 22px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        text-align: center;
+        animation: logoutIn 0.22s ease-out;
+    }
+    @keyframes logoutIn {
+        from { opacity: 0; transform: scale(0.95) translateY(8px); }
+        to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .logout-icon {
+        width: 64px; height: 64px; border-radius: 50%;
+        background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+        color: #b91c1c;
+        display: flex; align-items: center; justify-content: center;
+        margin: 0 auto 16px;
+    }
+    .logout-title { font-size: 1.2rem; font-weight: 700; color: #0f172a; margin-bottom: 6px; }
+    .logout-text { color: #64748b; font-size: 0.9rem; line-height: 1.5; margin-bottom: 22px; }
+    .logout-actions { display: flex; gap: 10px; justify-content: center; }
+    .logout-btn {
+        height: 42px; padding: 0 22px;
+        border: none; border-radius: 10px;
+        font-size: 0.9rem; font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.1s;
+    }
+    .logout-btn.cancel { background: #f1f5f9; color: #334155; }
+    .logout-btn.cancel:hover { background: #e2e8f0; }
+    .logout-btn.confirm {
+        background: #b91c1c; color: #fff;
+        box-shadow: 0 2px 8px rgba(185,28,28,0.25);
+    }
+    .logout-btn.confirm:hover { background: #991b1b; box-shadow: 0 4px 12px rgba(185,28,28,0.35); }
+    .logout-btn:active { transform: scale(0.98); }
+</style>
+<div class="logout-backdrop" id="logoutConfirm" onclick="if(event.target===this) closeLogoutConfirm()">
+    <div class="logout-box">
+        <div class="logout-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                <polyline points="16 17 21 12 16 7"/>
+                <line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+        </div>
+        <div class="logout-title">Confirmer la déconnexion</div>
+        <div class="logout-text">Vous êtes sur le point de vous déconnecter de votre espace eBloodBank. Voulez-vous continuer&nbsp;?</div>
+        <div class="logout-actions">
+            <button type="button" class="logout-btn cancel" onclick="closeLogoutConfirm()">Annuler</button>
+            <a id="logoutConfirmLink" href="#" class="logout-btn confirm" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center;">Se déconnecter</a>
+        </div>
+    </div>
+</div>
+<script>
+(function(){
+    function openLogoutConfirm(url) {
+        document.getElementById('logoutConfirmLink').setAttribute('href', url);
+        document.getElementById('logoutConfirm').classList.add('active');
+    }
+    window.closeLogoutConfirm = function() {
+        document.getElementById('logoutConfirm').classList.remove('active');
+    };
+    document.addEventListener('click', function(e){
+        var a = e.target.closest('a');
+        if (!a) return;
+        var href = a.getAttribute('href') || '';
+        if (/\/logout\/?$|\/deconnexion\/?$/.test(href)) {
+            e.preventDefault();
+            openLogoutConfirm(href);
+        }
+    });
+    document.addEventListener('keydown', function(e){
+        if (e.key === 'Escape') closeLogoutConfirm();
+    });
+})();
+</script>
 </body>
 
 </html>

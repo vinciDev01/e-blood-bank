@@ -1,7 +1,6 @@
 from django.db import models
-from _auth.models import *
+from _auth.models import ServiceMedicaux, Donneur, Utilisateur
 from bankDeSang.models import PocheDeSang
-from _auth.models import *
 
 
 class Patient(models.Model):
@@ -64,9 +63,10 @@ class DemandeDeSang(models.Model):
     motif = models.CharField(max_length=20, choices=motif_choices)
     etat_choices = [
         ('En attente', 'En attente'),
-        ('Approuvée', 'Approuvée'),
-        ('Rejetée', 'Rejetée'),
-        ('Complétée', 'Complétée'),
+        ('1/2 Approuvee', '1/2 Approuvee'),
+        ('Approuvee', 'Approuvee'),
+        ('Rejetee', 'Rejetee'),
+        ('Completee', 'Completee'),
     ]
     etat = models.CharField(max_length=20, choices=etat_choices, default='En attente')
     etat_groupes = models.JSONField(default=dict)  # Nouveau champ pour suivre l'état de chaque groupe sanguin

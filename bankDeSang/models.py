@@ -1,13 +1,10 @@
 from datetime import timedelta, datetime
 from django.db import models
-from django.core.exceptions import ObjectDoesNotExist
-from _auth.models import *
-from _auth.models import Donneur
+from _auth.models import Donneur, BanqueDeSang, ServiceMedicaux
 from datetime import date
 import qrcode
 import os
-#from django.conf import settings
-from eBloodBank import settings
+from django.conf import settings
 
 # Définition du modèle DonDeSang
 def default_date_expiration():

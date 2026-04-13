@@ -26,6 +26,7 @@ EMAIL_USE_TLS = EMAIL_USE_TLS
 EMAIL_USE_SSL = EMAIL_USE_SSL
 
 ADMIN_EMAIL = ADMIN_EMAIL
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

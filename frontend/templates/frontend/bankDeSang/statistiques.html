@@ -1,297 +1,406 @@
-{% extends 'frontend/bankDeSang/accueil_bankDeSang.html' %}
-
+{% extends 'frontend/bankDeSang/base.html' %}
 {% load static %}
+
+{% block title %}Statistiques — Banque de sang{% endblock %}
 
 {% block extrahead %}
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 {% endblock %}
 
-{% block title %}Statistiques{% endblock %}
-
 {% block content %}
-<div class="relative flex flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md">
-    <div class="relative mx-4 mt-4 flex flex-col gap-4 overflow-hidden rounded-none bg-transparent bg-clip-border text-gray-700 shadow-none md:flex-row md:items-center">
-        <div class="w-max rounded-lg bg-gray-900 p-5 text-white">
-            <!-- Icône pour le graphique en ligne -->
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" class="h-6 w-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6.429 9.75L2.25 12l4.179 2.25m0-4.5l5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0l4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0l-5.571 3-5.571-3"></path>
-            </svg>
+<style>
+    .stats-page {
+        font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif;
+        background: #f8fafc;
+        min-height: 100vh;
+        padding: 24px 28px 48px;
+    }
+    .stats-header { margin-bottom: 24px; }
+    .stats-header h1 { font-size: 1.75rem; font-weight: 700; color: #1e293b; margin-bottom: 4px; }
+    .stats-header p { color: #64748b; font-size: 0.92rem; }
+
+    .stats-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 22px; }
+    .stats-kpi {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 18px 20px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .stats-kpi:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.06); }
+    .stats-kpi-icon {
+        width: 44px; height: 44px; border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0;
+    }
+    .stats-kpi-icon.red { background: #fee2e2; color: #b91c1c; }
+    .stats-kpi-icon.green { background: #dcfce7; color: #166534; }
+    .stats-kpi-icon.blue { background: #dbeafe; color: #1d4ed8; }
+    .stats-kpi-icon.amber { background: #fef3c7; color: #b45309; }
+    .stats-kpi-icon.gray { background: #f1f5f9; color: #475569; }
+    .stats-kpi-icon.rose { background: #ffe4e6; color: #be123c; }
+    .stats-kpi-label { color: #64748b; font-size: 0.74rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+    .stats-kpi-value { font-size: 1.75rem; font-weight: 700; color: #0f172a; line-height: 1.05; margin-top: 4px; }
+    .stats-kpi-sub { font-size: 0.72rem; color: #94a3b8; margin-top: 2px; }
+
+    .stats-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 18px; margin-bottom: 18px; }
+    @media (max-width: 1024px) { .stats-grid { grid-template-columns: 1fr; } }
+
+    .chart-card {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 20px 22px;
+    }
+    .chart-card-header {
+        display: flex; align-items: center; justify-content: space-between;
+        margin-bottom: 16px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    .chart-card-title {
+        font-size: 1rem; font-weight: 700; color: #0f172a;
+        display: flex; align-items: center; gap: 8px;
+    }
+    .chart-card-title svg { color: #b91c1c; }
+    .chart-card-subtitle { font-size: 0.78rem; color: #64748b; margin-top: 2px; font-weight: 400; }
+
+    .chart-empty {
+        text-align: center; padding: 40px 20px;
+        color: #94a3b8; font-size: 0.9rem;
+    }
+    .chart-empty svg { color: #cbd5e1; margin-bottom: 10px; }
+
+    .donneurs-list { display: flex; flex-direction: column; gap: 12px; }
+    .donneur-row {
+        display: flex; align-items: center; gap: 12px;
+        padding: 10px 0;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    .donneur-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .donneur-rank {
+        width: 28px; height: 28px; border-radius: 50%;
+        background: #f1f5f9; color: #475569;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 0.8rem; font-weight: 700;
+        flex-shrink: 0;
+    }
+    .donneur-row:nth-child(1) .donneur-rank { background: #fef3c7; color: #b45309; }
+    .donneur-row:nth-child(2) .donneur-rank { background: #f1f5f9; color: #475569; }
+    .donneur-row:nth-child(3) .donneur-rank { background: #ffe4e6; color: #be123c; }
+    .donneur-info { flex: 1; min-width: 0; }
+    .donneur-name { font-weight: 600; font-size: 0.9rem; color: #0f172a; }
+    .donneur-meta { font-size: 0.76rem; color: #64748b; }
+    .donneur-count {
+        background: #fef2f2; color: #b91c1c;
+        padding: 4px 10px; border-radius: 16px;
+        font-size: 0.76rem; font-weight: 700;
+        white-space: nowrap;
+    }
+</style>
+
+<div class="stats-page">
+
+    <div class="stats-header">
+        <h1>Statistiques</h1>
+        <p>Vue d'ensemble des collectes, du stock, des demandes et des donneurs de la banque de sang.</p>
+    </div>
+
+    <!-- KPIs -->
+    <div class="stats-kpis">
+        <div class="stats-kpi">
+            <div class="stats-kpi-icon red">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2v20M12 2C9 6 5 8 5 13a7 7 0 0 0 14 0c0-5-4-7-7-11z"/>
+                </svg>
+            </div>
+            <div>
+                <div class="stats-kpi-label">Poches collectées</div>
+                <div class="stats-kpi-value">{{ total_poches_collectees }}</div>
+                <div class="stats-kpi-sub">Depuis le début</div>
+            </div>
         </div>
-        <div>
-            <h6 class="block font-sans text-base font-semibold leading-relaxed tracking-normal text-blue-gray-900 antialiased">Graphique en ligne</h6>
-            <p class="block max-w-sm font-sans text-sm font-normal leading-normal text-gray-700 antialiased">
-                Visualisez vos données de manière simple avec le plugin de graphique.
-            </p>
+        <div class="stats-kpi">
+            <div class="stats-kpi-icon green">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 7L9 18l-5-5"/>
+                </svg>
+            </div>
+            <div>
+                <div class="stats-kpi-label">Disponibles</div>
+                <div class="stats-kpi-value">{{ poches_disponibles }}</div>
+                <div class="stats-kpi-sub">En stock actuellement</div>
+            </div>
+        </div>
+        <div class="stats-kpi">
+            <div class="stats-kpi-icon blue">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="7" y1="17" x2="17" y2="7"/>
+                    <polyline points="7 7 17 7 17 17"/>
+                </svg>
+            </div>
+            <div>
+                <div class="stats-kpi-label">Distribuées</div>
+                <div class="stats-kpi-value">{{ poches_distribuees }}</div>
+                <div class="stats-kpi-sub">Vers services médicaux</div>
+            </div>
+        </div>
+        <div class="stats-kpi">
+            <div class="stats-kpi-icon gray">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+                </svg>
+            </div>
+            <div>
+                <div class="stats-kpi-label">Expirées</div>
+                <div class="stats-kpi-value">{{ poches_expirees }}</div>
+                <div class="stats-kpi-sub">Périmées</div>
+            </div>
+        </div>
+        <div class="stats-kpi">
+            <div class="stats-kpi-icon rose">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                </svg>
+            </div>
+            <div>
+                <div class="stats-kpi-label">Donneurs</div>
+                <div class="stats-kpi-value">{{ total_donneurs }}</div>
+                <div class="stats-kpi-sub">Enregistrés</div>
+            </div>
+        </div>
+        <div class="stats-kpi">
+            <div class="stats-kpi-icon amber">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+            </div>
+            <div>
+                <div class="stats-kpi-label">Taux de satisfaction</div>
+                <div class="stats-kpi-value">{{ taux_approbation }}%</div>
+                <div class="stats-kpi-sub">{{ demandes_completees }}/{{ total_demandes }} demandes</div>
+            </div>
         </div>
     </div>
-    <div class="pt-6 px-2 pb-0">
-        <div id="line-chart"></div>
+
+    <!-- Graphique 1 : Collectes sur 12 mois + Top donneurs -->
+    <div class="stats-grid">
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <div>
+                    <div class="chart-card-title">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                            <polyline points="17 6 23 6 23 12"/>
+                        </svg>
+                        Évolution des collectes
+                    </div>
+                    <div class="chart-card-subtitle">Nombre de poches prélevées sur les 12 derniers mois</div>
+                </div>
+            </div>
+            {% if total_poches_collectees > 0 %}
+            <div id="chart-collectes"></div>
+            {% else %}
+            <div class="chart-empty">
+                <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                </svg>
+                <p>Aucune donnée de collecte à afficher.</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <div>
+                    <div class="chart-card-title">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                        Top 5 donneurs
+                    </div>
+                    <div class="chart-card-subtitle">Les plus actifs par nombre de dons</div>
+                </div>
+            </div>
+            {% if top_donneurs %}
+            <div class="donneurs-list">
+                {% for d in top_donneurs %}
+                <div class="donneur-row">
+                    <div class="donneur-rank">{{ forloop.counter }}</div>
+                    <div class="donneur-info">
+                        <div class="donneur-name">{{ d.donneur__nom }} {{ d.donneur__prenom }}</div>
+                        <div class="donneur-meta">Groupe {{ d.donneur__groupe_sanguin }}</div>
+                    </div>
+                    <div class="donneur-count">{{ d.nb_dons }} don{{ d.nb_dons|pluralize }}</div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="chart-empty">
+                <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                </svg>
+                <p>Aucun donneur avec des dons.</p>
+            </div>
+            {% endif %}
+        </div>
     </div>
+
+    <!-- Graphique 2 : Stock par groupe + Demandes par état -->
+    <div class="stats-grid">
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <div>
+                    <div class="chart-card-title">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="20" x2="12" y2="10"/>
+                            <line x1="18" y1="20" x2="18" y2="4"/>
+                            <line x1="6" y1="20" x2="6" y2="16"/>
+                        </svg>
+                        Stock par groupe sanguin
+                    </div>
+                    <div class="chart-card-subtitle">Répartition des poches disponibles</div>
+                </div>
+            </div>
+            {% if poches_disponibles > 0 %}
+            <div id="chart-groupes"></div>
+            {% else %}
+            <div class="chart-empty">
+                <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 8.35V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8.35"/>
+                    <path d="M6 18h12M6 14h12"/>
+                </svg>
+                <p>Aucune poche disponible en stock.</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <div>
+                    <div class="chart-card-title">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21.21 15.89A10 10 0 1 1 8 2.83"/>
+                            <path d="M22 12A10 10 0 0 0 12 2v10z"/>
+                        </svg>
+                        Demandes par état
+                    </div>
+                    <div class="chart-card-subtitle">Répartition du traitement</div>
+                </div>
+            </div>
+            {% if total_demandes > 0 %}
+            <div id="chart-etats"></div>
+            {% else %}
+            <div class="chart-empty">
+                <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                </svg>
+                <p>Aucune demande enregistrée.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
 </div>
+
 <script>
-    // Configuration initiale pour le graphique en ligne
-    const chartConfig1 = {
-        series: [{
-            name: "Ventes",
-            data: [50, 40, 300, 320, 500, 350, 200, 230, 500], // Données par défaut, à remplacer par des données dynamiques
-        }],
-        chart: {
-            type: "line",
-            height: 240,
-            toolbar: {
-                show: false,
-            },
-        },
-        title: {
-            show: false,
-        },
-        dataLabels: {
-            enabled: false,
-        },
-        colors: ["#020617"],
-        stroke: {
-            lineCap: "round",
-            curve: "smooth",
-        },
-        markers: {
-            size: 0,
-        },
-        xaxis: {
-            axisTicks: {
-                show: false,
-            },
-            axisBorder: {
-                show: false,
-            },
-            labels: {
-                style: {
-                    colors: "#616161",
-                    fontSize: "12px",
-                    fontFamily: "inherit",
-                    fontWeight: 400,
-                },
-            },
-            categories: ["Avr", "Mai", "Juin", "Juil", "Août", "Sept", "Oct", "Nov", "Déc"], // Mois en français
-        },
-        yaxis: {
-            labels: {
-                style: {
-                    colors: "#616161",
-                    fontSize: "12px",
-                    fontFamily: "inherit",
-                    fontWeight: 400,
-                },
-            },
-        },
-        grid: {
-            show: true,
-            borderColor: "#dddddd",
-            strokeDashArray: 5,
-            xaxis: {
-                lines: {
-                    show: true,
-                },
-            },
-            padding: {
-                top: 5,
-                right: 20,
-            },
-        },
-        fill: {
-            opacity: 0.8,
-        },
-        tooltip: {
-            theme: "dark",
-        },
+(function(){
+    var commonOpts = {
+        chart: { toolbar: { show: false }, fontFamily: 'Poppins, system-ui, sans-serif' },
+        dataLabels: { enabled: false },
+        grid: { borderColor: '#e2e8f0', strokeDashArray: 4 },
+        tooltip: { theme: 'light' }
     };
 
-    // Initialisation du graphique en ligne
-    const chart1 = new ApexCharts(document.querySelector("#line-chart"), chartConfig1);
-    chart1.render(); // Correction du nom de la méthode pour le rendu du graphique
+    {% if total_poches_collectees > 0 %}
+    new ApexCharts(document.querySelector("#chart-collectes"), Object.assign({}, commonOpts, {
+        series: [{ name: 'Poches collectées', data: {{ collectes_par_mois_json|safe }} }],
+        chart: Object.assign({}, commonOpts.chart, { type: 'area', height: 300 }),
+        colors: ['#b91c1c'],
+        stroke: { curve: 'smooth', width: 3 },
+        fill: {
+            type: 'gradient',
+            gradient: { shadeIntensity: 1, opacityFrom: 0.45, opacityTo: 0.05, stops: [0, 100] }
+        },
+        xaxis: {
+            categories: {{ labels_mois_json|safe }},
+            axisTicks: { show: false },
+            axisBorder: { show: false },
+            labels: { style: { colors: '#64748b', fontSize: '11px' } }
+        },
+        yaxis: { labels: { style: { colors: '#64748b', fontSize: '11px' } } }
+    })).render();
+    {% endif %}
+
+    {% if poches_disponibles > 0 %}
+    new ApexCharts(document.querySelector("#chart-groupes"), Object.assign({}, commonOpts, {
+        series: [{ name: 'Poches', data: {{ groupes_values_json|safe }} }],
+        chart: Object.assign({}, commonOpts.chart, { type: 'bar', height: 300 }),
+        colors: ['#b91c1c'],
+        plotOptions: {
+            bar: {
+                borderRadius: 6,
+                columnWidth: '55%',
+                distributed: true
+            }
+        },
+        legend: { show: false },
+        xaxis: {
+            categories: {{ groupes_labels_json|safe }},
+            axisTicks: { show: false },
+            axisBorder: { show: false },
+            labels: { style: { colors: '#64748b', fontSize: '12px', fontWeight: 600 } }
+        },
+        yaxis: { labels: { style: { colors: '#64748b', fontSize: '11px' } } },
+        colors: ['#dc2626', '#b91c1c', '#f59e0b', '#d97706', '#7c3aed', '#6d28d9', '#059669', '#047857']
+    })).render();
+    {% endif %}
+
+    {% if total_demandes > 0 %}
+    new ApexCharts(document.querySelector("#chart-etats"), Object.assign({}, commonOpts, {
+        series: {{ etats_values_json|safe }},
+        chart: Object.assign({}, commonOpts.chart, { type: 'donut', height: 300 }),
+        labels: {{ etats_labels_json|safe }},
+        colors: ['#f59e0b', '#3b82f6', '#10b981', '#ef4444'],
+        legend: {
+            position: 'bottom',
+            fontSize: '12px',
+            labels: { colors: '#475569' },
+            markers: { width: 10, height: 10, radius: 5 },
+            itemMargin: { horizontal: 8, vertical: 4 }
+        },
+        plotOptions: {
+            pie: {
+                donut: {
+                    size: '62%',
+                    labels: {
+                        show: true,
+                        total: {
+                            show: true,
+                            label: 'Total',
+                            color: '#64748b',
+                            fontSize: '13px',
+                            fontWeight: 600,
+                            formatter: function(w){
+                                return w.globals.seriesTotals.reduce(function(a, b){ return a + b; }, 0);
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        stroke: { width: 2, colors: ['#fff'] }
+    })).render();
+    {% endif %}
+})();
 </script>
-
-
-<div class="relative flex flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md">
-    <div class="relative mx-4 mt-4 flex flex-col gap-4 overflow-hidden rounded-none bg-transparent bg-clip-border text-gray-700 shadow-none md:flex-row md:items-center">
-      <div class="w-max rounded-lg bg-gray-900 p-5 text-white">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="currentColor"
-          aria-hidden="true"
-          class="h-6 w-6"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M6.429 9.75L2.25 12l4.179 2.25m0-4.5l5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0l4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0l-5.571 3-5.571-3"
-          ></path>
-        </svg>
-      </div>
-      <div>
-        <h6 class="block font-sans text-base font-semibold leading-relaxed tracking-normal text-blue-gray-900 antialiased">
-          Line Chart
-        </h6>
-        <p class="block max-w-sm font-sans text-sm font-normal leading-normal text-gray-700 antialiased">
-          Visualisez vos données de manière simple en utilisant le plugin de graphique @material-tailwind/html.
-        </p>
-      </div>
-    </div>
-    <div class="pt-6 px-2 pb-0">
-      <div id="bar-chart"></div>
-    </div>
-  </div>
-   
-  <script>
-  // Configuration initiale du graphique à barres
-  const chartConfig = {
-    series: [
-      {
-        name: "Ventes",
-        data: [50, 40, 300, 320, 500, 350, 200, 230, 500], // Données par défaut, à remplacer dynamiquement
-      },
-    ],
-    chart: {
-      type: "bar",
-      height: 240,
-      toolbar: {
-        show: false,
-      },
-    },
-    title: {
-      show: false, // Correction de la valeur pour cacher le titre
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    colors: ["#020617"],
-    plotOptions: {
-      bar: {
-        columnWidth: "40%",
-        borderRadius: 2,
-      },
-    },
-    xaxis: {
-      axisTicks: {
-        show: false,
-      },
-      axisBorder: {
-        show: false,
-      },
-      labels: {
-        style: {
-          colors: "#616161",
-          fontSize: "12px",
-          fontFamily: "inherit",
-          fontWeight: 400,
-        },
-      },
-      categories: [
-        "Avr", "Mai", "Juin", "Juil", "Août", "Sept", "Oct", "Nov", "Déc" // Mois en français
-      ],
-    },
-    yaxis: {
-      labels: {
-        style: {
-          colors: "#616161",
-          fontSize: "12px",
-          fontFamily: "inherit",
-          fontWeight: 400,
-        },
-      },
-    },
-    grid: {
-      show: true,
-      borderColor: "#dddddd",
-      strokeDashArray: 5,
-      xaxis: {
-        lines: {
-          show: true,
-        },
-      },
-      padding: {
-        top: 5,
-        right: 20,
-      },
-    },
-    fill: {
-      opacity: 0.8,
-    },
-    tooltip: {
-      theme: "dark",
-    },
-  };
-   
-  // Initialisation et rendu du graphique à barres
-  const chart = new ApexCharts(document.querySelector("#bar-chart"), chartConfig);
-  chart.render();
-  </script>
-
-
-
-
-<div class="relative flex flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md">
-    <div class="relative mx-4 mt-4 flex flex-col gap-4 overflow-hidden rounded-none bg-transparent bg-clip-border text-gray-700 shadow-none md:flex-row md:items-center">
-      <div class="w-max rounded-lg bg-gray-900 p-5 text-white">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="currentColor"
-          aria-hidden="true"
-          class="h-6 w-6"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M6.429 9.75L2.25 12l4.179 2.25m0-4.5l5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0l4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0l-5.571 3-5.571-3"
-          ></path>
-        </svg>
-      </div>
-      <div>
-        <h6 class="block font-sans text-base font-semibold leading-relaxed tracking-normal text-blue-gray-900 antialiased">
-          Graphique en Secteurs
-        </h6>
-        <p class="block max-w-sm font-sans text-sm font-normal leading-normal text-gray-700 antialiased">
-          Visualisez vos données de manière simple en utilisant le plugin de graphique @material-tailwind/html.
-        </p>
-      </div>
-    </div>
-    <div class="py-6 mt-4 grid place-items-center px-2">
-      <div id="pie-chart"></div>
-    </div>
-  </div>
-   
-  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-  <script>
-  // Configuration initiale du graphique en secteurs
-  const pieChartConfig = {
-    series: [44, 55, 13, 43, 22], // Données par défaut, à remplacer dynamiquement
-    chart: {
-      type: "pie",
-      width: 280,
-      height: 280,
-      toolbar: {
-        show: false,
-      },
-    },
-    title: {
-      show: false, // Correction de la valeur pour cacher le titre
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    colors: ["#020617", "#ff8f00", "#00897b", "#1e88e5", "#d81b60"],
-    legend: {
-      show: false,
-    },
-  };
-   
-  // Initialisation et rendu du graphique en secteurs
-  const pieChart = new ApexCharts(document.querySelector("#pie-chart"), pieChartConfig);
-  pieChart.render();
-  </script>
 {% endblock %}

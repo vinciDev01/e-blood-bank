@@ -9,13 +9,20 @@ urlpatterns = [
     path('activate/<uidb64>/<token>', views.activate, name='activate'),
     path('logout/', views.logOut, name='logout'),
 
+    # Verification OTP (2FA)
+    path('verifyOTP/', views.verifyOTP, name='verifyOTP'),
+    path('resendOTP/', views.resendOTP, name='resendOTP'),
+
     # Reinitialisation de mot de passe
     path('resetPassword/', views.resetPassword, name='resetPassword'),
     path('resetPasswordEmail/', views.resetPasswordEmail, name='resetPasswordEmail'),
     path('resetPasswordConfirm/<uidb64>/<token>/', views.resetPasswordConfirm, name='resetPasswordConfirm'),
-    path('forgotPassword/', views.forgotPassword, name='forgotPassword'),
 
     # Services Medicaux
     path('inscriptionServiceMedicaux/', views.inscriptionServiceMedicaux, name='inscriptionServiceMedicaux'),
     path('deconnexion/', views.logoutServiceMedicaux, name='deconnexion'),
+
+    # Administration (custom admin interface)
+    path('administration/', views.administrationDashboard, name='administrationDashboard'),
+    path('administration/banques/creer/', views.creerBanqueDeSang, name='creerBanqueDeSang'),
 ]

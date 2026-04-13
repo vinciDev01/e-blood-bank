@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bienvenue sur eBloodBank</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 font-sans">
+  <div class="max-w-2xl mx-auto mt-10 bg-white shadow-lg rounded-lg overflow-hidden">
+    <div class="bg-red-700 p-6 text-white text-center">
+      <h1 class="text-2xl font-bold">Bienvenue sur eBloodBank</h1>
+      <p class="text-red-100 mt-1">Votre compte banque de sang a ete cree</p>
+    </div>
+    <div class="p-6">
+      <p class="text-gray-700 mb-4">Bonjour <strong>{{ responsable }}</strong>,</p>
+      <p class="text-gray-700 mb-4">
+        Un compte administrateur a ete cree pour la banque de sang
+        <strong>&laquo; {{ nom_etablissement }} &raquo;</strong> sur la plateforme eBloodBank.
+        Voici vos identifiants de connexion :
+      </p>
+
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-5 mb-5">
+        <div class="mb-3">
+          <div class="text-xs uppercase tracking-wide text-gray-500 font-semibold mb-1">Email</div>
+          <div class="text-gray-900 font-mono text-base">{{ email }}</div>
+        </div>
+        <div>
+          <div class="text-xs uppercase tracking-wide text-gray-500 font-semibold mb-1">Mot de passe temporaire</div>
+          <div class="text-gray-900 font-mono text-base bg-white border border-gray-300 rounded px-3 py-2 inline-block">{{ password }}</div>
+        </div>
+      </div>
+
+      <div class="text-center mb-6">
+        <a href="http://{{ domain }}/_auth/login/"
+           class="bg-red-700 text-white py-2 px-6 rounded-full hover:bg-red-800 transition duration-300 inline-block">
+          Se connecter
+        </a>
+      </div>
+
+      <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
+        <p class="text-sm text-yellow-800">
+          <strong>Important :</strong> pour votre securite, nous vous recommandons de changer votre mot de passe
+          des votre premiere connexion via la page "Mot de passe oublie".
+        </p>
+      </div>
+
+      <p class="text-gray-700 mb-4">
+        Une fois connecte, vous aurez acces a l'ensemble des fonctionnalites dediees aux banques de sang :
+        gestion des poches de sang, suivi des dons, suivi des stocks et traitement des demandes des services medicaux.
+      </p>
+
+      <p class="text-gray-700">
+        Cordialement,<br>
+        L'equipe eBloodBank
+      </p>
+    </div>
+    <div class="bg-gray-100 p-6 text-center text-gray-600 text-sm">
+      <p>&copy; 2026 eBloodBank. Tous droits reserves.</p>
+    </div>
+  </div>
+</body>
+</html>

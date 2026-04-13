@@ -1,141 +1,440 @@
 {% extends 'frontend/bankDeSang/base.html' %}
-
 {% load static %}
 
-{% block title %}Gestion des stocks{% endblock %}
+{% block title %}Gestion des stocks — Banque de sang{% endblock %}
 
 {% block content %}
-<div class="rounded-lg border bg-card bg-white text-card-foreground shadow-sm" data-v0-t="card" style="font-size: 1.140rem; font-family: 'Poppins', sans-serif;">
-    <div class="flex flex-col space-y-1.5 p-6">
-        <div class="flex justify-between items-center">
-            <div>
-                <h3 class="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">Statut du Stock</h3>
-                <p class="text-sm text-muted-foreground">Statut actuel de votre inventaire</p>
+<style>
+    .stk-page {
+        font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif;
+        background: #f8fafc;
+        min-height: 100vh;
+        padding: 24px 28px 48px;
+    }
+    .stk-header { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin-bottom: 22px; }
+    .stk-header h1 { font-size: 1.75rem; font-weight: 700; color: #1e293b; margin-bottom: 4px; }
+    .stk-header p { color: #64748b; font-size: 0.92rem; max-width: 560px; }
+
+    .stk-btn-primary {
+        background: #b91c1c; color: #fff;
+        height: 42px;
+        padding: 0 20px;
+        border: none; border-radius: 10px;
+        font-size: 0.9rem; font-weight: 600;
+        cursor: pointer;
+        display: inline-flex; align-items: center; gap: 8px;
+        box-shadow: 0 2px 8px rgba(185,28,28,0.25);
+        transition: background 0.2s, box-shadow 0.2s;
+    }
+    .stk-btn-primary:hover { background: #991b1b; box-shadow: 0 4px 12px rgba(185,28,28,0.35); }
+
+    .stk-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 22px; }
+    .stk-kpi {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 18px 20px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+    .stk-kpi-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .stk-kpi-icon.red { background: #fee2e2; color: #b91c1c; }
+    .stk-kpi-icon.green { background: #dcfce7; color: #166534; }
+    .stk-kpi-icon.amber { background: #fef3c7; color: #b45309; }
+    .stk-kpi-icon.gray { background: #f1f5f9; color: #475569; }
+    .stk-kpi-label { color: #64748b; font-size: 0.74rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+    .stk-kpi-value { font-size: 1.75rem; font-weight: 700; color: #0f172a; line-height: 1.05; margin-top: 4px; }
+
+    .stk-alert {
+        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        border: 1px solid #fcd34d;
+        color: #78350f;
+        padding: 14px 20px;
+        border-radius: 12px;
+        margin-bottom: 22px;
+        display: flex; align-items: center; gap: 12px;
+        font-size: 0.9rem;
+    }
+    .stk-alert svg { flex-shrink: 0; color: #d97706; }
+
+    .stk-card {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+    .stk-card-header {
+        padding: 18px 22px;
+        border-bottom: 1px solid #f1f5f9;
+        background: #fafbfc;
+    }
+    .stk-card-title { font-size: 1rem; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px; }
+    .stk-card-title svg { color: #b91c1c; }
+    .stk-card-subtitle { font-size: 0.8rem; color: #64748b; margin-top: 2px; }
+
+    .stk-grid {
+        display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+        padding: 22px;
+    }
+    @media (max-width: 900px) { .stk-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px) { .stk-grid { grid-template-columns: 1fr; } }
+
+    .stk-tile {
+        background: #fff;
+        border: 1.5px solid #f1f5f9;
+        border-radius: 14px;
+        padding: 18px 16px;
+        text-decoration: none;
+        color: #1e293b;
+        transition: all 0.15s;
+        position: relative;
+    }
+    .stk-tile:hover {
+        border-color: #b91c1c;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(185,28,28,0.1);
+    }
+    .stk-tile-header {
+        display: flex; align-items: center; justify-content: space-between;
+        margin-bottom: 14px;
+    }
+    .stk-tile-group {
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: #b91c1c;
+        line-height: 1;
+    }
+    .stk-tile-level {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        padding: 3px 8px;
+        border-radius: 14px;
+    }
+    .lv-ok { background: #dcfce7; color: #166534; }
+    .lv-faible { background: #fef3c7; color: #92400e; }
+    .lv-critique { background: #fee2e2; color: #991b1b; }
+
+    .stk-tile-value {
+        display: flex; align-items: baseline; gap: 6px;
+        margin-bottom: 12px;
+    }
+    .stk-tile-nb { font-size: 2rem; font-weight: 700; color: #0f172a; line-height: 1; }
+    .stk-tile-unit { font-size: 0.78rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    .stk-tile-bar {
+        height: 6px; background: #f1f5f9; border-radius: 3px; overflow: hidden;
+        margin-bottom: 10px;
+    }
+    .stk-tile-bar-fill {
+        height: 100%;
+        width: var(--bar-width, 0%);
+        background: linear-gradient(90deg, #b91c1c 0%, #dc2626 100%);
+        border-radius: 3px;
+        transition: width 0.4s ease-out;
+    }
+    .stk-tile-link {
+        font-size: 0.78rem; color: #b91c1c; font-weight: 600;
+        display: inline-flex; align-items: center; gap: 4px;
+    }
+    .stk-tile-empty {
+        opacity: 0.6;
+        pointer-events: none;
+    }
+
+    /* Modal */
+    .modal-backdrop {
+        position: fixed; inset: 0;
+        background: rgba(15, 23, 42, 0.55);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        padding: 20px;
+        backdrop-filter: blur(3px);
+    }
+    .modal-backdrop.active { display: flex; }
+    .modal-box {
+        background: #fff;
+        border-radius: 16px;
+        width: 100%;
+        max-width: 560px;
+        max-height: 92vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        animation: modalIn 0.25s ease-out;
+    }
+    @keyframes modalIn {
+        from { opacity: 0; transform: translateY(12px) scale(0.98); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .modal-head {
+        padding: 22px 26px 16px;
+        border-bottom: 1px solid #f1f5f9;
+        display: flex; justify-content: space-between; align-items: flex-start;
+    }
+    .modal-head h3 { font-size: 1.2rem; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+    .modal-head p { color: #64748b; font-size: 0.88rem; }
+    .modal-close {
+        background: #f1f5f9; border: none; color: #64748b;
+        width: 32px; height: 32px; border-radius: 8px;
+        cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        transition: background 0.2s;
+        flex-shrink: 0;
+    }
+    .modal-close:hover { background: #e2e8f0; color: #1e293b; }
+
+    .modal-body { padding: 22px 26px; }
+    .modal-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 560px) { .modal-row { grid-template-columns: 1fr; } }
+
+    .modal-field { margin-bottom: 14px; }
+    .modal-field label {
+        display: block;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #334155;
+        margin-bottom: 6px;
+    }
+    .modal-field input,
+    .modal-field select {
+        width: 100%; height: 42px;
+        border: 1.5px solid #e2e8f0; border-radius: 9px;
+        padding: 0 12px; font-size: 0.9rem;
+        background: #fff; color: #0f172a;
+        transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .modal-field input:focus, .modal-field select:focus {
+        outline: none;
+        border-color: #b91c1c;
+        box-shadow: 0 0 0 3px rgba(185,28,28,0.08);
+    }
+    .modal-footer {
+        padding: 16px 26px 22px;
+        border-top: 1px solid #f1f5f9;
+        display: flex; justify-content: flex-end; gap: 10px;
+    }
+    .btn-secondary {
+        background: #f1f5f9; color: #334155;
+        height: 42px; padding: 0 18px;
+        border: none; border-radius: 9px;
+        font-size: 0.9rem; font-weight: 600;
+        cursor: pointer;
+    }
+    .btn-secondary:hover { background: #e2e8f0; }
+
+    /* Toasts */
+    #stk-toasts { position: fixed; top: 24px; right: 24px; z-index: 10000; display: flex; flex-direction: column; gap: 10px; }
+    .stk-toast { min-width: 300px; padding: 14px 18px; border-radius: 10px; box-shadow: 0 6px 24px rgba(0,0,0,0.12); font-size: 0.88rem; font-weight: 500; }
+    .stk-toast.success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
+    .stk-toast.error { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+</style>
+
+<div class="stk-page">
+
+    <div class="stk-header">
+        <div>
+            <h1>Gestion des stocks</h1>
+            <p>Suivez votre inventaire de poches de sang par groupe sanguin et enregistrez de nouveaux prélèvements.</p>
+        </div>
+        <button type="button" class="stk-btn-primary" onclick="openStockModal()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Enregistrer une poche
+        </button>
+    </div>
+
+    <!-- KPIs -->
+    <div class="stk-kpis">
+        <div class="stk-kpi">
+            <div class="stk-kpi-icon red">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2v20M12 2C9 6 5 8 5 13a7 7 0 0 0 14 0c0-5-4-7-7-11z"/>
+                </svg>
             </div>
-            <button onclick="document.getElementById('ajouterStockModal').style.display='block'"
-                class="rounded-lg border bg-black text-white font-semibold px-6 py-2 shadow-sm">Ajouter une poche</button>
+            <div>
+                <div class="stk-kpi-label">Poches totales</div>
+                <div class="stk-kpi-value">{{ total_poches }}</div>
+            </div>
+        </div>
+        <div class="stk-kpi">
+            <div class="stk-kpi-icon green">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="8 12 11 15 16 10"/>
+                </svg>
+            </div>
+            <div>
+                <div class="stk-kpi-label">Groupes couverts</div>
+                <div class="stk-kpi-value">{{ nombre_groupes }}/8</div>
+            </div>
+        </div>
+        <div class="stk-kpi">
+            <div class="stk-kpi-icon amber">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                </svg>
+            </div>
+            <div>
+                <div class="stk-kpi-label">Expirent sous 7 j</div>
+                <div class="stk-kpi-value">{{ poches_bientot_expirees }}</div>
+            </div>
+        </div>
+        <div class="stk-kpi">
+            <div class="stk-kpi-icon gray">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+                </svg>
+            </div>
+            <div>
+                <div class="stk-kpi-label">Expirées</div>
+                <div class="stk-kpi-value">{{ poches_expirees }}</div>
+            </div>
         </div>
     </div>
-    <div class="p-6">
-        <div class="grid gap-4 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4">
-            {% for stock in stocks %}
-            <a href="{% url 'bankDeSang:detailStock' stock.id %}">
-                <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
-                    <div class="p-6 flex items-center gap-4">
-                        <img src="{% static 'img/blood_bag.svg' %}" alt="Blood bag" class="w-12 h-12" />
-                        <div class="grid gap-1.5">
-                            <div class="font-semibold">{{ stock.groupe_sanguin }}</div>
-                            <div>{{ stock.nombre_de_poches }} poches</div>
-                        </div>
-                    </div>
+
+    {% if poches_bientot_expirees > 0 %}
+    <div class="stk-alert">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        <div><strong>{{ poches_bientot_expirees }} poche{{ poches_bientot_expirees|pluralize }}</strong> expire{{ poches_bientot_expirees|pluralize:",nt" }} dans les 7 prochains jours. Pensez à les utiliser ou à informer les services médicaux.</div>
+    </div>
+    {% endif %}
+
+    <!-- Grille des groupes -->
+    <div class="stk-card">
+        <div class="stk-card-header">
+            <div class="stk-card-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 8.35V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8.35"/>
+                    <path d="M6 18h12M6 14h12"/>
+                </svg>
+                Stock par groupe sanguin
+            </div>
+            <div class="stk-card-subtitle">Cliquez sur un groupe pour voir le détail des poches</div>
+        </div>
+        <div class="stk-grid">
+            {% for s in stocks %}
+            {% if s.id and s.nombre > 0 %}
+            <a href="{% url 'bankDeSang:detailStock' s.id %}" class="stk-tile">
+            {% else %}
+            <div class="stk-tile stk-tile-empty">
+            {% endif %}
+                <div class="stk-tile-header">
+                    <div class="stk-tile-group">{{ s.groupe }}</div>
+                    {% if s.nombre == 0 %}
+                        <span class="stk-tile-level lv-critique">Vide</span>
+                    {% elif s.niveau == 'critique' %}
+                        <span class="stk-tile-level lv-critique">Critique</span>
+                    {% elif s.niveau == 'faible' %}
+                        <span class="stk-tile-level lv-faible">Faible</span>
+                    {% else %}
+                        <span class="stk-tile-level lv-ok">Suffisant</span>
+                    {% endif %}
                 </div>
+                <div class="stk-tile-value">
+                    <span class="stk-tile-nb">{{ s.nombre }}</span>
+                    <span class="stk-tile-unit">poche{{ s.nombre|pluralize }}</span>
+                </div>
+                <div class="stk-tile-bar">
+                    <div class="stk-tile-bar-fill" style="--bar-width: {{ s.pct }}%"></div>
+                </div>
+                {% if s.id and s.nombre > 0 %}
+                <div class="stk-tile-link">Voir détail &rarr;</div>
+                {% else %}
+                <div class="stk-tile-link" style="color:#94a3b8">Aucune poche</div>
+                {% endif %}
+            {% if s.id and s.nombre > 0 %}
             </a>
+            {% else %}
+            </div>
+            {% endif %}
             {% endfor %}
         </div>
     </div>
+
 </div>
 
-<div id="ajouterStockModal" class="modal" style="display:none;">
-    <div class="modal-content">
-        <span onclick="document.getElementById('ajouterStockModal').style.display='none'" class="close">&times;</span>
-        <form id="ajouterStockForm" method="POST" action="{% url 'bankDeSang:gestionStock' %}">
+<!-- Modal d'ajout -->
+<div class="modal-backdrop" id="stockModal" onclick="if(event.target===this) closeStockModal()">
+    <div class="modal-box">
+        <form method="POST" action="{% url 'bankDeSang:gestionStock' %}">
             {% csrf_token %}
-            <div class="rounded-lg border bg-card bg-white text-card-foreground shadow-sm" data-v0-t="card"
-                style="font-size: 1.140rem; font-family: 'Poppins', sans-serif;">
-                <div class="flex flex-col space-y-1.5 p-6">
-                    <h3 class="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">Ajouter une poche</h3>
-                    <p class="text-sm text-muted-foreground">Ajouter une nouvelle poche à votre inventaire</p>
+            <div class="modal-head">
+                <div>
+                    <h3>Enregistrer une poche</h3>
+                    <p>Ajoutez une nouvelle poche de sang à l'inventaire de votre banque.</p>
                 </div>
-                <div class="p-6">
-                    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
-                        <div class="flex flex-col space-y-1.5">
-                            <label for="donneur" class="text-sm font-semibold">Donneur (facultatif)</label>
-                            <input type="text" name="donneur" id="donneur" placeholder="Numéro du donneur" 
-                                class="rounded-lg border bg-white text-black font-semibold px-4 py-2 shadow-sm">
-                        </div>
-                        <div class="flex flex-col space-y-1.5">
-                            <label for="matricule" class="text-sm font-semibold">Matricule</label>
-                            <input type="text" name="matricule" id="matricule" placeholder="Matricule" required
-                                class="rounded-lg border bg-white text-black font-semibold px-4 py-2 shadow-sm">
-                        </div>
-                        <div class="flex flex-col space-y-1.5">
-                            <label for="date_de_prelevement" class="text-sm font-semibold">Date de prélèvement</label>
-                            <input type="date" name="date_de_prelevement" id="date_de_prelevement" required
-                                class="rounded-lg border bg-white text-black font-semibold px-4 py-2 shadow-sm">
-                        </div>
-                        <div class="flex flex-col space-y-1.5">
-                            <label for="type_produit" class="text-sm font-semibold">Type de produit</label>
-                            <select name="type_produit" id="type_produit"
-                                class="rounded-lg border bg-white text-black font-semibold px-4 py-2 shadow-sm">
-                                <option value="">Choisir le type de produit</option>
-                                <option value="Sang total">Sang total</option>
-                                <option value="Concentré de globules rouges">Concentré de globules rouges</option>
-                                <option value="Plasma">Plasma</option>
-                                <option value="Plaquettes">Plaquettes</option>
-                            </select>
-                        </div>
-                        <div class="flex flex-col space-y-1.5">
-                            <label for="groupe_sanguin" class="text-sm font-semibold">Groupe Sanguin</label>
-                            <select name="groupe_sanguin" id="groupe_sanguin"
-                                class="rounded-lg border bg-white text-black font-semibold px-4 py-2 shadow-sm">
-                                <option value="">Choisir groupe sanguin</option>
-                                <option value="O+">O+</option>
-                                <option value="A+">A+</option>
-                                <option value="B+">B+</option>
-                                <option value="AB+">AB+</option>
-                                <option value="O-">O-</option>
-                                <option value="A-">A-</option>
-                                <option value="B-">B-</option>
-                                <option value="AB-">AB-</option>
-                            </select>
-                        </div>
+                <button type="button" class="modal-close" onclick="closeStockModal()" aria-label="Fermer">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-row">
+                    <div class="modal-field">
+                        <label for="matricule">Matricule <span style="color:#b91c1c">*</span></label>
+                        <input type="text" name="matricule" id="matricule" required placeholder="Ex : PS-2026-0001">
                     </div>
-                    <div class="flex justify-end mt-4">
-                        <button type="submit"
-                            class="rounded-lg border bg-black text-white font-semibold px-6 py-2 shadow-sm">Ajouter</button>
+                    <div class="modal-field">
+                        <label for="donneur">N° donneur <span style="color:#94a3b8">(facultatif)</span></label>
+                        <input type="text" name="donneur" id="donneur" placeholder="Numéro de donneur">
                     </div>
                 </div>
+                <div class="modal-row">
+                    <div class="modal-field">
+                        <label for="date_de_prelevement">Date de prélèvement <span style="color:#b91c1c">*</span></label>
+                        <input type="date" name="date_de_prelevement" id="date_de_prelevement" required value="{{ today_iso }}" max="{{ today_iso }}">
+                    </div>
+                    <div class="modal-field">
+                        <label for="groupe_sanguin">Groupe sanguin <span style="color:#b91c1c">*</span></label>
+                        <select name="groupe_sanguin" id="groupe_sanguin" required>
+                            <option value="">— Choisir —</option>
+                            {% for code, label in groupes_sanguins %}
+                            <option value="{{ code }}">{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-field">
+                    <label for="type_produit">Type de produit <span style="color:#b91c1c">*</span></label>
+                    <select name="type_produit" id="type_produit" required>
+                        <option value="">— Choisir —</option>
+                        {% for code, label in types_produit %}
+                        <option value="{{ code }}">{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="closeStockModal()">Annuler</button>
+                <button type="submit" class="stk-btn-primary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    Enregistrer
+                </button>
             </div>
         </form>
     </div>
 </div>
 
-<style>
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 9999;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgb(0, 0, 0);
-    background-color: rgba(0, 0, 0, 0.502);
-    padding-top: 60px;
-}
+{% if messages %}
+<div id="stk-toasts">
+    {% for message in messages %}
+    <div class="stk-toast {{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+</div>
+<script>setTimeout(function(){ document.querySelectorAll('#stk-toasts .stk-toast').forEach(function(t){ t.remove(); }); }, 5000);</script>
+{% endif %}
 
-.modal-content {
-    background-color: #fefefe;
-    margin: 3% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-}
-
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
-</style>
-
+<script>
+    function openStockModal() { document.getElementById('stockModal').classList.add('active'); }
+    function closeStockModal() { document.getElementById('stockModal').classList.remove('active'); }
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeStockModal(); });
+</script>
 {% endblock %}

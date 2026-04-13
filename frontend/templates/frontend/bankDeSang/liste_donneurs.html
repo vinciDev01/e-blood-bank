@@ -1,458 +1,341 @@
-{% extends 'frontend/bankDeSang/accueil_bankDeSang.html' %}
-
+{% extends 'frontend/bankDeSang/base.html' %}
 {% load static %}
 
-{% block title %}Liste des donneurs{% endblock %}
+{% block title %}Liste des donneurs — Banque de sang{% endblock %}
 
 {% block content %}
-<div class="relative flex flex-col w-full h-full text-gray-700 bg-white shadow-md rounded-xl bg-clip-border" style="font-size: 1.140rem; font-family: 'Poppins', sans-serif;">
-    <div class="relative mx-4 mt-4 overflow-hidden text-gray-700 bg-white rounded-none bg-clip-border">
-        <div class="flex items-center justify-between gap-8 mb-8">
-            <div>
-                <h5
-                    class="block font-sans text-xl antialiased font-semibold leading-snug tracking-normal text-blue-gray-900">
-                    Members list
-                </h5>
-                <p class="block mt-1 font-sans text-base antialiased font-normal leading-relaxed text-gray-700">
-                    See information about all members
-                </p>
-            </div>
-            <div class="flex flex-col gap-2 shrink-0 sm:flex-row">
-                <button
-                    class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center align-middle font-sans text-xs font-bold uppercase text-gray-900 transition-all hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                    type="button">
-                    view all
-                </button>
-                <button
-                    class="flex select-none items-center gap-3 rounded-lg bg-gray-900 py-2 px-4 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                    type="button">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"
-                        stroke-width="2" class="w-4 h-4">
-                        <path
-                            d="M6.25 6.375a4.125 4.125 0 118.25 0 4.125 4.125 0 01-8.25 0zM3.25 19.125a7.125 7.125 0 0114.25 0v.003l-.001.119a.75.75 0 01-.363.63 13.067 13.067 0 01-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 01-.364-.63l-.001-.122zM19.75 7.5a.75.75 0 00-1.5 0v2.25H16a.75.75 0 000 1.5h2.25v2.25a.75.75 0 001.5 0v-2.25H22a.75.75 0 000-1.5h-2.25V7.5z">
-                        </path>
-                    </svg>
-                    Add member
-                </button>
-            </div>
-        </div>
-        <div class="flex flex-col items-center justify-between gap-4 md:flex-row">
-            <div class="block w-full overflow-hidden md:w-max bg-gray-100 rounded-lg">
-                <nav>
-                    <ul role="tablist" class="relative flex flex-row p-1 rounded-lg bg-blue-gray-50 bg-opacity-60">
-                        <li role="tab"
-                            class="relative flex items-center justify-center w-full h-full px-2 py-1 font-sans text-base antialiased font-normal leading-relaxed text-center bg-transparent cursor-pointer select-none text-blue-gray-900"
-                            data-value="all">
-                            <div class="z-20 text-inherit">
-                                &nbsp;&nbsp;All&nbsp;&nbsp;
-                            </div>
-                            <div class="absolute inset-0 z-10 h-full bg-white rounded-md shadow"></div>
-                        </li>
-                        <li role="tab"
-                            class="relative flex items-center justify-center w-full h-full px-2 py-1 font-sans text-base antialiased font-normal leading-relaxed text-center bg-transparent cursor-pointer select-none text-blue-gray-900"
-                            data-value="monitored">
-                            <div class="z-20 text-inherit">
-                                &nbsp;&nbsp;Donor&nbsp;&nbsp;
-                            </div>
-                        </li>
-                        <li role="tab"
-                            class="relative flex items-center justify-center w-full h-full px-2 py-1 font-sans text-base antialiased font-normal leading-relaxed text-center bg-transparent cursor-pointer select-none text-blue-gray-900"
-                            data-value="unmonitored">
-                            <div class="z-20 text-inherit">
-                                &nbsp;&nbsp;Badged&nbsp;&nbsp;
-                            </div>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-            <div class="w-full md:w-72">
-                <div class="relative">
-                    <div class="absolute grid w-5 h-5 top-2 right-3 place-items-center text-blue-gray-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" aria-hidden="true" class="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z">
-                            </path>
-                        </svg>
-                    </div>
-                    <input
-                        class="peer h-full w-full rounded-lg border border-blue-gray-200 border-t-transparent bg-transparent px-3 py-2.5 !pr-9 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
-                        placeholder="Search..." />
-                </div>
-            </div>
+<style>
+    .don-page {
+        font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif;
+        background: #f8fafc;
+        min-height: 100vh;
+        padding: 24px 28px 48px;
+    }
+    .don-header { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin-bottom: 22px; }
+    .don-header h1 { font-size: 1.75rem; font-weight: 700; color: #1e293b; margin-bottom: 4px; }
+    .don-header p { color: #64748b; font-size: 0.92rem; }
 
+    .don-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 22px; }
+    .don-kpi {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 18px 20px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+    .don-kpi-icon {
+        width: 44px; height: 44px; border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0;
+    }
+    .don-kpi-icon.red { background: #fee2e2; color: #b91c1c; }
+    .don-kpi-icon.green { background: #dcfce7; color: #166534; }
+    .don-kpi-icon.blue { background: #dbeafe; color: #1d4ed8; }
+    .don-kpi-label { color: #64748b; font-size: 0.74rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+    .don-kpi-value { font-size: 1.75rem; font-weight: 700; color: #0f172a; line-height: 1.05; margin-top: 4px; }
+
+    .don-card {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+    .don-toolbar {
+        padding: 18px 22px;
+        border-bottom: 1px solid #f1f5f9;
+        display: flex; gap: 12px; flex-wrap: wrap;
+        align-items: center;
+    }
+    .don-search {
+        flex: 1;
+        min-width: 220px;
+        position: relative;
+    }
+    .don-search svg {
+        position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+        width: 18px; height: 18px; color: #94a3b8;
+        pointer-events: none;
+    }
+    .don-search input {
+        width: 100%; height: 40px;
+        border: 1.5px solid #e2e8f0; border-radius: 9px;
+        padding: 0 12px 0 38px;
+        font-size: 0.88rem;
+        background: #fff;
+        transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .don-search input:focus {
+        outline: none;
+        border-color: #b91c1c;
+        box-shadow: 0 0 0 3px rgba(185,28,28,0.08);
+    }
+    .don-filter {
+        height: 40px;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 9px;
+        padding: 0 14px;
+        background: #fff;
+        font-size: 0.88rem;
+        color: #1e293b;
+        cursor: pointer;
+        transition: border-color 0.15s;
+    }
+    .don-filter:focus { outline: none; border-color: #b91c1c; box-shadow: 0 0 0 3px rgba(185,28,28,0.08); }
+    .don-btn-primary {
+        background: #b91c1c; color: #fff;
+        height: 40px;
+        padding: 0 18px;
+        border: none; border-radius: 9px;
+        font-size: 0.88rem; font-weight: 600;
+        cursor: pointer;
+        display: inline-flex; align-items: center; gap: 6px;
+        text-decoration: none;
+        transition: background 0.2s;
+    }
+    .don-btn-primary:hover { background: #991b1b; }
+
+    .don-table { width: 100%; border-collapse: collapse; }
+    .don-table th {
+        text-align: left;
+        background: #fafbfc;
+        color: #64748b;
+        font-weight: 600;
+        font-size: 0.74rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        padding: 12px 22px;
+        border-bottom: 1px solid #e2e8f0;
+        white-space: nowrap;
+    }
+    .don-table td {
+        padding: 14px 22px;
+        font-size: 0.9rem;
+        border-bottom: 1px solid #f1f5f9;
+        vertical-align: middle;
+    }
+    .don-table tbody tr { transition: background 0.12s; }
+    .don-table tbody tr:hover { background: #fafbfc; }
+    .don-table tbody tr:last-child td { border-bottom: none; }
+
+    .don-avatar {
+        display: flex; align-items: center; gap: 12px;
+    }
+    .don-avatar-circle {
+        width: 40px; height: 40px; border-radius: 50%;
+        background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+        color: #b91c1c;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: 700; font-size: 0.85rem;
+        flex-shrink: 0;
+    }
+    .don-name { font-weight: 600; color: #0f172a; }
+    .don-matricule { font-size: 0.76rem; color: #94a3b8; margin-top: 2px; font-family: ui-monospace, Menlo, monospace; }
+
+    .don-groupe {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 20px;
+        background: #fef2f2;
+        color: #b91c1c;
+        font-weight: 700;
+        font-size: 0.78rem;
+        letter-spacing: 0.02em;
+    }
+    .don-sexe {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 14px;
+        font-size: 0.72rem;
+        font-weight: 600;
+        text-transform: capitalize;
+    }
+    .don-sexe.M { background: #dbeafe; color: #1d4ed8; }
+    .don-sexe.F { background: #fce7f3; color: #be185d; }
+
+    .don-dons-badge {
+        display: inline-flex; align-items: center; gap: 4px;
+        background: #f1f5f9;
+        color: #475569;
+        padding: 3px 10px;
+        border-radius: 14px;
+        font-size: 0.78rem;
+        font-weight: 600;
+    }
+    .don-dons-badge.actif {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .don-empty {
+        padding: 64px 24px;
+        text-align: center;
+        color: #94a3b8;
+    }
+    .don-empty svg { color: #cbd5e1; margin-bottom: 12px; }
+    .don-empty p { font-size: 0.95rem; color: #64748b; margin-bottom: 4px; }
+    .don-empty small { font-size: 0.82rem; }
+
+    .don-footer {
+        padding: 14px 22px;
+        border-top: 1px solid #f1f5f9;
+        background: #fafbfc;
+        display: flex; justify-content: space-between; align-items: center;
+        font-size: 0.82rem; color: #64748b;
+    }
+    .don-contact { color: #b91c1c; text-decoration: none; font-weight: 500; }
+    .don-contact:hover { text-decoration: underline; }
+
+    @media (max-width: 768px) {
+        .don-page { padding: 20px 16px 40px; }
+        .don-toolbar { padding: 14px; }
+        .don-table th, .don-table td { padding: 10px 12px; }
+    }
+</style>
+
+<div class="don-page">
+
+    <div class="don-header">
+        <div>
+            <h1>Liste des donneurs</h1>
+            <p>Consultez et recherchez l'ensemble des donneurs enregistrés dans votre banque.</p>
         </div>
     </div>
-    <div class="p-6 px-0 overflow-scroll">
-        <table class="w-full mt-4 text-left table-auto min-w-max">
+
+    <!-- KPIs -->
+    <div class="don-kpis">
+        <div class="don-kpi">
+            <div class="don-kpi-icon red">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                </svg>
+            </div>
+            <div>
+                <div class="don-kpi-label">Total donneurs</div>
+                <div class="don-kpi-value">{{ total_donneurs }}</div>
+            </div>
+        </div>
+        <div class="don-kpi">
+            <div class="don-kpi-icon green">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 7L9 18l-5-5"/>
+                </svg>
+            </div>
+            <div>
+                <div class="don-kpi-label">Donneurs actifs</div>
+                <div class="don-kpi-value">{{ donneurs_actifs }}</div>
+            </div>
+        </div>
+        <div class="don-kpi">
+            <div class="don-kpi-icon blue">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2v20M12 2C9 6 5 8 5 13a7 7 0 0 0 14 0c0-5-4-7-7-11z"/>
+                </svg>
+            </div>
+            <div>
+                <div class="don-kpi-label">Total dons collectés</div>
+                <div class="don-kpi-value">{{ total_dons }}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="don-card">
+        <div class="don-toolbar">
+            <form method="get" class="don-search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"/>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                <input type="text" name="q" placeholder="Rechercher par nom, prénom, numéro ou email…" value="{{ search }}">
+                {% if groupe_filtre %}<input type="hidden" name="groupe" value="{{ groupe_filtre }}">{% endif %}
+            </form>
+            <form method="get" style="display:flex; gap: 10px;">
+                {% if search %}<input type="hidden" name="q" value="{{ search }}">{% endif %}
+                <select name="groupe" class="don-filter" onchange="this.form.submit()">
+                    <option value="">Tous les groupes</option>
+                    {% for g in groupes_disponibles %}
+                    <option value="{{ g }}" {% if groupe_filtre == g %}selected{% endif %}>Groupe {{ g }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+            {% if search or groupe_filtre %}
+            <a href="{% url 'bankDeSang:listeDonneurs' %}" class="don-filter" style="text-decoration:none; display:inline-flex; align-items:center; color:#64748b;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                Effacer
+            </a>
+            {% endif %}
+        </div>
+
+        {% if donneurs %}
+        <table class="don-table">
             <thead>
                 <tr>
-                    <th
-                        class="p-4 transition-colors cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 hover:bg-blue-gray-50">
-                        <p
-                            class="flex items-center justify-between gap-2 font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                            Member
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                                stroke="currentColor" aria-hidden="true" class="w-4 h-4">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"></path>
-                            </svg>
-                        </p>
-                    </th>
-                    <th
-                        class="p-4 transition-colors cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 hover:bg-blue-gray-50">
-                        <p
-                            class="flex items-center justify-between gap-2 font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                            Function
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                                stroke="currentColor" aria-hidden="true" class="w-4 h-4">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"></path>
-                            </svg>
-                        </p>
-                    </th>
-                    <th
-                        class="p-4 transition-colors cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 hover:bg-blue-gray-50">
-                        <p
-                            class="flex items-center justify-between gap-2 font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                            Status
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                                stroke="currentColor" aria-hidden="true" class="w-4 h-4">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"></path>
-                            </svg>
-                        </p>
-                    </th>
-                    <th
-                        class="p-4 transition-colors cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 hover:bg-blue-gray-50">
-                        <p
-                            class="flex items-center justify-between gap-2 font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                            Employed
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                                stroke="currentColor" aria-hidden="true" class="w-4 h-4">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"></path>
-                            </svg>
-                        </p>
-                    </th>
-                    <th
-                        class="p-4 transition-colors cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 hover:bg-blue-gray-50">
-                        <p
-                            class="flex items-center justify-between gap-2 font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                        </p>
-                    </th>
+                    <th>Donneur</th>
+                    <th>Groupe</th>
+                    <th>Âge</th>
+                    <th>Sexe</th>
+                    <th>Ville</th>
+                    <th>Téléphone</th>
+                    <th>Dons</th>
                 </tr>
             </thead>
             <tbody>
+                {% for d in donneurs %}
                 <tr>
-                    <td class="p-4 border-b border-blue-gray-50">
-                        <div class="flex items-center gap-3">
-                            <img src="https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg"
-                                alt="John Michael"
-                                class="relative inline-block h-9 w-9 rounded-full object-cover object-center" />
-                            <div class="flex flex-col">
-                                <p
-                                    class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                    John Michael
-                                </p>
-                                <p
-                                    class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900 opacity-70">
-                                    john@creative-tim.com
-                                </p>
+                    <td>
+                        <div class="don-avatar">
+                            <div class="don-avatar-circle">{{ d.prenom|slice:":1"|upper }}{{ d.nom|slice:":1"|upper }}</div>
+                            <div>
+                                <div class="don-name">{{ d.prenom }} {{ d.nom }}</div>
+                                <div class="don-matricule">{{ d.numero_de_donneur }}</div>
                             </div>
                         </div>
                     </td>
-                    <td class="p-4 border-b border-blue-gray-50">
-                        <div class="flex flex-col">
-                            <p
-                                class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                Manager
-                            </p>
-                            <p
-                                class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900 opacity-70">
-                                Organization
-                            </p>
-                        </div>
+                    <td><span class="don-groupe">{{ d.groupe_sanguin }}</span></td>
+                    <td>{{ d.age }} ans</td>
+                    <td>
+                        {% if d.sexe|slice:":1"|upper == 'M' %}
+                            <span class="don-sexe M">Homme</span>
+                        {% else %}
+                            <span class="don-sexe F">Femme</span>
+                        {% endif %}
                     </td>
-                    <td class="p-4 border-b border-blue-gray-50">
-                        <div class="w-max">
-                            <div
-                                class="relative grid items-center px-2 py-1 font-sans text-xs font-bold text-green-900 uppercase rounded-md select-none whitespace-nowrap bg-green-500/20">
-                                <span class="bg-green-100 rounded-full py-1 px-2">online</span>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="p-4 border-b border-blue-gray-50">
-                        <p class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                            23/04/18
-                        </p>
-                    </td>
-                    <td class="p-4 border-b border-blue-gray-50">
-                        <button
-                            class="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-100 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                            type="button">
-                            <span class="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                    aria-hidden="true" class="w-4 h-4">
-                                    <path
-                                        d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32L19.513 8.2z">
-                                    </path>
-                                </svg>
-                            </span>
-                        </button>
+                    <td>{{ d.ville }}</td>
+                    <td style="color:#64748b; font-size:0.84rem;">{{ d.telephone }}</td>
+                    <td>
+                        {% if d.nb_dons > 0 %}
+                            <span class="don-dons-badge actif">{{ d.nb_dons }} don{{ d.nb_dons|pluralize }}</span>
+                        {% else %}
+                            <span class="don-dons-badge">Aucun don</span>
+                        {% endif %}
                     </td>
                 </tr>
-                <tr>
-                    <td class="p-4 border-b border-blue-gray-50">
-                        <div class="flex items-center gap-3">
-                            <img src="https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-2.jpg"
-                                alt="Alexa Liras"
-                                class="relative inline-block h-9 w-9 rounded-full object-cover object-center" />
-                            <div class="flex flex-col">
-                                <p
-                                    class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                    Alexa Liras
-                                </p>
-                                <p
-                                    class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900 opacity-70">
-                                    alexa@creative-tim.com
-                                </p>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="p-4 border-b border-blue-gray-50">
-                        <div class="flex flex-col">
-                            <p
-                                class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                Programator
-                            </p>
-                            <p
-                                class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900 opacity-70">
-                                Developer
-                            </p>
-                        </div>
-                    </td>
-                    <td class="p-4 border-b border-blue-gray-50">
-                        <div class="w-max">
-                            <div
-                                class="relative grid items-center px-2 py-1 font-sans text-xs font-bold uppercase rounded-md select-none whitespace-nowrap bg-blue-gray-500/20 text-blue-gray-900">
-                                <span class="bg-gray-200 rounded-full py-1 px-2">offline</span>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="p-4 border-b border-blue-gray-50">
-                        <p class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                            23/04/18
-                        </p>
-                    </td>
-                    <td class="p-4 border-b border-blue-gray-50">
-                        <button
-                            class="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-100 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                            type="button">
-                            <span class="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                    aria-hidden="true" class="w-4 h-4">
-                                    <path
-                                        d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32L19.513 8.2z">
-                                    </path>
-                                </svg>
-                            </span>
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="p-4 border-b border-blue-gray-50">
-                        <div class="flex items-center gap-3">
-                            <img src="https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-1.jpg"
-                                alt="Laurent Perrier"
-                                class="relative inline-block h-9 w-9 rounded-full object-cover object-center" />
-                            <div class="flex flex-col">
-                                <p
-                                    class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                    Laurent Perrier
-                                </p>
-                                <p
-                                    class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900 opacity-70">
-                                    laurent@creative-tim.com
-                                </p>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="p-4 border-b border-blue-gray-50">
-                        <div class="flex flex-col">
-                            <p
-                                class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                Executive
-                            </p>
-                            <p
-                                class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900 opacity-70">
-                                Projects
-                            </p>
-                        </div>
-                    </td>
-                    <td class="p-4 border-b border-blue-gray-50">
-                        <div class="w-max">
-                            <div
-                                class="relative grid items-center px-2 py-1 font-sans text-xs font-bold uppercase rounded-md select-none whitespace-nowrap bg-blue-gray-500/20 text-blue-gray-900">
-                                <span class="bg-gray-200 rounded-full py-1 px-2">offline</span>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="p-4 border-b border-blue-gray-50">
-                        <p class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                            19/09/17
-                        </p>
-                    </td>
-                    <td class="p-4 border-b border-blue-gray-50">
-                        <button
-                            class="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-100 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                            type="button">
-                            <span class="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                    aria-hidden="true" class="w-4 h-4">
-                                    <path
-                                        d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32L19.513 8.2z">
-                                    </path>
-                                </svg>
-                            </span>
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="p-4 border-b border-blue-gray-50">
-                        <div class="flex items-center gap-3">
-                            <img src="https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-4.jpg"
-                                alt="Michael Levi"
-                                class="relative inline-block h-9 w-9 rounded-full object-cover object-center" />
-                            <div class="flex flex-col">
-                                <p
-                                    class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                    Michael Levi
-                                </p>
-                                <p
-                                    class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900 opacity-70">
-                                    michael@creative-tim.com
-                                </p>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="p-4 border-b border-blue-gray-50">
-                        <div class="flex flex-col">
-                            <p
-                                class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                Programator
-                            </p>
-                            <p
-                                class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900 opacity-70">
-                                Developer
-                            </p>
-                        </div>
-                    </td>
-                    <td class="p-4 border-b border-blue-gray-50">
-                        <div class="w-max">
-                            <div
-                                class="relative grid items-center px-2 py-1 font-sans text-xs font-bold text-green-900 uppercase rounded-md select-none whitespace-nowrap bg-green-500/20">
-                                <span class="bg-green-100 rounded-full py-1 px-2">online</span>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="p-4 border-b border-blue-gray-50">
-                        <p class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                            24/12/08
-                        </p>
-                    </td>
-                    <td class="p-4 border-b border-blue-gray-50">
-                        <button
-                            class="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-100 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                            type="button">
-                            <span class="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                    aria-hidden="true" class="w-4 h-4">
-                                    <path
-                                        d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32L19.513 8.2z">
-                                    </path>
-                                </svg>
-                            </span>
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="p-4">
-                        <div class="flex items-center gap-3">
-                            <img src="https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-5.jpg"
-                                alt="Richard Gran"
-                                class="relative inline-block h-9 w-9 rounded-full object-cover object-center" />
-                            <div class="flex flex-col">
-                                <p
-                                    class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                    Richard Gran
-                                </p>
-                                <p
-                                    class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900 opacity-70">
-                                    richard@creative-tim.com
-                                </p>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="p-4">
-                        <div class="flex flex-col">
-                            <p
-                                class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                Manager
-                            </p>
-                            <p
-                                class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900 opacity-70">
-                                Executive
-                            </p>
-                        </div>
-                    </td>
-                    <td class="p-4">
-                        <div class="w-max">
-                            <div
-                                class="relative grid items-center px-2 py-1 font-sans text-xs font-bold uppercase rounded-md select-none whitespace-nowrap bg-blue-gray-500/20 text-blue-gray-900">
-                                <span class="bg-gray-200 rounded-full py-1 px-2">offline</span>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="p-4">
-                        <p class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                            04/10/21
-                        </p>
-                    </td>
-                    <td class="p-4">
-                        <button
-                            class="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-100 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                            type="button">
-                            <span class="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                    aria-hidden="true" class="w-4 h-4">
-                                    <path
-                                        d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32L19.513 8.2z">
-                                    </path>
-                                </svg>
-                            </span>
-                        </button>
-                    </td>
-                </tr>
+                {% endfor %}
             </tbody>
         </table>
-    </div>
-    <div class="flex items-center justify-between p-4 border-t border-blue-gray-50">
-        <p class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-            Page 1 of 10
-        </p>
-        <div class="flex gap-2">
-            <button
-                class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center align-middle font-sans text-xs font-bold uppercase text-gray-900 transition-all hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                type="button">
-                Previous
-            </button>
-            <button
-                class="select-none rounded-lg border border-gray-900 py-2 px-4 text-center align-middle font-sans text-xs font-bold uppercase text-gray-900 transition-all hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                type="button">
-                Next
-            </button>
+        <div class="don-footer">
+            <span>{{ donneurs|length }} donneur{{ donneurs|length|pluralize }} affiché{{ donneurs|length|pluralize }}{% if total_donneurs != donneurs|length %} sur {{ total_donneurs }}{% endif %}</span>
         </div>
+        {% else %}
+        <div class="don-empty">
+            <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+            </svg>
+            {% if search or groupe_filtre %}
+            <p>Aucun donneur ne correspond à votre recherche.</p>
+            <small>Essayez de modifier les critères ou <a href="{% url 'bankDeSang:listeDonneurs' %}" class="don-contact">réinitialisez les filtres</a>.</small>
+            {% else %}
+            <p>Aucun donneur enregistré pour le moment.</p>
+            <small>Les donneurs apparaîtront ici dès leur inscription.</small>
+            {% endif %}
+        </div>
+        {% endif %}
     </div>
+
 </div>
 {% endblock %}

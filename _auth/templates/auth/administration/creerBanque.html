@@ -1,0 +1,356 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Créer une banque de sang — eBloodBank</title>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(180deg, #fff5f5 0%, #f5f5f7 280px);
+            color: #1d1d1f;
+            min-height: 100vh;
+        }
+
+        .nav {
+            background: #fff; border-bottom: 1px solid #e5e5ea;
+            padding: 14px 32px;
+            display: flex; align-items: center; justify-content: space-between;
+            position: sticky; top: 0; z-index: 10;
+        }
+        .nav-left { display: flex; align-items: center; gap: 10px; }
+        .nav-left span { font-size: 1.15rem; font-weight: 700; color: #b91c1c; }
+        .nav-left .sep { color: #d2d2d7; font-weight: 400; margin: 0 4px; }
+        .nav-right a { color: #b91c1c; text-decoration: none; font-weight: 600; font-size: 0.9rem; }
+        .nav-right a:hover { text-decoration: underline; }
+
+        .hero {
+            background: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 100%);
+            color: #fff;
+            padding: 40px 32px 80px;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::after {
+            content: ''; position: absolute; right: -60px; top: -60px;
+            width: 260px; height: 260px;
+            background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .hero-inner { max-width: 760px; margin: 0 auto; position: relative; }
+        .hero h1 { font-size: 1.85rem; font-weight: 700; margin-bottom: 0.35rem; }
+        .hero p { color: rgba(255,255,255,0.85); font-size: 0.95rem; }
+
+        .container { max-width: 760px; margin: -48px auto 0; padding: 0 32px 48px; position: relative; }
+
+        .back {
+            color: rgba(255,255,255,0.9); text-decoration: none;
+            font-size: 0.88rem; display: inline-flex; align-items: center; gap: 6px;
+            margin-bottom: 0.75rem;
+        }
+        .back:hover { color: #fff; }
+
+        .card {
+            background: #fff; padding: 32px 36px;
+            border-radius: 14px; border: 1px solid #e5e5ea;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 1px solid #fcd34d; color: #78350f;
+            padding: 14px 18px; border-radius: 10px; font-size: 0.88rem;
+            margin-bottom: 1.75rem;
+            display: flex; align-items: flex-start; gap: 12px;
+            line-height: 1.5;
+        }
+        .info-box svg { flex-shrink: 0; margin-top: 2px; color: #d97706; }
+
+        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        @media (max-width: 640px) { .row { grid-template-columns: 1fr; } }
+
+        .field { margin-bottom: 1.1rem; }
+        .field label {
+            display: block; font-size: 0.82rem; font-weight: 600;
+            color: #3a3a3c; margin-bottom: 0.4rem;
+        }
+        .field label .req { color: #b91c1c; margin-left: 2px; }
+        .input-wrap {
+            position: relative;
+            display: flex; align-items: center;
+        }
+        .input-wrap svg.icon {
+            position: absolute; left: 14px;
+            width: 18px; height: 18px; color: #8e8e93;
+            pointer-events: none;
+        }
+        .field input {
+            width: 100%; height: 46px;
+            border: 1.5px solid #d2d2d7; border-radius: 10px;
+            padding: 0 14px 0 42px; font-size: 0.92rem; background: #fff;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            color: #1d1d1f;
+        }
+        .field input:focus {
+            outline: none;
+            border-color: #b91c1c;
+            box-shadow: 0 0 0 3px rgba(185,28,28,0.08);
+        }
+        .field input::placeholder { color: #aeaeb2; }
+
+        .divider {
+            height: 1px; background: #f2f2f5;
+            margin: 1.5rem -36px;
+        }
+        .section-label {
+            font-size: 0.75rem; font-weight: 700;
+            color: #b91c1c; text-transform: uppercase; letter-spacing: 0.06em;
+            margin-bottom: 1rem;
+        }
+
+        .actions {
+            display: flex; justify-content: flex-end; gap: 10px;
+            margin-top: 1.75rem;
+        }
+        .btn {
+            padding: 12px 22px; border-radius: 10px;
+            font-size: 0.92rem; font-weight: 600;
+            cursor: pointer; border: none; text-decoration: none;
+            display: inline-flex; align-items: center; gap: 6px;
+            transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+        }
+        .btn-secondary { background: #f2f2f5; color: #1d1d1f; }
+        .btn-secondary:hover { background: #e5e5ea; }
+        .btn-primary {
+            background: #b91c1c; color: #fff;
+            box-shadow: 0 2px 8px rgba(185,28,28,0.25);
+        }
+        .btn-primary:hover { background: #991b1b; box-shadow: 0 4px 12px rgba(185,28,28,0.35); }
+        .btn-primary:active { transform: scale(0.98); }
+
+        #toast-container { position: fixed; top: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+        .toast {
+            min-width: 320px; max-width: 440px;
+            padding: 14px 18px; border-radius: 10px;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+            font-size: 0.88rem; font-weight: 500;
+            animation: slideIn 0.3s ease-out;
+        }
+        .toast-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
+        .toast-error { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+        .toast-warning { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(60px); } to { opacity: 1; transform: translateX(0); } }
+
+        @media (max-width: 640px) {
+            .hero { padding: 32px 20px 72px; }
+            .container { padding: 0 20px 32px; }
+            .nav { padding: 12px 20px; }
+            .card { padding: 24px 22px; }
+            .divider { margin: 1.25rem -22px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="nav">
+        <div class="nav-left">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#b91c1c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"/>
+                <path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97"/>
+            </svg>
+            <span>eBloodBank</span>
+            <span class="sep">|</span>
+            <span style="color: #6e6e73; font-weight: 500; font-size: 0.95rem;">Administration</span>
+        </div>
+        <div class="nav-right"><a href="{% url '_auth:logout' %}">Déconnexion</a></div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-inner">
+            <a href="{% url '_auth:administrationDashboard' %}" class="back">&larr; Retour au tableau de bord</a>
+            <h1>Créer une banque de sang</h1>
+            <p>Renseignez les informations ci-dessous. Un mot de passe sera généré automatiquement et envoyé par email au responsable.</p>
+        </div>
+    </section>
+
+    <div class="container">
+
+        <div class="card">
+            <div class="info-box">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+                </svg>
+                <span>L'adresse email saisie servira d'identifiant de connexion au responsable de la banque. Il recevra automatiquement son mot de passe temporaire par email.</span>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="section-label">Informations de l'établissement</div>
+
+                <div class="field">
+                    <label for="nom_etablissement">Nom de l'établissement<span class="req">*</span></label>
+                    <div class="input-wrap">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/>
+                        </svg>
+                        <input type="text" name="nom_etablissement" id="nom_etablissement" required placeholder="Banque Centrale de Sang">
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="section-label">Responsable &amp; contact</div>
+
+                <div class="row">
+                    <div class="field">
+                        <label for="responsable">Responsable<span class="req">*</span></label>
+                        <div class="input-wrap">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                            <input type="text" name="responsable" id="responsable" required placeholder="Dr. Martin Dupont">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="email">Email du responsable<span class="req">*</span></label>
+                        <div class="input-wrap">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="4" width="20" height="16" rx="2"/>
+                                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                            </svg>
+                            <input type="email" name="email" id="email" required placeholder="responsable@banque.com">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="telephone">Téléphone<span class="req">*</span></label>
+                    <div class="input-wrap">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                        </svg>
+                        <input type="tel" name="telephone" id="telephone" required placeholder="+33 1 23 45 67 89">
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="section-label">Adresse</div>
+
+                <div class="field">
+                    <label for="adresse">Adresse<span class="req">*</span></label>
+                    <div class="input-wrap">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                            <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                        <input type="text" name="adresse" id="adresse" required placeholder="10 rue de la Santé">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="field">
+                        <label for="ville">Ville<span class="req">*</span></label>
+                        <div class="input-wrap">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 21h18M5 21V7l7-4 7 4v14"/>
+                                <path d="M9 9h1M9 13h1M9 17h1M14 9h1M14 13h1M14 17h1"/>
+                            </svg>
+                            <input type="text" name="ville" id="ville" required placeholder="Paris">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="code_postal">Code postal<span class="req">*</span></label>
+                        <div class="input-wrap">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="16" rx="2"/>
+                                <path d="M7 9h10M7 13h10M7 17h6"/>
+                            </svg>
+                            <input type="text" name="code_postal" id="code_postal" required placeholder="75001">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="pays">Pays<span class="req">*</span></label>
+                    <div class="input-wrap">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                        </svg>
+                        <input type="text" name="pays" id="pays" required placeholder="France">
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <a href="{% url '_auth:administrationDashboard' %}" class="btn btn-secondary">Annuler</a>
+                    <button type="submit" class="btn btn-primary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        Créer la banque de sang
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Popup de confirmation de déconnexion -->
+    <style>
+        .logout-backdrop { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.55); display: none; align-items: center; justify-content: center; z-index: 99999; padding: 20px; backdrop-filter: blur(3px); }
+        .logout-backdrop.active { display: flex; }
+        .logout-box { background: #fff; border-radius: 16px; width: 100%; max-width: 420px; padding: 28px 26px 22px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); text-align: center; animation: logoutIn 0.22s ease-out; }
+        @keyframes logoutIn { from { opacity: 0; transform: scale(0.95) translateY(8px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        .logout-icon { width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); color: #b91c1c; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+        .logout-title { font-size: 1.2rem; font-weight: 700; color: #0f172a; margin-bottom: 6px; }
+        .logout-text { color: #64748b; font-size: 0.9rem; line-height: 1.5; margin-bottom: 22px; }
+        .logout-actions { display: flex; gap: 10px; justify-content: center; }
+        .logout-btn { height: 42px; padding: 0 22px; border: none; border-radius: 10px; font-size: 0.9rem; font-weight: 600; cursor: pointer; }
+        .logout-btn.cancel { background: #f1f5f9; color: #334155; }
+        .logout-btn.cancel:hover { background: #e2e8f0; }
+        .logout-btn.confirm { background: #b91c1c; color: #fff; box-shadow: 0 2px 8px rgba(185,28,28,0.25); }
+        .logout-btn.confirm:hover { background: #991b1b; }
+    </style>
+    <div class="logout-backdrop" id="logoutConfirm" onclick="if(event.target===this) closeLogoutConfirm()">
+        <div class="logout-box">
+            <div class="logout-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            </div>
+            <div class="logout-title">Confirmer la déconnexion</div>
+            <div class="logout-text">Vous êtes sur le point de vous déconnecter de votre espace eBloodBank. Voulez-vous continuer&nbsp;?</div>
+            <div class="logout-actions">
+                <button type="button" class="logout-btn cancel" onclick="closeLogoutConfirm()">Annuler</button>
+                <a id="logoutConfirmLink" href="#" class="logout-btn confirm" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center;">Se déconnecter</a>
+            </div>
+        </div>
+    </div>
+    <script>
+    (function(){
+        function openLogoutConfirm(url) { document.getElementById('logoutConfirmLink').setAttribute('href', url); document.getElementById('logoutConfirm').classList.add('active'); }
+        window.closeLogoutConfirm = function() { document.getElementById('logoutConfirm').classList.remove('active'); };
+        document.addEventListener('click', function(e){
+            var a = e.target.closest('a');
+            if (!a) return;
+            var href = a.getAttribute('href') || '';
+            if (/\/logout\/?$|\/deconnexion\/?$/.test(href)) { e.preventDefault(); openLogoutConfirm(href); }
+        });
+        document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeLogoutConfirm(); });
+    })();
+    </script>
+
+    {% if messages %}
+    <div id="toast-container">
+        {% for message in messages %}
+        <div class="toast toast-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    <script>
+        setTimeout(function(){
+            document.querySelectorAll('#toast-container .toast').forEach(function(t){ t.remove(); });
+        }, 5000);
+    </script>
+    {% endif %}
+</body>
+</html>

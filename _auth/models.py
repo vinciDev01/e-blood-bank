@@ -1,7 +1,10 @@
 from django.db import models
-from datetime import date
+from datetime import date, timedelta
 from django.contrib.auth.models import AbstractUser, Group, Permission
+from django.utils import timezone
 import os
+import random
+import string
 
 # Create your models here.
 def renomer_image(instance, filename):
@@ -172,5 +175,26 @@ class BanqueDeSang(models.Model):
         verbose_name_plural = "Banques de Sang"
 
 
+class OTPCode(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='otp_codes')
+    code = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+    is_used = models.BooleanField(default=False)
 
+    def save(self, *args, **kwargs):
+        if not self.expires_at:
+            self.expires_at = timezone.now() + timedelta(minutes=5)
+        super().save(*args, **kwargs)
 
+    def is_valid(self):
+        return not self.is_used and timezone.now() < self.expires_at
+
+    @staticmethod
+    def generate_code():
+        return ''.join(random.choices(string.digits, k=6))
+
+    class Meta:
+        verbose_name = "Code OTP"
+        verbose_name_plural = "Codes OTP"
+        ordering = ['-created_at']

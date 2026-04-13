@@ -1,27 +1,56 @@
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from datetime import datetime
-from .models import *
-from bankDeSang.models import *
 from django.contrib.auth.decorators import login_required
-from django.core.mail import send_mail
-# from django.conf import settings
-from .models import *
+from datetime import datetime
+
+from .models import DemandeDeSang, Patient, Stock_de_sang
+from bankDeSang.models import PocheDeSang, StockDeSang
+from _auth.models import ServiceMedicaux
 from decorateurs import check_role
-from django.shortcuts import get_object_or_404
 
 
-
-
-# Create your views here.
-
-# @serviceMedicaux
 @login_required
+@check_role('medical')
 def accueilServiceMedicaux(request):
-    # `request.user` contient l'utilisateur authentifié
-    hopital = request.user.service_medical.nom_etablissement
-    return render(request, 'frontend/serviceMedicaux/accueil_service_medicaux.html', {'hopital': hopital})
+    service = request.user.service_medical
+    hopital = service.nom_etablissement
+
+    demandes = DemandeDeSang.objects.filter(serviceMedicaux=service)
+    nombre_demandes = demandes.count()
+    demandes_en_attente = demandes.filter(etat='En attente').count()
+    demandes_approuvees = demandes.filter(etat__in=['Approuvee', '1/2 Approuvee']).count()
+    demandes_completees = demandes.filter(etat='Completee').count()
+    demandes_rejetees = demandes.filter(etat='Rejetee').count()
+
+    stocks = Stock_de_sang.objects.filter(service_medical=service)
+    nbr_poche = sum(s.nombre_de_poches for s in stocks)
+
+    stock_par_groupe = {g: 0 for g, _ in DemandeDeSang.groupe_sanguin_choices}
+    for s in stocks:
+        stock_par_groupe[s.groupe_sanguin] = stock_par_groupe.get(s.groupe_sanguin, 0) + s.nombre_de_poches
+    total_stock = sum(stock_par_groupe.values()) or 1
+    repartition = [
+        {'groupe': g, 'nombre': n, 'pourcentage': round(n * 100 / total_stock, 1)}
+        for g, n in stock_par_groupe.items()
+    ]
+
+    dernieres_demandes = demandes.order_by('-date_demande')[:5]
+
+    context = {
+        'hopital': hopital,
+        'service': service,
+        'nombre_demandes': nombre_demandes,
+        'demandes_en_attente': demandes_en_attente,
+        'demandes_approuvees': demandes_approuvees,
+        'demandes_completees': demandes_completees,
+        'demandes_rejetees': demandes_rejetees,
+        'nbr_poche': nbr_poche,
+        'repartition': repartition,
+        'dernieres_demandes': dernieres_demandes,
+    }
+    return render(request, 'frontend/serviceMedicaux/accueil_service_medicaux.html', context)
+
 
 @login_required
 @check_role('medical')
@@ -31,28 +60,30 @@ def mesDemandesDeSang(request):
     grp_sanguins = []
     nbr_poches = []
     poches_allouees = []
+
     for demande in demandes:
-        grp_sanguins.extend(demande.groupe_sanguin[service_medical.email])
-        nbr_poches.extend(demande.nombre_poches[service_medical.email])
+        grp_sanguins.extend(demande.groupe_sanguin.get(service_medical.email, []))
+        nbr_poches.extend(demande.nombre_poches.get(service_medical.email, []))
         if service_medical.email in demande.nombre_poches_allouees:
             poches_allouees.extend(demande.nombre_poches_allouees[service_medical.email])
-        # print(nbr_poches)
 
     mes_demandes = True
-    id_demande = DemandeDeSang.objects.filter(serviceMedicaux=request.user.service_medical, etat="Approuvée").values_list('id', flat=True).first()
-    print("id_demande")
-    print(id_demande)
+    id_demande = DemandeDeSang.objects.filter(
+        serviceMedicaux=request.user.service_medical,
+        etat="Approuvee",
+    ).values_list('id', flat=True).first()
+
     context = {
         'demandes': demandes,
         'grp_sanguins': grp_sanguins,
         'nbr_poches': nbr_poches,
         'poches_allouees': poches_allouees,
         'mes_demandes': mes_demandes,
-        'id_demande': id_demande
+        'id_demande': id_demande,
     }
     return render(request, 'frontend/serviceMedicaux/liste_demande_de_sang.html', context)
 
-#demande des utilisateurs
+
 @login_required
 @check_role('medical')
 def listeDemandeDeSang(request):
@@ -71,6 +102,10 @@ def faireDemandeDeSang(request):
             groupes_sanguins = request.POST.getlist('groupesSanguins[]')
             nombres_poches = request.POST.getlist('nombresPoches[]')
             service_medical = request.user.service_medical
+
+            # Initialiser etat_groupes pour chaque groupe demande
+            etat_groupes = {grp: 'En attente' for grp in groupes_sanguins}
+
             demande = DemandeDeSang(
                 serviceMedicaux=service_medical,
                 groupe_sanguin={service_medical.email: groupes_sanguins},
@@ -78,10 +113,13 @@ def faireDemandeDeSang(request):
                 nombre_poches={service_medical.email: nombres_poches},
                 urgence=urgence,
                 motif=motif,
-                notification_envoyee=False
+                etat_groupes=etat_groupes,
+                notification_envoyee=False,
             )
             demande.save()
+            messages.success(request, 'Votre demande a ete enregistree avec succes')
             return redirect('serviceMedicaux:accueilServiceMedicaux')
+
         elif request.user.role == 'donor':
             groupe_sanguin = request.POST.get('groupeSanguin', '')
             nombre_poche = request.POST.get('nombrePoche', '')
@@ -93,12 +131,14 @@ def faireDemandeDeSang(request):
                 nombre_poches={"nombre_poche": nombre_poche},
                 urgence=urgence,
                 motif=motif,
-                notification_envoyee=False
+                etat_groupes={groupe_sanguin: 'En attente'},
+                notification_envoyee=False,
             )
             demande.save()
-            # return redirect('serviceMedicaux:accueilServiceMedicaux')
+            messages.success(request, 'Votre demande a ete enregistree avec succes')
+            return redirect('frontend:accueil')
+
         elif request.user.role == 'generic':
-            # Gérer les utilisateurs lambda
             groupe_sanguin = request.POST.get('groupeSanguin', '')
             nombre_poche = request.POST.get('nombrePoche', '')
             user = request.user
@@ -110,7 +150,7 @@ def faireDemandeDeSang(request):
                 groupe_sanguin=groupe_sanguin,
                 relation_proche_patient=request.POST['relationProchePatient'],
                 telephone_proche=request.POST['telephone'],
-                utilisateur = user
+                utilisateur=user,
             )
             demande = DemandeDeSang(
                 patient=patient,
@@ -119,97 +159,24 @@ def faireDemandeDeSang(request):
                 nombre_poches={user.email: nombre_poche},
                 urgence=urgence,
                 motif=motif,
-                notification_envoyee=False
+                etat_groupes={groupe_sanguin: 'En attente'},
+                notification_envoyee=False,
             )
-            # for service_medical in ServiceMedicaux.objects.all():
-            #     demande.serviceMedicaux = service_medical
             demande.save()
-
+            messages.success(request, 'Votre demande a ete enregistree avec succes')
             return redirect('frontend:accueil')
-
-        # demande.save()
-        messages.success(request, 'Votre demande a été enregistrée avec succès')
-        # return redirect('serviceMedicaux:accueilServiceMedicaux')
 
     return render(request, 'frontend/serviceMedicaux/faire_demande_de_sang.html')
 
 
-
-
-# def faireDemandeDeSang2(request):
-#     if request.method == 'POST':
-#         type_produit = request.POST.get('typeProduit', '')
-#         urgence = request.POST.get('urgence', '')
-#         motif = request.POST.get('motif', '')
-
-#         if request.user.role == 'medical':
-#             groupes_sanguins = request.POST.getlist('groupesSanguins[]')
-#             nombres_poches = request.POST.getlist('nombresPoches[]')
-#             service_medical = request.user.service_medical
-#             demandes = []
-#             for groupe_sanguin, nombre_poche in zip(groupes_sanguins, nombres_poches):
-#                 demande = DemandeDeSang(
-#                     serviceMedicaux=service_medical,
-#                     groupe_sanguin={service_medical.email: groupe_sanguin},
-#                     type_produit=type_produit,
-#                     nombre_poches={service_medical.email: nombre_poche},
-#                     urgence=urgence,
-#                     motif=motif,
-#                     notification_envoyee=False
-#                 )
-#                 demandes.append(demande)
-#         elif request.user.role == 'donor':
-#             groupe_sanguin = request.POST.get('groupeSanguin', '')
-#             nombre_poche = request.POST.get('nombrePoche', '')
-#             donneur = request.user.donneur
-#             demande = DemandeDeSang(
-#                 donneur=donneur,
-#                 groupe_sanguin={"groupe_sanguin": groupe_sanguin},
-#                 type_produit=type_produit,
-#                 nombre_poches={"nombre_poche": nombre_poche},
-#                 urgence=urgence,
-#                 motif=motif,
-#                 notification_envoyee=False
-#             )
-#             demandes = [demande]
-#         else:
-#             # Gérer les utilisateurs lambda
-#             groupe_sanguin = request.POST.get('groupeSanguin', '')
-#             nombre_poche = request.POST.get('nombrePoche', '')
-#             patient = Patient.objects.create(
-#                 nom_complet=request.POST['nomComplet'],
-#                 date_de_naissance=request.POST['dateDeNaissance'],
-#                 proche=request.POST['proche'],
-#                 relation_proche_patient=request.POST['relationProchePatient'],
-#                 telephone_proche=request.POST['telephone'],
-#             )
-#             demande = DemandeDeSang(
-#                 patient=patient,
-#                 groupe_sanguin={"groupe_sanguin": groupe_sanguin},
-#                 type_produit=type_produit,
-#                 nombre_poches={"nombre_poche": nombre_poche},
-#                 urgence=urgence,
-#                 motif=motif,
-#                 notification_envoyee=False
-#             )
-#             demandes = [demande]
-#             for service_medical in ServiceMedicaux.objects.all():
-#                 demande.serviceMedicaux = service_medical
-#                 demande.save()
-
-#         for demande in demandes:
-#             demande.save()
-#         messages.success(request, 'Votre demande a été enregistrée avec succès')
-#         return redirect('serviceMedicaux:accueilServiceMedicaux')
-
-#     return render(request, 'frontend/serviceMedicaux/faire_demande_de_sang.html')
-
-
-
+@login_required
+@check_role('medical')
 def getToutesDemande(request):
-    demandes = DemandeDeSang.objects.get(etat='En attente')
-    return JsonResponse({'demandes': list(demandes.values())})
-
+    demandes = DemandeDeSang.objects.filter(etat='En attente')
+    data = list(demandes.values(
+        'id', 'etat', 'type_produit', 'urgence', 'motif', 'date_demande',
+    ))
+    return JsonResponse({'demandes': data})
 
 
 @login_required
@@ -217,59 +184,38 @@ def getToutesDemande(request):
 def recevoir_poches(request):
     if request.method == 'POST':
         demande_id = request.POST.get('demande_id')
-        poches = request.POST.getlist('poches[]')
-        demande = DemandeDeSang.objects.get(id=demande_id)
-        groupes_sanguins = demande.groupe_sanguin[demande.serviceMedicaux.email]
+        matricules_recues = request.POST.getlist('poches[]')
 
-        for groupe in groupes_sanguins:
-            if groupe in poches:
-                demande.etat_groupes[groupe] = 'Approuvée'
-            else:
-                demande.etat_groupes[groupe] = 'Rejetée'
+        demande = get_object_or_404(DemandeDeSang, id=demande_id)
+        service = demande.serviceMedicaux
 
-        demande.poches_recues = {demande.serviceMedicaux.email: poches}
+        # Stocker les poches recues
+        demande.poches_recues = {service.email: matricules_recues}
 
-        for matricul in poches:
-            poche = PocheDeSang.objects.get(matricule=matricul)
+        # Traiter chaque poche recue
+        for matricule in matricules_recues:
+            poche = get_object_or_404(PocheDeSang, matricule=matricule)
+
+            # Transferer la poche de la banque vers le service medical
             poche.bank_de_sang = None
-            poche.service_medicaux = demande.serviceMedicaux
+            poche.service_medicaux = service
             poche.en_transition = False
             poche.est_disponible = True
-            StockDeSang.enregistrer_stock(poche, -1)
-            Stock_de_sang.enregistrer_stock(poche, 1)
             poche.save()
 
+            # Diminuer le stock de la banque de sang
+            StockDeSang.enregistrer_stock(poche, -1)
+            # Augmenter le stock du service medical
+            Stock_de_sang.enregistrer_stock(poche, 1)
+
+        # Mettre a jour l'etat des groupes : marquer comme complet
+        groupes_sanguins = demande.groupe_sanguin.get(service.email, [])
+        for groupe in groupes_sanguins:
+            # Un groupe est "recu" si au moins une poche de ce groupe est dans les matricules recues
+            demande.etat_groupes[groupe] = 'Completee'
+
+        demande.etat = 'Completee'
         demande.save()
-        messages.success(request, 'Les poches ont été reçues avec succès')
+        messages.success(request, 'Les poches ont ete recues avec succes')
+
     return redirect('serviceMedicaux:mesDemandesDeSang')
-
-# @login_required
-# @check_role('blood_bank')
-# def gestionStock(request):
-#     if request.method == 'POST':
-#         donneur_id = request.POST.get('donneur', None)
-#         matricule = request.POST.get('matricule', '')
-#         date_de_prelevement_str = request.POST.get('date_de_prelevement', '')
-#         type_produit = request.POST.get('type_produit', '')
-#         groupe_sanguin = request.POST.get('groupe_sanguin', '')
-
-#         date_de_prelevement = datetime.strptime(date_de_prelevement_str, '%Y-%m-%d').date()
-        
-#         donneur = Donneur.objects.get(id=donneur_id) if donneur_id else None
-
-#         if PocheDeSang.objects.filter(matricule=matricule).exists():
-#             messages.error(request, 'Le matricule existe déjà.')
-#             return render(request, 'frontend/bankDeSang/gestion_stock.html', {'stocks': StockDeSang.objects.all()})
-
-#         poche_de_sang = PocheDeSang.objects.create(
-#             donneur=donneur,
-#             matricule=matricule,
-#             date_de_prelevement=date_de_prelevement,
-#             type_produit=type_produit,
-#             groupe_sanguin=groupe_sanguin
-#         )
-
-#         StockDeSang.enregistrer_stock(poche_de_sang, 1)
-
-#     stocks = StockDeSang.objects.all()
-#     return render(request, 'frontend/bankDeSang/gestion_stock.html', {'stocks': stocks})

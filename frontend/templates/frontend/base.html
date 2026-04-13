@@ -146,7 +146,8 @@
                           <label for="proche" class="block text-left mb-2">Nom d'un Proche</label>
                           <input type="text" id="proche" name="proche"
                             class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                            style="border: 1px solid #484848; border-radius: 0.375rem;" value="{{ user.first_name }} {{ user.last_name }}" disabled>
+                            style="border: 1px solid #484848; border-radius: 0.375rem;"
+                            value="{{ user.first_name }} {{ user.last_name }}" disabled>
                         </div>
                         <div class="mb-4">
                           <label for="relationProchePatient" class="block text-left mb-2">Relation avec le
@@ -222,7 +223,8 @@
         <div @click.outside="dropdownOpen = false" class="relative" x-data="{ dropdownOpen: false }">
           <a @click.prevent="dropdownOpen = ! dropdownOpen" class="flex items-center gap-4" href="#">
             <span class="hidden text-right lg:block">
-              <span class="block text-sm font-medium text-black dark:text-white">{{ user.first_name }} {{ user.last_name }}</span>
+              <span class="block text-sm font-medium text-black dark:text-white">{{ user.first_name }} {{ user.last_name
+                }}</span>
               <span class="block text-xs font-medium">{{ user.username }}</span>
             </span>
             <span class="h-12 w-12 rounded-full">
@@ -270,7 +272,13 @@
               <li>
                 <a class="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
                   href="{% url 'frontend:listeDemandeDeSang' %}">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(136, 148, 166, 1);transform: ;msFilter:;"><path d="M20 4H6c-1.103 0-2 .897-2 2v5h2V8l6.4 4.8a1.001 1.001 0 0 0 1.2 0L20 8v9h-8v2h8c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2zm-7 6.75L6.666 6h12.668L13 10.75z"></path><path d="M2 12h7v2H2zm2 3h6v2H4zm3 3h4v2H7z"></path></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                    style="fill: rgba(136, 148, 166, 1);transform: ;msFilter:;">
+                    <path
+                      d="M20 4H6c-1.103 0-2 .897-2 2v5h2V8l6.4 4.8a1.001 1.001 0 0 0 1.2 0L20 8v9h-8v2h8c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2zm-7 6.75L6.666 6h12.668L13 10.75z">
+                    </path>
+                    <path d="M2 12h7v2H2zm2 3h6v2H4zm3 3h4v2H7z"></path>
+                  </svg>
                   Mes Demandes
                 </a>
               </li>
@@ -317,7 +325,7 @@
 
 
 
-{% block content %}{% endblock %}
+  {% block content %}{% endblock %}
 
 
 
