@@ -296,87 +296,164 @@ def resetPasswordConfirm(request, uidb64, token):
 
 # ---------- Administration (custom admin interface) ----------
 
+ROLE_LABELS = {
+    'blood_bank': 'Banque de sang',
+    'medical': 'Service médical',
+    'donor': 'Donneur',
+    'admin': 'Administrateur',
+    'generic': 'Utilisateur générique',
+}
+
+
 @login_required(login_url='/_auth/login/')
 @check_role('admin')
 def administrationDashboard(request):
+    from .models import Donneur
+
     banques = BanqueDeSang.objects.select_related('user').order_by('nom_etablissement')
     services = ServiceMedicaux.objects.select_related('user').order_by('nom_etablissement')
+    donneurs = Donneur.objects.select_related('user').order_by('nom', 'prenom')[:50]
+    admins = CustomUser.objects.filter(role='admin').order_by('email')
+    generics = CustomUser.objects.filter(role='generic').exclude(banque_de_sang__isnull=False).exclude(service_medical__isnull=False).exclude(donneur__isnull=False).order_by('email')
+
     return render(request, 'auth/administration/dashboard.html', {
         'banques': banques,
         'services': services,
+        'donneurs': donneurs,
+        'admins': admins,
+        'generics': generics,
         'nb_banques': banques.count(),
         'nb_services': services.count(),
+        'nb_donneurs': Donneur.objects.count(),
+        'nb_admins': admins.count(),
+        'nb_generics': generics.count(),
         'nb_utilisateurs': CustomUser.objects.count(),
     })
 
 
 @login_required(login_url='/_auth/login/')
 @check_role('admin')
-def creerBanqueDeSang(request):
-    if request.method == 'POST':
-        nom_etablissement = request.POST.get('nom_etablissement', '').strip()
-        responsable = request.POST.get('responsable', '').strip()
-        email = request.POST.get('email', '').strip().lower()
-        adresse = request.POST.get('adresse', '').strip()
-        ville = request.POST.get('ville', '').strip()
-        code_postal = request.POST.get('code_postal', '').strip()
-        pays = request.POST.get('pays', '').strip()
-        telephone = request.POST.get('telephone', '').strip()
+def creerUtilisateur(request):
+    from .models import Donneur
+    from datetime import datetime
 
-        if not all([nom_etablissement, responsable, email, adresse, ville, code_postal, pays, telephone]):
-            messages.error(request, 'Tous les champs sont obligatoires.')
-            return redirect('_auth:creerBanqueDeSang')
+    role = request.GET.get('role') or request.POST.get('role', 'blood_bank')
+    if role not in ROLE_LABELS:
+        role = 'blood_bank'
+
+    if request.method == 'POST':
+        email = request.POST.get('email', '').strip().lower()
+
+        if not email:
+            messages.error(request, 'L\'adresse email est obligatoire.')
+            return redirect(f"{request.path}?role={role}")
 
         if CustomUser.objects.filter(email=email).exists():
             messages.error(request, 'Cet email est déjà associé à un compte.')
-            return redirect('_auth:creerBanqueDeSang')
+            return redirect(f"{request.path}?role={role}")
 
-        password = generate_random_password()
+        try:
+            if role == 'blood_bank':
+                required = ['nom_etablissement', 'responsable', 'adresse', 'ville', 'code_postal', 'pays', 'telephone']
+                data = {f: request.POST.get(f, '').strip() for f in required}
+                if not all(data.values()):
+                    raise ValueError('Tous les champs sont obligatoires.')
+                password = generate_random_password()
+                user = CustomUser.objects.create_user(
+                    username=email, email=email, password=password,
+                    first_name=data['nom_etablissement'], last_name=data['responsable'],
+                    role='blood_bank',
+                )
+                user.is_active = True
+                user.save()
+                BanqueDeSang.objects.create(user=user, **data)
+                display_name = data['nom_etablissement']
 
-        user = CustomUser.objects.create_user(
-            username=email,
-            email=email,
-            password=password,
-            first_name=nom_etablissement,
-            last_name=responsable,
-            role='blood_bank',
-        )
-        user.is_active = True
-        user.save()
+            elif role == 'medical':
+                required = ['nom_etablissement', 'type_etablissement', 'responsable', 'adresse', 'ville', 'code_postal', 'pays', 'telephone', 'numero_licence', 'numero_enregistrement']
+                data = {f: request.POST.get(f, '').strip() for f in required}
+                if not all(data.values()):
+                    raise ValueError('Tous les champs sont obligatoires.')
+                password = generate_random_password()
+                user = CustomUser.objects.create_user(
+                    username=email, email=email, password=password,
+                    first_name=data['nom_etablissement'], last_name=data['responsable'],
+                    role='medical',
+                )
+                user.is_active = True
+                user.save()
+                ServiceMedicaux.objects.create(user=user, email=email, **data)
+                display_name = data['nom_etablissement']
 
-        BanqueDeSang.objects.create(
-            user=user,
-            nom_etablissement=nom_etablissement,
-            responsable=responsable,
-            adresse=adresse,
-            ville=ville,
-            code_postal=code_postal,
-            pays=pays,
-            telephone=telephone,
-        )
+            elif role == 'donor':
+                required = ['nom', 'prenom', 'date_naissance', 'sexe', 'groupe_sanguin', 'adresse', 'ville', 'code_postal', 'pays', 'telephone']
+                data = {f: request.POST.get(f, '').strip() for f in required}
+                if not all(data.values()):
+                    raise ValueError('Tous les champs sont obligatoires.')
+                data['date_naissance'] = datetime.strptime(data['date_naissance'], '%Y-%m-%d').date()
+                password = generate_random_password()
+                user = CustomUser.objects.create_user(
+                    username=email, email=email, password=password,
+                    first_name=data['prenom'], last_name=data['nom'],
+                    role='donor',
+                )
+                user.is_active = True
+                user.save()
+                Donneur.objects.create(user=user, **data)
+                display_name = f"{data['prenom']} {data['nom']}"
+
+            elif role in ('admin', 'generic'):
+                first_name = request.POST.get('first_name', '').strip()
+                last_name = request.POST.get('last_name', '').strip()
+                if not first_name or not last_name:
+                    raise ValueError('Prénom et nom sont obligatoires.')
+                password = generate_random_password()
+                user = CustomUser.objects.create_user(
+                    username=email, email=email, password=password,
+                    first_name=first_name, last_name=last_name,
+                    role=role,
+                )
+                user.is_active = True
+                if role == 'admin':
+                    user.is_staff = True
+                    user.is_superuser = True
+                user.save()
+                Utilisateur.objects.create(
+                    user=user, nom=first_name, prenom=last_name, email=email,
+                )
+                display_name = f"{first_name} {last_name}"
+
+        except ValueError as ve:
+            messages.error(request, str(ve))
+            return redirect(f"{request.path}?role={role}")
+        except Exception as e:
+            print(f"Erreur creation utilisateur ({role}): {e}")
+            messages.error(request, f"Erreur lors de la création : {e}")
+            return redirect(f"{request.path}?role={role}")
 
         current_site = get_current_site(request)
-        html_message = render_to_string('auth/users/creationBanqueMail.html', {
-            'nom_etablissement': nom_etablissement,
-            'responsable': responsable,
+        html_message = render_to_string('auth/users/creationUtilisateurMail.html', {
+            'display_name': display_name,
+            'role_label': ROLE_LABELS[role],
             'email': email,
             'password': password,
             'domain': current_site.domain,
         })
         try:
-            send_html_email(
-                'Votre compte eBloodBank a été créé',
-                html_message,
-                email,
-            )
-            messages.success(request, f'Banque de sang « {nom_etablissement} » créée avec succès. Les identifiants ont été envoyés à {email}.')
+            send_html_email('Votre compte eBloodBank a été créé', html_message, email)
+            messages.success(request, f'{ROLE_LABELS[role]} « {display_name} » créé avec succès. Les identifiants ont été envoyés à {email}.')
         except Exception as e:
-            print(f"Erreur envoi email creation banque: {e}")
+            print(f"Erreur envoi email: {e}")
             messages.warning(request, f'Compte créé, mais l\'email n\'a pas pu être envoyé. Mot de passe temporaire : {password}')
 
         return redirect('_auth:administrationDashboard')
 
-    return render(request, 'auth/administration/creerBanque.html')
+    from .models import Donneur as DM
+    return render(request, 'auth/administration/creerUtilisateur.html', {
+        'role': role,
+        'role_label': ROLE_LABELS.get(role, 'Utilisateur'),
+        'groupes_sanguins': DM.groupe_sanguin_choices,
+    })
 
 
 # ---------- ServiceMedicaux registration ----------

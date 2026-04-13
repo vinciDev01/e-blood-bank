@@ -24,5 +24,5 @@ urlpatterns = [
 
     # Administration (custom admin interface)
     path('administration/', views.administrationDashboard, name='administrationDashboard'),
-    path('administration/banques/creer/', views.creerBanqueDeSang, name='creerBanqueDeSang'),
+    path('administration/utilisateurs/creer/', views.creerUtilisateur, name='creerUtilisateur'),
 ]

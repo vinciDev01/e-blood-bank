@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifications apportées — 13 avril 2026</title>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 100%);
+            color: #fff;
+            padding: 40px 44px;
+            position: relative;
+            overflow: hidden;
+        }
+        header::after {
+            content: '';
+            position: absolute;
+            right: -60px; top: -60px;
+            width: 260px; height: 260px;
+            background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        header .tag {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+        header h1 { font-size: 2.1rem; font-weight: 700; margin-bottom: 8px; line-height: 1.2; }
+        header p { color: rgba(255,255,255,0.88); font-size: 1rem; max-width: 680px; }
+
+        main { padding: 36px 44px 48px; }
+
+        .intro {
+            background: #fef2f2;
+            border-left: 4px solid #b91c1c;
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin-bottom: 32px;
+            color: #991b1b;
+            font-size: 0.95rem;
+        }
+
+        .toc {
+            background: #f1f5f9;
+            border-radius: 10px;
+            padding: 18px 24px;
+            margin-bottom: 32px;
+        }
+        .toc h2 { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.06em; color: #64748b; margin-bottom: 10px; }
+        .toc ol { list-style: none; counter-reset: toc; }
+        .toc ol li {
+            counter-increment: toc;
+            padding: 4px 0;
+            font-size: 0.92rem;
+        }
+        .toc ol li::before {
+            content: counter(toc) ".";
+            color: #b91c1c;
+            font-weight: 700;
+            margin-right: 8px;
+        }
+        .toc a { color: #334155; text-decoration: none; }
+        .toc a:hover { color: #b91c1c; text-decoration: underline; }
+
+        section.feature {
+            margin-bottom: 36px;
+            padding-bottom: 28px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        section.feature:last-of-type { border-bottom: none; }
+        section.feature h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .num-badge {
+            background: linear-gradient(135deg, #b91c1c 0%, #dc2626 100%);
+            color: #fff;
+            width: 32px; height: 32px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.88rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .feature-why {
+            color: #64748b;
+            font-size: 0.92rem;
+            margin-bottom: 14px;
+            padding-left: 44px;
+        }
+        .feature-body { padding-left: 44px; }
+        .feature-body p { margin-bottom: 10px; font-size: 0.95rem; color: #334155; }
+        .feature-body ul {
+            list-style: none;
+            margin-bottom: 10px;
+        }
+        .feature-body ul li {
+            position: relative;
+            padding-left: 22px;
+            margin-bottom: 6px;
+            font-size: 0.92rem;
+            color: #475569;
+        }
+        .feature-body ul li::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 9px;
+            width: 6px; height: 6px;
+            background: #b91c1c;
+            border-radius: 50%;
+        }
+        .feature-body strong { color: #0f172a; font-weight: 600; }
+        .feature-body code {
+            background: #f1f5f9;
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 0.85em;
+            color: #b91c1c;
+        }
+
+        .tag-pill {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 3px 9px;
+            border-radius: 12px;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            margin-left: 8px;
+        }
+        .tag-new { background: #dcfce7; color: #166534; }
+        .tag-improve { background: #dbeafe; color: #1d4ed8; }
+        .tag-fix { background: #fef3c7; color: #92400e; }
+        .tag-security { background: #fee2e2; color: #991b1b; }
+
+        .files-list {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-top: 10px;
+            font-size: 0.85rem;
+        }
+        .files-list .files-title {
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            font-size: 0.7rem;
+        }
+        .files-list code {
+            display: inline-block;
+            margin: 2px 4px 2px 0;
+            font-size: 0.78rem;
+        }
+
+        .summary {
+            background: linear-gradient(135deg, #fef2f2 0%, #fff5f5 100%);
+            border: 1px solid #fecaca;
+            border-radius: 12px;
+            padding: 24px 28px;
+            margin-top: 20px;
+        }
+        .summary h2 { color: #991b1b; font-size: 1.1rem; margin-bottom: 12px; }
+        .summary .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 14px;
+            margin-top: 14px;
+        }
+        .summary .stat {
+            background: #fff;
+            padding: 14px 16px;
+            border-radius: 10px;
+            border: 1px solid #fecaca;
+        }
+        .summary .stat-num {
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: #b91c1c;
+            line-height: 1;
+        }
+        .summary .stat-lab {
+            font-size: 0.78rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-top: 4px;
+        }
+
+        footer {
+            background: #0f172a;
+            color: #94a3b8;
+            padding: 20px 44px;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+        footer strong { color: #fff; }
+
+        @media (max-width: 640px) {
+            body { padding: 20px 10px; }
+            header { padding: 28px 22px; }
+            header h1 { font-size: 1.6rem; }
+            main { padding: 24px 22px 32px; }
+            .feature-why, .feature-body { padding-left: 0; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <header>
+        <span class="tag">Rapport de modifications</span>
+        <h1>eBloodBank — Évolutions du 13 avril 2026</h1>
+        <p>Ce document récapitule les améliorations apportées à l'application de gestion de banque de sang, ainsi que les nouvelles fonctionnalités mises en place au cours de la journée.</p>
+    </header>
+
+    <main>
+
+        <div class="intro">
+            <strong>Contexte&nbsp;:</strong> cette session a porté sur la refonte des interfaces (sidebars, tableaux de bord, formulaires), l'ajout de fonctionnalités métier essentielles (récupération de mot de passe, gestion centralisée des utilisateurs), et le nettoyage technique du dépôt Git.
+        </div>
+
+        <div class="toc">
+            <h2>Au sommaire</h2>
+            <ol>
+                <li><a href="#f1">Récupération du mot de passe par email</a></li>
+                <li><a href="#f2">Interface d'administration personnalisée</a></li>
+                <li><a href="#f3">Création de tous les types d'utilisateurs par l'admin</a></li>
+                <li><a href="#f4">Tableau de bord du service médical</a></li>
+                <li><a href="#f5">Tableau de bord de la banque de sang</a></li>
+                <li><a href="#f6">Barres de navigation latérales (sidebars)</a></li>
+                <li><a href="#f7">Page des statistiques avec données réelles</a></li>
+                <li><a href="#f8">Liste des donneurs avec recherche et filtres</a></li>
+                <li><a href="#f9">Gestion des stocks de poches de sang</a></li>
+                <li><a href="#f10">Popup de confirmation avant déconnexion</a></li>
+                <li><a href="#f11">Nettoyage du dépôt Git</a></li>
+            </ol>
+        </div>
+
+        <!-- 1 -->
+        <section class="feature" id="f1">
+            <h2><span class="num-badge">1</span> Récupération du mot de passe par email <span class="tag-pill tag-new">Nouveau</span></h2>
+            <div class="feature-why">Les utilisateurs qui oublient leur mot de passe peuvent désormais le réinitialiser eux-mêmes, sans intervention d'un administrateur.</div>
+            <div class="feature-body">
+                <p><strong>Fonctionnement&nbsp;:</strong></p>
+                <ul>
+                    <li>Sur la page de connexion, un lien «&nbsp;Mot de passe oublié ?&nbsp;» redirige vers un formulaire où l'utilisateur saisit son adresse email.</li>
+                    <li>Un email contenant un lien sécurisé (token à usage unique) est envoyé à l'adresse saisie.</li>
+                    <li>En cliquant sur le lien, l'utilisateur accède à un formulaire pour choisir un nouveau mot de passe (minimum 8 caractères).</li>
+                    <li>Une fois validé, il est redirigé vers la page de connexion.</li>
+                </ul>
+                <p><strong>Sécurité&nbsp;:</strong> pour éviter qu'un attaquant ne découvre quelles adresses sont enregistrées, le message affiché est toujours neutre («&nbsp;Si cette adresse est associée à un compte, un email a été envoyé&nbsp;»), que l'email existe ou non.</p>
+                <div class="files-list">
+                    <div class="files-title">Fichiers créés</div>
+                    <code>resetPassword.html</code>
+                    <code>resetPasswordMail.html</code>
+                    <code>resetPasswordConfirm.html</code>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2 -->
+        <section class="feature" id="f2">
+            <h2><span class="num-badge">2</span> Interface d'administration personnalisée <span class="tag-pill tag-new">Nouveau</span></h2>
+            <div class="feature-why">L'administrateur dispose d'une interface dédiée à eBloodBank (au lieu de l'interface Django standard), cohérente avec le reste de l'application.</div>
+            <div class="feature-body">
+                <p><strong>Accès&nbsp;:</strong> après connexion, un utilisateur avec le rôle «&nbsp;Administrateur&nbsp;» est automatiquement redirigé vers cette interface.</p>
+                <p><strong>Contenu du tableau de bord&nbsp;:</strong></p>
+                <ul>
+                    <li>Statistiques en temps réel&nbsp;: nombre total d'utilisateurs, banques de sang, services médicaux, donneurs et administrateurs.</li>
+                    <li>Cinq actions rapides pour créer chaque type d'utilisateur.</li>
+                    <li>Tableaux détaillés par catégorie (banques, services médicaux, donneurs, administrateurs) avec nom, email, ville, téléphone et statut.</li>
+                </ul>
+                <p>L'interface classique de Django reste accessible pour le débogage ou les cas avancés.</p>
+            </div>
+        </section>
+
+        <!-- 3 -->
+        <section class="feature" id="f3">
+            <h2><span class="num-badge">3</span> Création de tous les types d'utilisateurs par l'administrateur <span class="tag-pill tag-new">Nouveau</span></h2>
+            <div class="feature-why">L'administrateur peut maintenant créer n'importe quel type de compte (banque de sang, service médical, donneur, autre administrateur, utilisateur générique), sans passer par la ligne de commande.</div>
+            <div class="feature-body">
+                <p><strong>Fonctionnement&nbsp;:</strong></p>
+                <ul>
+                    <li>Un formulaire unique propose un sélecteur de rôle en haut (5 tuiles cliquables).</li>
+                    <li>Les champs affichés s'adaptent automatiquement au rôle choisi.</li>
+                    <li>Un mot de passe aléatoire de 12 caractères (mélange de lettres, chiffres et symboles) est généré côté serveur.</li>
+                    <li>Les identifiants sont envoyés par email à l'utilisateur, qui est invité à changer son mot de passe lors de la première connexion.</li>
+                </ul>
+                <p><strong>Informations collectées selon le rôle&nbsp;:</strong></p>
+                <ul>
+                    <li><strong>Banque de sang&nbsp;:</strong> nom de l'établissement, responsable, adresse complète, téléphone.</li>
+                    <li><strong>Service médical&nbsp;:</strong> nom, type (hôpital, clinique…), responsable, adresse, numéros de licence et d'enregistrement.</li>
+                    <li><strong>Donneur&nbsp;:</strong> nom, prénom, date de naissance, sexe, groupe sanguin, adresse, téléphone.</li>
+                    <li><strong>Administrateur / Utilisateur&nbsp;:</strong> prénom, nom, email.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 4 -->
+        <section class="feature" id="f4">
+            <h2><span class="num-badge">4</span> Tableau de bord du service médical <span class="tag-pill tag-improve">Amélioré</span></h2>
+            <div class="feature-why">L'ancienne page contenait des graphiques avec des données fictives et du texte en anglais. Elle affiche désormais les vraies informations du service connecté.</div>
+            <div class="feature-body">
+                <p><strong>Ce qui est affiché maintenant&nbsp;:</strong></p>
+                <ul>
+                    <li>Cinq indicateurs&nbsp;: nombre de demandes, en attente, approuvées, complétées, et poches en stock.</li>
+                    <li>Liste des cinq dernières demandes avec patient, type de produit, motif, urgence et statut.</li>
+                    <li>Répartition du stock par groupe sanguin avec barres de progression.</li>
+                    <li>Boutons d'action rapide pour créer une nouvelle demande ou consulter les demandes en cours.</li>
+                </ul>
+                <p>Tout le contenu est en français avec les accents corrects, et l'identité visuelle (rouge eBloodBank) est appliquée.</p>
+            </div>
+        </section>
+
+        <!-- 5 -->
+        <section class="feature" id="f5">
+            <h2><span class="num-badge">5</span> Tableau de bord de la banque de sang <span class="tag-pill tag-improve">Amélioré</span></h2>
+            <div class="feature-why">Même problème que pour le service médical&nbsp;: données fictives et interface en anglais. La page est repensée pour refléter l'activité réelle.</div>
+            <div class="feature-body">
+                <p><strong>Nouveautés&nbsp;:</strong></p>
+                <ul>
+                    <li>Cinq indicateurs clés&nbsp;: poches en stock, demandes en attente, donneurs enregistrés, poches disponibles, poches expirées.</li>
+                    <li>Bannière d'alerte automatique si des poches vont expirer dans les 7 prochains jours.</li>
+                    <li>Quatre raccourcis&nbsp;: enregistrer un don, voir les demandes, gérer les donneurs, accéder aux statistiques.</li>
+                    <li>Grille de 8 tuiles (une par groupe sanguin) avec le nombre de poches et une barre de remplissage.</li>
+                    <li>Liste des demandes récentes avec badges d'urgence colorés (immédiate, 24 h, non urgent).</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 6 -->
+        <section class="feature" id="f6">
+            <h2><span class="num-badge">6</span> Barres de navigation latérales (sidebars) <span class="tag-pill tag-improve">Amélioré</span></h2>
+            <div class="feature-why">Les menus contenaient du code mort, des libellés en anglais («&nbsp;Donor&nbsp;», «&nbsp;Blood Requests&nbsp;»…), et des liens qui ne fonctionnaient pas.</div>
+            <div class="feature-body">
+                <p><strong>Refonte&nbsp;:</strong></p>
+                <ul>
+                    <li>En-tête sur fond blanc avec le logo officiel de l'application et une carte utilisateur (nom de l'établissement + email).</li>
+                    <li>Menu organisé en trois groupes&nbsp;: Général, Gestion/Demandes, Compte.</li>
+                    <li>Libellés entièrement en français avec accents corrects.</li>
+                    <li>Détection automatique de la page active (mise en évidence de l'élément sélectionné).</li>
+                    <li>Carte d'aide «&nbsp;Besoin d'aide ?&nbsp;» en bas, aux couleurs de la marque.</li>
+                </ul>
+                <p><strong>Nettoyage&nbsp;:</strong> suppression de 194 lignes de code mort (ancien menu caché) dans le template du service médical.</p>
+            </div>
+        </section>
+
+        <!-- 7 -->
+        <section class="feature" id="f7">
+            <h2><span class="num-badge">7</span> Page des statistiques avec données réelles <span class="tag-pill tag-improve">Amélioré</span></h2>
+            <div class="feature-why">La page statistiques de la banque de sang affichait trois graphiques avec des chiffres inventés.</div>
+            <div class="feature-body">
+                <p><strong>Les graphiques sont maintenant alimentés par la base de données&nbsp;:</strong></p>
+                <ul>
+                    <li>Six indicateurs&nbsp;: poches collectées, disponibles, distribuées, expirées, donneurs, taux de satisfaction des demandes.</li>
+                    <li>Courbe en aire&nbsp;: évolution des collectes sur les 12 derniers mois (mois en français).</li>
+                    <li>Classement des 5 donneurs les plus actifs, avec médailles or, argent et bronze.</li>
+                    <li>Histogramme du stock par groupe sanguin.</li>
+                    <li>Diagramme en anneau&nbsp;: répartition des demandes par état (en attente, approuvée, complétée, rejetée).</li>
+                </ul>
+                <p>Quand aucune donnée n'est disponible, un message clair remplace le graphique au lieu d'afficher un espace vide.</p>
+            </div>
+        </section>
+
+        <!-- 8 -->
+        <section class="feature" id="f8">
+            <h2><span class="num-badge">8</span> Liste des donneurs avec recherche et filtres <span class="tag-pill tag-improve">Amélioré</span></h2>
+            <div class="feature-why">La liste affichait de fausses données issues d'un modèle d'exemple anglophone.</div>
+            <div class="feature-body">
+                <p><strong>Nouvelle version&nbsp;:</strong></p>
+                <ul>
+                    <li>Trois indicateurs en haut&nbsp;: total donneurs, donneurs actifs (qui ont déjà donné), total des dons collectés.</li>
+                    <li>Barre de recherche&nbsp;: par nom, prénom, numéro de donneur ou email.</li>
+                    <li>Filtre par groupe sanguin (A+, A-, B+, B-, AB+, AB-, O+, O-).</li>
+                    <li>Tableau avec avatar coloré, badge de groupe sanguin, âge, sexe (Homme/Femme), ville, téléphone et compteur de dons.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 9 -->
+        <section class="feature" id="f9">
+            <h2><span class="num-badge">9</span> Gestion des stocks de poches de sang <span class="tag-pill tag-improve">Amélioré</span></h2>
+            <div class="feature-why">La page ne montrait que les groupes existants en base et proposait un formulaire d'ajout minimaliste.</div>
+            <div class="feature-body">
+                <p><strong>Nouveautés&nbsp;:</strong></p>
+                <ul>
+                    <li>Affichage des 8 groupes sanguins même si certains sont vides, avec un niveau automatique&nbsp;:
+                        <ul style="margin-top:6px">
+                            <li><strong>Critique</strong> (moins de 5 poches)</li>
+                            <li><strong>Faible</strong> (moins de 15 poches)</li>
+                            <li><strong>Suffisant</strong> (15 poches ou plus)</li>
+                        </ul>
+                    </li>
+                    <li>Barre de remplissage visuelle pour comparer les groupes entre eux.</li>
+                    <li>Alerte en haut de page si des poches vont expirer sous 7 jours.</li>
+                    <li>Formulaire d'ajout modernisé (popup centrée avec fond flouté, fermeture par <code>Échap</code> ou clic extérieur).</li>
+                    <li>Date de prélèvement pré-remplie à aujourd'hui, dates futures interdites.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 10 -->
+        <section class="feature" id="f10">
+            <h2><span class="num-badge">10</span> Popup de confirmation avant déconnexion <span class="tag-pill tag-new">Nouveau</span></h2>
+            <div class="feature-why">Évite qu'un utilisateur se déconnecte accidentellement en cliquant par erreur sur le lien de déconnexion.</div>
+            <div class="feature-body">
+                <p><strong>Fonctionnement&nbsp;:</strong></p>
+                <ul>
+                    <li>Lorsque l'utilisateur clique sur n'importe quel lien de déconnexion, une fenêtre s'ouvre avec un message de confirmation.</li>
+                    <li>Deux boutons&nbsp;: «&nbsp;Annuler&nbsp;» (retour à la page) ou «&nbsp;Se déconnecter&nbsp;» (action confirmée).</li>
+                    <li>La popup peut aussi être fermée avec la touche <code>Échap</code> ou en cliquant en dehors.</li>
+                </ul>
+                <p>Cette fonctionnalité est active dans toute l'application&nbsp;: espaces banque de sang, service médical, et administration.</p>
+            </div>
+        </section>
+
+        <!-- 11 -->
+        <section class="feature" id="f11">
+            <h2><span class="num-badge">11</span> Nettoyage du dépôt Git <span class="tag-pill tag-fix">Correction</span></h2>
+            <div class="feature-why">Le dossier <code>.venv/</code> (environnement virtuel Python, contenant des fichiers de plus de 100 Mo) avait été accidentellement poussé dans l'historique Git, ce qui bloquait les envois vers GitHub.</div>
+            <div class="feature-body">
+                <p><strong>Actions menées&nbsp;:</strong></p>
+                <ul>
+                    <li>Réécriture de l'historique Git pour retirer <code>.venv/</code> de tous les commits (15 977 fichiers).</li>
+                    <li>Nettoyage des objets orphelins (<code>git gc --aggressive</code>).</li>
+                    <li>Poussée forcée vers GitHub.</li>
+                </ul>
+                <p><strong>Résultat&nbsp;:</strong> le dossier <code>.git</code> est passé de <strong>225 Mo à 2,2 Mo</strong> et la poussée vers GitHub est acceptée.</p>
+            </div>
+        </section>
+
+        <!-- Résumé -->
+        <div class="summary">
+            <h2>En chiffres</h2>
+            <p style="font-size:0.9rem;color:#64748b">Résumé quantitatif de la session du 13 avril 2026.</p>
+            <div class="stats-grid">
+                <div class="stat">
+                    <div class="stat-num">11</div>
+                    <div class="stat-lab">Fonctionnalités améliorées</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num">5</div>
+                    <div class="stat-lab">Nouveautés majeures</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num">~20</div>
+                    <div class="stat-lab">Fichiers modifiés</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num">~10</div>
+                    <div class="stat-lab">Fichiers créés</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num">225 → 2,2 Mo</div>
+                    <div class="stat-lab">Taille du dépôt Git</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num">100 %</div>
+                    <div class="stat-lab">Interface en français</div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer>
+        <p><strong>eBloodBank</strong> — Rapport généré le 13 avril 2026</p>
+    </footer>
+
+</div>
+</body>
+</html>
