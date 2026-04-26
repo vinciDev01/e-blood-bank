@@ -1,12 +1,19 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion - eBloodBank</title>
     <style>
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
@@ -23,23 +30,29 @@
             position: relative;
             overflow: hidden;
         }
+
         @media (min-width: 960px) {
-            .panel-left { display: block; }
+            .panel-left {
+                display: block;
+            }
         }
+
         .panel-left img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
+
         .panel-overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(160deg, rgba(185,28,28,0.82) 0%, rgba(30,30,30,0.7) 100%);
+            background: linear-gradient(160deg, rgba(185, 28, 28, 0.82) 0%, rgba(30, 30, 30, 0.7) 100%);
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
             padding: 3.5rem;
         }
+
         .panel-overlay h2 {
             color: #fff;
             font-size: 2rem;
@@ -48,8 +61,9 @@
             margin-bottom: 0.75rem;
             animation: fadeUp 0.7s ease-out both;
         }
+
         .panel-overlay p {
-            color: rgba(255,255,255,0.8);
+            color: rgba(255, 255, 255, 0.8);
             font-size: 1rem;
             line-height: 1.6;
             max-width: 380px;
@@ -64,6 +78,7 @@
             justify-content: center;
             padding: 2rem;
         }
+
         .form-wrapper {
             width: 100%;
             max-width: 420px;
@@ -77,18 +92,25 @@
             gap: 10px;
             margin-bottom: 2rem;
         }
-        .logo-row img { height: 38px; width: auto; }
+
+        .logo-row img {
+            height: 38px;
+            width: auto;
+        }
+
         .logo-row span {
             font-size: 1.2rem;
             font-weight: 700;
             color: #b91c1c;
             letter-spacing: -0.02em;
         }
+
         .form-header h1 {
             font-size: 1.65rem;
             font-weight: 700;
             margin-bottom: 0.35rem;
         }
+
         .form-header p {
             color: #6e6e73;
             font-size: 0.92rem;
@@ -96,7 +118,10 @@
         }
 
         /* Fields */
-        .field { margin-bottom: 1.25rem; }
+        .field {
+            margin-bottom: 1.25rem;
+        }
+
         .field label {
             display: block;
             font-size: 0.82rem;
@@ -105,6 +130,7 @@
             margin-bottom: 0.4rem;
             letter-spacing: 0.01em;
         }
+
         .input-group {
             display: flex;
             align-items: center;
@@ -115,16 +141,19 @@
             height: 48px;
             transition: border-color 0.2s, box-shadow 0.2s;
         }
+
         .input-group:focus-within {
             border-color: #b91c1c;
-            box-shadow: 0 0 0 3px rgba(185,28,28,0.08);
+            box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.08);
         }
+
         .input-group svg {
             flex-shrink: 0;
             width: 18px;
             height: 18px;
             color: #8e8e93;
         }
+
         .input-group input {
             flex: 1;
             border: none;
@@ -135,7 +164,11 @@
             height: 100%;
             color: #1d1d1f;
         }
-        .input-group input::placeholder { color: #aeaeb2; }
+
+        .input-group input::placeholder {
+            color: #aeaeb2;
+        }
+
         .eye-btn {
             background: none;
             border: none;
@@ -145,7 +178,10 @@
             color: #8e8e93;
             transition: color 0.15s;
         }
-        .eye-btn:hover { color: #3a3a3c; }
+
+        .eye-btn:hover {
+            color: #3a3a3c;
+        }
 
         /* Row between fields */
         .options-row {
@@ -155,6 +191,7 @@
             margin-bottom: 1.5rem;
             font-size: 0.82rem;
         }
+
         .options-row label {
             display: flex;
             align-items: center;
@@ -162,19 +199,25 @@
             color: #3a3a3c;
             cursor: pointer;
         }
+
         .options-row input[type="checkbox"] {
             width: 15px;
             height: 15px;
             accent-color: #b91c1c;
             cursor: pointer;
         }
+
         .options-row a {
             color: #b91c1c;
             text-decoration: none;
             font-weight: 500;
             transition: color 0.15s;
         }
-        .options-row a:hover { color: #991b1b; text-decoration: underline; }
+
+        .options-row a:hover {
+            color: #991b1b;
+            text-decoration: underline;
+        }
 
         /* Submit button */
         .btn-submit {
@@ -190,8 +233,14 @@
             transition: background 0.2s, transform 0.1s;
             letter-spacing: 0.01em;
         }
-        .btn-submit:hover { background: #991b1b; }
-        .btn-submit:active { transform: scale(0.985); }
+
+        .btn-submit:hover {
+            background: #991b1b;
+        }
+
+        .btn-submit:active {
+            transform: scale(0.985);
+        }
 
         /* Separator */
         .separator {
@@ -202,7 +251,9 @@
             color: #aeaeb2;
             font-size: 0.8rem;
         }
-        .separator::before, .separator::after {
+
+        .separator::before,
+        .separator::after {
             content: '';
             flex: 1;
             height: 1px;
@@ -210,7 +261,11 @@
         }
 
         /* Social buttons */
-        .social-row { display: flex; gap: 12px; }
+        .social-row {
+            display: flex;
+            gap: 12px;
+        }
+
         .btn-social {
             flex: 1;
             height: 46px;
@@ -227,11 +282,16 @@
             cursor: pointer;
             transition: border-color 0.2s, box-shadow 0.2s;
         }
+
         .btn-social:hover {
             border-color: #b91c1c;
-            box-shadow: 0 0 0 3px rgba(185,28,28,0.06);
+            box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.06);
         }
-        .btn-social svg { width: 18px; height: 18px; }
+
+        .btn-social svg {
+            width: 18px;
+            height: 18px;
+        }
 
         /* Footer link */
         .form-footer {
@@ -240,13 +300,17 @@
             font-size: 0.88rem;
             color: #6e6e73;
         }
+
         .form-footer a {
             color: #b91c1c;
             text-decoration: none;
             font-weight: 600;
             transition: color 0.15s;
         }
-        .form-footer a:hover { text-decoration: underline; }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
 
         /* --- Toast --- */
         #toast-container {
@@ -258,6 +322,7 @@
             flex-direction: column;
             gap: 10px;
         }
+
         .toast {
             display: flex;
             align-items: center;
@@ -266,17 +331,38 @@
             max-width: 400px;
             padding: 14px 18px;
             border-radius: 10px;
-            box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
             font-size: 0.88rem;
             font-weight: 500;
             animation: slideIn 0.35s ease-out;
             position: relative;
             overflow: hidden;
         }
-        .toast.out { opacity: 0; transform: translateX(60px); transition: all 0.25s; }
-        .toast-error { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
-        .toast-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
-        .toast svg { flex-shrink: 0; width: 20px; height: 20px; }
+
+        .toast.out {
+            opacity: 0;
+            transform: translateX(60px);
+            transition: all 0.25s;
+        }
+
+        .toast-error {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+        }
+
+        .toast-success {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+        }
+
+        .toast svg {
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+        }
+
         .toast-close {
             margin-left: auto;
             background: none;
@@ -287,7 +373,11 @@
             font-size: 16px;
             padding: 0;
         }
-        .toast-close:hover { opacity: 1; }
+
+        .toast-close:hover {
+            opacity: 1;
+        }
+
         .toast-bar {
             position: absolute;
             bottom: 0;
@@ -296,24 +386,52 @@
             border-radius: 0 0 10px 10px;
             animation: shrink 4s linear forwards;
         }
-        .toast-error .toast-bar { background: #f87171; }
-        .toast-success .toast-bar { background: #4ade80; }
+
+        .toast-error .toast-bar {
+            background: #f87171;
+        }
+
+        .toast-success .toast-bar {
+            background: #4ade80;
+        }
 
         /* Animations */
         @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(18px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
+
         @keyframes slideIn {
-            from { opacity: 0; transform: translateX(60px); }
-            to { opacity: 1; transform: translateX(0); }
+            from {
+                opacity: 0;
+                transform: translateX(60px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
+
         @keyframes shrink {
-            from { width: 100%; }
-            to { width: 0%; }
+            from {
+                width: 100%;
+            }
+
+            to {
+                width: 0%;
+            }
         }
     </style>
 </head>
+
 <body>
 
     <!-- Left panel -->
@@ -321,7 +439,8 @@
         <img src="{% static 'img/bg_login.jpg' %}" alt="">
         <div class="panel-overlay">
             <h2>Chaque don compte.<br>Chaque vie aussi.</h2>
-            <p>eBloodBank connecte les donneurs, les banques de sang et les services medicaux pour sauver des vies ensemble.</p>
+            <p>eBloodBank connecte les donneurs, les banques de sang et les services medicaux pour sauver des vies
+                ensemble.</p>
         </div>
     </div>
 
@@ -329,11 +448,8 @@
     <div class="panel-right">
         <div class="form-wrapper">
             <div class="logo-row">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#b91c1c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"/>
-                    <path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97"/>
-                </svg>
-                <span>eBloodBank</span>
+                <img src="{% static 'img/Logo_eBloodBank.png' %}" alt="eBloodBank"
+                    style="height: 150px; width: auto; display: block;">
             </div>
 
             <div class="form-header">
@@ -347,27 +463,34 @@
                 <div class="field">
                     <label for="email">Adresse email</label>
                     <div class="input-group">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="2" y="4" width="20" height="16" rx="2"/>
-                            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="4" width="20" height="16" rx="2" />
+                            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                         </svg>
-                        <input type="email" name="email" id="email" placeholder="nom@exemple.com" required autocomplete="email">
+                        <input type="email" name="email" id="email" placeholder="nom@exemple.com" required
+                            autocomplete="email">
                     </div>
                 </div>
 
                 <div class="field">
                     <label for="password-input">Mot de passe</label>
                     <div class="input-group">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                         </svg>
-                        <input type="password" name="password" id="password-input" placeholder="Votre mot de passe" required autocomplete="current-password">
-                        <button type="button" class="eye-btn" onclick="togglePwd()" aria-label="Afficher le mot de passe">
-                            <svg id="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
-                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
-                                <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
-                                <line x1="1" y1="1" x2="23" y2="23"/>
+                        <input type="password" name="password" id="password-input" placeholder="Votre mot de passe"
+                            required autocomplete="current-password">
+                        <button type="button" class="eye-btn" onclick="togglePwd()"
+                            aria-label="Afficher le mot de passe">
+                            <svg id="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                                <path
+                                    d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
+                                <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
+                                <line x1="1" y1="1" x2="23" y2="23" />
                             </svg>
                         </button>
                     </div>
@@ -387,11 +510,23 @@
 
             <div class="social-row">
                 <button type="button" class="btn-social">
-                    <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                    <svg viewBox="0 0 24 24">
+                        <path fill="#4285F4"
+                            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" />
+                        <path fill="#34A853"
+                            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                        <path fill="#FBBC05"
+                            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                        <path fill="#EA4335"
+                            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                    </svg>
                     Google
                 </button>
                 <button type="button" class="btn-social">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.51-3.23 0-1.44.64-2.2.46-3.06-.4C3.79 16.17 4.36 9.02 8.9 8.75c1.27.06 2.15.72 2.91.76.99-.2 1.94-.78 3-.72 1.27.1 2.23.6 2.84 1.52-2.6 1.55-1.98 4.97.37 5.92-.46 1.2-1.06 2.38-1.97 4.05zM12.03 8.67c-.12-2.35 1.84-4.38 4.04-4.56.3 2.63-2.37 4.63-4.04 4.56z"/></svg>
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.51-3.23 0-1.44.64-2.2.46-3.06-.4C3.79 16.17 4.36 9.02 8.9 8.75c1.27.06 2.15.72 2.91.76.99-.2 1.94-.78 3-.72 1.27.1 2.23.6 2.84 1.52-2.6 1.55-1.98 4.97.37 5.92-.46 1.2-1.06 2.38-1.97 4.05zM12.03 8.67c-.12-2.35 1.84-4.38 4.04-4.56.3 2.63-2.37 4.63-4.04 4.56z" />
+                    </svg>
                     Apple
                 </button>
             </div>
@@ -424,17 +559,18 @@
                 : '<svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd"/></svg>')
                 + '<span>' + msg + '</span><button class="toast-close" onclick="dismiss(this.parentElement)">&times;</button><div class="toast-bar"></div>';
             c.appendChild(t);
-            setTimeout(function(){ dismiss(t); }, 4000);
+            setTimeout(function () { dismiss(t); }, 4000);
         }
         function dismiss(t) {
             if (!t || t.classList.contains('out')) return;
             t.classList.add('out');
-            setTimeout(function(){ t.remove(); }, 250);
+            setTimeout(function () { t.remove(); }, 250);
         }
 
-        {% if messages %}{% for message in messages %}
+        {% if messages %} {% for message in messages %}
         showToast("{{ message|escapejs }}", "{{ message.tags }}");
-        {% endfor %}{% endif %}
+        {% endfor %} {% endif %}
     </script>
 </body>
+
 </html>

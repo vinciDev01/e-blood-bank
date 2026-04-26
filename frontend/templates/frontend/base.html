@@ -223,7 +223,7 @@
         <div @click.outside="dropdownOpen = false" class="relative" x-data="{ dropdownOpen: false }">
           <a @click.prevent="dropdownOpen = ! dropdownOpen" class="flex items-center gap-4" href="#">
             <span class="hidden text-right lg:block">
-              <span class="block text-sm font-medium text-black dark:text-white">{{ user.first_name }} {{ user.last_name
+              <span class="block text-sm font-medium text-black dark:text-white">{{ user.last_name
                 }}</span>
               <span class="block text-xs font-medium">{{ user.username }}</span>
             </span>

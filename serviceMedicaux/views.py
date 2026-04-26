@@ -94,30 +94,62 @@ def listeDemandeDeSang(request):
 @login_required
 def faireDemandeDeSang(request):
     if request.method == 'POST':
-        type_produit = request.POST.get('typeProduit', '')
-        urgence = request.POST.get('urgence', '')
-        motif = request.POST.get('motif', '')
+        type_produit = request.POST.get('type_produit', '').strip()
+        urgence = request.POST.get('urgence', '').strip()
+        motif = request.POST.get('motif', '').strip() or 'Autre'
+        groupe_sanguin = request.POST.get('groupe_sanguin', '').strip()
+        quantite = request.POST.get('quantite', '').strip()
 
         if request.user.role == 'medical':
-            groupes_sanguins = request.POST.getlist('groupesSanguins[]')
-            nombres_poches = request.POST.getlist('nombresPoches[]')
-            service_medical = request.user.service_medical
+            if not (groupe_sanguin and quantite and type_produit and urgence):
+                messages.error(request, "Veuillez remplir tous les champs obligatoires.")
+                return redirect('serviceMedicaux:faireDemandeDeSang')
 
-            # Initialiser etat_groupes pour chaque groupe demande
-            etat_groupes = {grp: 'En attente' for grp in groupes_sanguins}
+            try:
+                service_medical = request.user.service_medical
+            except ServiceMedicaux.DoesNotExist:
+                messages.error(request, "Profil de service médical introuvable pour cet utilisateur.")
+                return redirect('serviceMedicaux:faireDemandeDeSang')
 
-            demande = DemandeDeSang(
-                serviceMedicaux=service_medical,
-                groupe_sanguin={service_medical.email: groupes_sanguins},
-                type_produit=type_produit,
-                nombre_poches={service_medical.email: nombres_poches},
-                urgence=urgence,
-                motif=motif,
-                etat_groupes=etat_groupes,
-                notification_envoyee=False,
-            )
-            demande.save()
-            messages.success(request, 'Votre demande a ete enregistree avec succes')
+            # Onglet "Demande patient" si nom_patient est fourni
+            patient = None
+            nom_patient = request.POST.get('nom_patient', '').strip()
+            if nom_patient:
+                prenom_patient = request.POST.get('prenom_patient', '').strip()
+                date_naissance = request.POST.get('date_naissance', '').strip()
+                if not date_naissance:
+                    messages.error(request, "La date de naissance du patient est obligatoire.")
+                    return redirect('serviceMedicaux:faireDemandeDeSang')
+                try:
+                    patient = Patient.objects.create(
+                        nom_complet=f"{prenom_patient} {nom_patient}".strip(),
+                        date_de_naissance=date_naissance,
+                        proche='',
+                        groupe_sanguin=groupe_sanguin,
+                        relation_proche_patient='',
+                        telephone_proche='',
+                    )
+                except Exception as e:
+                    messages.error(request, f"Erreur lors de la création du patient : {e}")
+                    return redirect('serviceMedicaux:faireDemandeDeSang')
+
+            try:
+                DemandeDeSang.objects.create(
+                    serviceMedicaux=service_medical,
+                    patient=patient,
+                    groupe_sanguin={service_medical.email: [groupe_sanguin]},
+                    type_produit=type_produit,
+                    nombre_poches={service_medical.email: [quantite]},
+                    urgence=urgence,
+                    motif=motif,
+                    etat_groupes={groupe_sanguin: 'En attente'},
+                    notification_envoyee=False,
+                )
+            except Exception as e:
+                messages.error(request, f"Erreur lors de l'enregistrement de la demande : {e}")
+                return redirect('serviceMedicaux:faireDemandeDeSang')
+
+            messages.success(request, 'Votre demande a été enregistrée avec succès.')
             return redirect('serviceMedicaux:accueilServiceMedicaux')
 
         elif request.user.role == 'donor':

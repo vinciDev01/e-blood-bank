@@ -342,7 +342,7 @@
                     </svg>
                 </button>
                 <a href="{% url 'bankDeSang:accueilBankDeSang' %}" class="ebb-brand">
-                    <img src="{% static 'img/Logo_eBloodBank_Banka_Titipo.png' %}" alt="eBloodBank">
+                    <img src="{% static 'img/Logo_eBloodBank.png' %}" alt="eBloodBank">
                 </a>
                 <!-- <div class="ebb-user-card">
                     <div class="ebb-user-name">{{ request.user.banque_de_sang.nom_etablissement|default:"Utilisateur" }}
@@ -510,92 +510,6 @@
                     </div>
                     <div class="flex items-center gap-3 2xsm:gap-7">
                         <ul class="flex items-center gap-2 2xsm:gap-4">
-                            <!-- <li class="relative z-10">
-                                
-                                    <button class="text-blue-600 font-bold border border-blue-600 rounded-lg px-4 py-2" id="ouvrirModal">
-                                        Faire une demande
-                                    </button>
-
-                                
-                            </li> -->
-                            <!-- Notification Menu Area -->
-                            <li @click.away="dropdownOpen = false" class="relative z-10"
-                                x-data="{ dropdownOpen: false, notifying: true }">
-                                <a @click.prevent="dropdownOpen = ! dropdownOpen; notifying = false"
-                                    class="relative flex h-8.5 w-8.5 items-center justify-center rounded-full border-[0.5px] border-stroke bg-gray hover:text-primary dark:border-strokedark dark:bg-meta-4 dark:text-white"
-                                    href="#">
-                                    <span :class="!notifying && 'hidden'"
-                                        class="absolute -top-0.5 right-0 z-1 h-2 w-2 rounded-full bg-meta-1">
-                                        <span
-                                            class="absolute -z-1 inline-flex h-full w-full animate-ping rounded-full bg-meta-1 opacity-75"></span>
-                                    </span>
-                                    <svg class="fill-current duration-300 ease-in-out" fill="none" height="18"
-                                        viewbox="0 0 18 18" width="18" xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M16.1999 14.9343L15.6374 14.0624C15.5249 13.8937 15.4687 13.7249 15.4687 13.528V7.67803C15.4687 6.01865 14.7655 4.47178 13.4718 3.31865C12.4312 2.39053 11.0812 1.7999 9.64678 1.6874V1.1249C9.64678 0.787402 9.36553 0.478027 8.9999 0.478027C8.6624 0.478027 8.35303 0.759277 8.35303 1.1249V1.65928C8.29678 1.65928 8.24053 1.65928 8.18428 1.6874C4.92178 2.05303 2.4749 4.66865 2.4749 7.79053V13.528C2.44678 13.8093 2.39053 13.9499 2.33428 14.0343L1.7999 14.9343C1.63115 15.2155 1.63115 15.553 1.7999 15.8343C1.96865 16.0874 2.2499 16.2562 2.55928 16.2562H8.38115V16.8749C8.38115 17.2124 8.6624 17.5218 9.02803 17.5218C9.36553 17.5218 9.6749 17.2405 9.6749 16.8749V16.2562H15.4687C15.778 16.2562 16.0593 16.0874 16.228 15.8343C16.3968 15.553 16.3968 15.2155 16.1999 14.9343ZM3.23428 14.9905L3.43115 14.653C3.5999 14.3718 3.68428 14.0343 3.74053 13.6405V7.79053C3.74053 5.31553 5.70928 3.23428 8.3249 2.95303C9.92803 2.78428 11.503 3.2624 12.6562 4.2749C13.6687 5.1749 14.2312 6.38428 14.2312 7.67803V13.528C14.2312 13.9499 14.3437 14.3437 14.5968 14.7374L14.7655 14.9905H3.23428Z"
-                                            fill=""></path>
-                                    </svg>
-                                </a>
-                                <!-- Dropdown Start -->
-                                <div class="absolute -right-27 mt-2.5 flex h-90 w-75 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark sm:right-0 sm:w-80"
-                                    x-show="dropdownOpen">
-                                    <div class="px-4.5 py-3">
-                                        <h5 class="text-sm font-medium text-bodydark2">
-                                            Notification
-                                        </h5>
-                                    </div>
-                                    <ul class="flex h-auto flex-col overflow-y-auto">
-                                        <li>
-                                            <a class="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-                                                href="#">
-                                                <p class="text-sm">
-                                                    <span class="text-black dark:text-white">Edit your information in a
-                                                        swipe</span>
-                                                    Sint occaecat cupidatat non proident, sunt in culpa
-                                                    qui officia deserunt mollit anim.
-                                                </p>
-                                                <p class="text-xs">12 May, 2025</p>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-                                                href="#">
-                                                <p class="text-sm">
-                                                    <span class="text-black dark:text-white">It is a long established
-                                                        fact</span>
-                                                    that a reader will be distracted by the readable.
-                                                </p>
-                                                <p class="text-xs">24 Feb, 2025</p>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-                                                href="#">
-                                                <p class="text-sm">
-                                                    <span class="text-black dark:text-white">There are many
-                                                        variations</span>
-                                                    of passages of Lorem Ipsum available, but the
-                                                    majority have suffered
-                                                </p>
-                                                <p class="text-xs">04 Jan, 2025</p>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-                                                href="#">
-                                                <p class="text-sm">
-                                                    <span class="text-black dark:text-white">There are many
-                                                        variations</span>
-                                                    of passages of Lorem Ipsum available, but the
-                                                    majority have suffered
-                                                </p>
-                                                <p class="text-xs">01 Dec, 2024</p>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <!-- Dropdown End -->
-                            </li>
                             <!-- Notification Menu Area -->
                             <!-- Chat Notification Area -->
                             <li @click.away="dropdownOpen = false" class="relative z-10"
@@ -1113,99 +1027,160 @@
     </div>
 
 
-<!-- Popup de confirmation de déconnexion -->
-<style>
-    .logout-backdrop {
-        position: fixed; inset: 0;
-        background: rgba(15, 23, 42, 0.55);
-        display: none;
-        align-items: center; justify-content: center;
-        z-index: 99999;
-        padding: 20px;
-        backdrop-filter: blur(3px);
-        font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif;
-    }
-    .logout-backdrop.active { display: flex; }
-    .logout-box {
-        background: #fff;
-        border-radius: 16px;
-        width: 100%;
-        max-width: 420px;
-        padding: 28px 26px 22px;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        text-align: center;
-        animation: logoutIn 0.22s ease-out;
-    }
-    @keyframes logoutIn {
-        from { opacity: 0; transform: scale(0.95) translateY(8px); }
-        to { opacity: 1; transform: scale(1) translateY(0); }
-    }
-    .logout-icon {
-        width: 64px; height: 64px; border-radius: 50%;
-        background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-        color: #b91c1c;
-        display: flex; align-items: center; justify-content: center;
-        margin: 0 auto 16px;
-    }
-    .logout-title { font-size: 1.2rem; font-weight: 700; color: #0f172a; margin-bottom: 6px; }
-    .logout-text { color: #64748b; font-size: 0.9rem; line-height: 1.5; margin-bottom: 22px; }
-    .logout-actions { display: flex; gap: 10px; justify-content: center; }
-    .logout-btn {
-        height: 42px; padding: 0 22px;
-        border: none; border-radius: 10px;
-        font-size: 0.9rem; font-weight: 600;
-        cursor: pointer;
-        transition: background 0.2s, transform 0.1s;
-    }
-    .logout-btn.cancel { background: #f1f5f9; color: #334155; }
-    .logout-btn.cancel:hover { background: #e2e8f0; }
-    .logout-btn.confirm {
-        background: #b91c1c; color: #fff;
-        box-shadow: 0 2px 8px rgba(185,28,28,0.25);
-    }
-    .logout-btn.confirm:hover { background: #991b1b; box-shadow: 0 4px 12px rgba(185,28,28,0.35); }
-    .logout-btn:active { transform: scale(0.98); }
-</style>
-<div class="logout-backdrop" id="logoutConfirm" onclick="if(event.target===this) closeLogoutConfirm()">
-    <div class="logout-box">
-        <div class="logout-icon">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                <polyline points="16 17 21 12 16 7"/>
-                <line x1="21" y1="12" x2="9" y2="12"/>
-            </svg>
-        </div>
-        <div class="logout-title">Confirmer la déconnexion</div>
-        <div class="logout-text">Vous êtes sur le point de vous déconnecter de votre espace eBloodBank. Voulez-vous continuer&nbsp;?</div>
-        <div class="logout-actions">
-            <button type="button" class="logout-btn cancel" onclick="closeLogoutConfirm()">Annuler</button>
-            <a id="logoutConfirmLink" href="#" class="logout-btn confirm" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center;">Se déconnecter</a>
+    <!-- Popup de confirmation de déconnexion -->
+    <style>
+        .logout-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.55);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            padding: 20px;
+            backdrop-filter: blur(3px);
+            font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif;
+        }
+
+        .logout-backdrop.active {
+            display: flex;
+        }
+
+        .logout-box {
+            background: #fff;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 420px;
+            padding: 28px 26px 22px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            animation: logoutIn 0.22s ease-out;
+        }
+
+        @keyframes logoutIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .logout-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            color: #b91c1c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+
+        .logout-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 6px;
+        }
+
+        .logout-text {
+            color: #64748b;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 22px;
+        }
+
+        .logout-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .logout-btn {
+            height: 42px;
+            padding: 0 22px;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .logout-btn.cancel {
+            background: #f1f5f9;
+            color: #334155;
+        }
+
+        .logout-btn.cancel:hover {
+            background: #e2e8f0;
+        }
+
+        .logout-btn.confirm {
+            background: #b91c1c;
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(185, 28, 28, 0.25);
+        }
+
+        .logout-btn.confirm:hover {
+            background: #991b1b;
+            box-shadow: 0 4px 12px rgba(185, 28, 28, 0.35);
+        }
+
+        .logout-btn:active {
+            transform: scale(0.98);
+        }
+    </style>
+    <div class="logout-backdrop" id="logoutConfirm" onclick="if(event.target===this) closeLogoutConfirm()">
+        <div class="logout-box">
+            <div class="logout-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+            </div>
+            <div class="logout-title">Confirmer la déconnexion</div>
+            <div class="logout-text">Vous êtes sur le point de vous déconnecter de votre espace eBloodBank. Voulez-vous
+                continuer&nbsp;?</div>
+            <div class="logout-actions">
+                <button type="button" class="logout-btn cancel" onclick="closeLogoutConfirm()">Annuler</button>
+                <a id="logoutConfirmLink" href="#" class="logout-btn confirm"
+                    style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center;">Se
+                    déconnecter</a>
+            </div>
         </div>
     </div>
-</div>
-<script>
-(function(){
-    function openLogoutConfirm(url) {
-        document.getElementById('logoutConfirmLink').setAttribute('href', url);
-        document.getElementById('logoutConfirm').classList.add('active');
-    }
-    window.closeLogoutConfirm = function() {
-        document.getElementById('logoutConfirm').classList.remove('active');
-    };
-    document.addEventListener('click', function(e){
-        var a = e.target.closest('a');
-        if (!a) return;
-        var href = a.getAttribute('href') || '';
-        if (/\/logout\/?$|\/deconnexion\/?$/.test(href)) {
-            e.preventDefault();
-            openLogoutConfirm(href);
-        }
-    });
-    document.addEventListener('keydown', function(e){
-        if (e.key === 'Escape') closeLogoutConfirm();
-    });
-})();
-</script>
+    <script>
+        (function () {
+            function openLogoutConfirm(url) {
+                document.getElementById('logoutConfirmLink').setAttribute('href', url);
+                document.getElementById('logoutConfirm').classList.add('active');
+            }
+            window.closeLogoutConfirm = function () {
+                document.getElementById('logoutConfirm').classList.remove('active');
+            };
+            document.addEventListener('click', function (e) {
+                var a = e.target.closest('a');
+                if (!a) return;
+                if (a.id === 'logoutConfirmLink') return;
+                var href = a.getAttribute('href') || '';
+                if (/\/logout\/?$|\/deconnexion\/?$/.test(href)) {
+                    e.preventDefault();
+                    openLogoutConfirm(href);
+                }
+            });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') closeLogoutConfirm();
+            });
+        })();
+    </script>
 </body>
 
 </html>
