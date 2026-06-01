@@ -103,3 +103,20 @@ class GeocoderBanquesCommandTest(TestCase):
         banque.refresh_from_db()
         self.assertEqual(banque.latitude, 6.13)
         self.assertEqual(banque.longitude, 1.22)
+
+
+class SeedBanquesCommandTest(TestCase):
+    def test_seed_cree_banques_avec_coordonnees(self):
+        call_command('seed_banques', stdout=StringIO())
+        banques = BanqueDeSang.objects.all()
+        self.assertGreater(banques.count(), 0)
+        # Toutes les banques seedées ont des coordonnées renseignées.
+        self.assertFalse(banques.filter(latitude__isnull=True).exists())
+        self.assertFalse(banques.filter(longitude__isnull=True).exists())
+
+    def test_seed_est_idempotent(self):
+        call_command('seed_banques', stdout=StringIO())
+        total_apres_premier_run = BanqueDeSang.objects.count()
+        call_command('seed_banques', stdout=StringIO())
+        total_apres_second_run = BanqueDeSang.objects.count()
+        self.assertEqual(total_apres_premier_run, total_apres_second_run)
