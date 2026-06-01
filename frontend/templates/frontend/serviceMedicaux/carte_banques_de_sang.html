@@ -8,7 +8,7 @@
     </p>
 </div>
 
-<script id="banques-data" type="application/json">{{ banques_json|safe }}</script>
+{{ banques|json_script:"banques-data" }}
 
 <script>
     function initCarteBanques() {
@@ -31,13 +31,24 @@
             bounds.extend(position);
 
             marqueur.addListener('click', function () {
-                infoWindow.setContent(
-                    '<div style="font-size:13px;max-width:220px;">' +
-                    '<strong>' + b.nom + '</strong><br>' +
-                    b.adresse + ', ' + b.ville + '<br>' +
-                    '<a href="tel:' + b.telephone + '">' + b.telephone + '</a>' +
-                    '</div>'
-                );
+                const wrapper = document.createElement('div');
+                wrapper.style.fontSize = '13px';
+                wrapper.style.maxWidth = '220px';
+
+                const titre = document.createElement('strong');
+                titre.textContent = b.nom;
+                wrapper.appendChild(titre);
+                wrapper.appendChild(document.createElement('br'));
+
+                wrapper.appendChild(document.createTextNode(b.adresse + ', ' + b.ville));
+                wrapper.appendChild(document.createElement('br'));
+
+                const tel = document.createElement('a');
+                tel.href = 'tel:' + encodeURIComponent(b.telephone);
+                tel.textContent = b.telephone;
+                wrapper.appendChild(tel);
+
+                infoWindow.setContent(wrapper);
                 infoWindow.open(carte, marqueur);
             });
         });

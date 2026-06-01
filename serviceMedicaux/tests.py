@@ -1,4 +1,3 @@
-import json
 from unittest.mock import patch
 from django.test import TestCase, override_settings
 from django.urls import reverse
@@ -36,7 +35,7 @@ class CarteBanquesViewTest(TestCase):
     def test_seules_les_banques_geocodees_sont_envoyees(self):
         self.client.force_login(self.medical)
         resp = self.client.get(reverse('serviceMedicaux:carteBanques'))
-        banques = json.loads(resp.context['banques_json'])
+        banques = resp.context['banques']
         noms = [b['nom'] for b in banques]
         self.assertIn('Banque Visible', noms)
         self.assertNotIn('Banque Cachee', noms)

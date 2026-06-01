@@ -1,4 +1,3 @@
-import json
 from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -273,7 +272,7 @@ def carteBanques(request):
         for b in banques
     ]
     context = {
-        'banques_json': json.dumps(donnees),
+        'banques': donnees,
         'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY,
     }
     return render(request, 'frontend/serviceMedicaux/carte_banques_de_sang.html', context)
