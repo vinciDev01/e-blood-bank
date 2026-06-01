@@ -634,8 +634,7 @@
                         <div @click.away="dropdownOpen = false" class="relative" x-data="{ dropdownOpen: false }">
                             <a @click.prevent="dropdownOpen = ! dropdownOpen" class="flex items-center gap-4" href="#">
                                 <span class="hidden text-right lg:block">
-                                    <span class="block text-sm font-medium text-black dark:text-white">{{
-                                        user.first_name }} {{ user.last_name }}</span>
+                                    <span class="block text-sm font-medium text-black dark:text-white">{{ user.banque_de_sang.nom_etablissement }}</span>
                                     <span class="block text-xs font-medium">{{ user.username }}</span>
                                 </span>
                                 <span class="h-12 w-12 rounded-full">
@@ -721,7 +720,7 @@
             <!-- ===== Header End ===== -->
 
             <!-- ===== Main Content Start ===== -->
-            <main class="p-2 text-black">
+            <main class="p-2 text-black" style="zoom: 1.2;">
                 {% block content %}
 
                 {% endblock %}

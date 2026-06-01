@@ -101,9 +101,15 @@ def gestionStock(request):
 
         date_de_prelevement = datetime.strptime(date_de_prelevement_str, '%Y-%m-%d').date()
 
+        # Le formulaire fournit le NUMÉRO de donneur (numero_de_donneur), pas la
+        # clé primaire. Recherche par ce numéro ; champ facultatif.
         donneur = None
-        if donneur_id:
-            donneur = get_object_or_404(Donneur, id=donneur_id)
+        numero_donneur = (donneur_id or '').strip()
+        if numero_donneur:
+            donneur = Donneur.objects.filter(numero_de_donneur=numero_donneur).first()
+            if donneur is None:
+                messages.error(request, "Aucun donneur trouvé avec ce numéro.")
+                return redirect('bankDeSang:gestionStock')
 
         if PocheDeSang.objects.filter(matricule=matricule).exists():
             messages.error(request, 'Ce matricule existe déjà.')
