@@ -107,7 +107,7 @@ class GeocoderBanquesCommandTest(TestCase):
 
 class SeedBanquesCommandTest(TestCase):
     def test_seed_cree_banques_avec_coordonnees(self):
-        call_command('seed_banques', stdout=StringIO())
+        call_command('seed_banques', force=True, stdout=StringIO())
         banques = BanqueDeSang.objects.all()
         self.assertGreater(banques.count(), 0)
         # Toutes les banques seedées ont des coordonnées renseignées.
@@ -115,8 +115,14 @@ class SeedBanquesCommandTest(TestCase):
         self.assertFalse(banques.filter(longitude__isnull=True).exists())
 
     def test_seed_est_idempotent(self):
-        call_command('seed_banques', stdout=StringIO())
+        call_command('seed_banques', force=True, stdout=StringIO())
         total_apres_premier_run = BanqueDeSang.objects.count()
-        call_command('seed_banques', stdout=StringIO())
+        call_command('seed_banques', force=True, stdout=StringIO())
         total_apres_second_run = BanqueDeSang.objects.count()
         self.assertEqual(total_apres_premier_run, total_apres_second_run)
+
+    def test_seed_refuse_hors_debug_sans_force(self):
+        from django.core.management.base import CommandError
+        with self.settings(DEBUG=False):
+            with self.assertRaises(CommandError):
+                call_command('seed_banques', stdout=StringIO())

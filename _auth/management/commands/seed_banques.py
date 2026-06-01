@@ -10,16 +10,20 @@ identifiée par le `username` de son utilisateur lié).
 Usage :
     python manage.py seed_banques
 """
+import os
+
+from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.core.management.base import BaseCommand
+from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
 
 from _auth.models import BanqueDeSang
 
 User = get_user_model()
 
-# Mot de passe par défaut des comptes de démonstration (à changer en production).
-MOT_DE_PASSE_DEMO = 'ChangeMoi123!'
+# Mot de passe des comptes de démonstration. Surchargeable via la variable
+# d'environnement SEED_BANQUE_PASSWORD ; sinon valeur locale par défaut.
+MOT_DE_PASSE_DEMO = os.environ.get('SEED_BANQUE_PASSWORD', '12345678!')
 
 BANQUES = [
     {
@@ -108,7 +112,19 @@ BANQUES = [
 class Command(BaseCommand):
     help = "Crée des banques de sang de démonstration avec leurs géolocalisations."
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--force', action='store_true',
+            help="Autorise l'exécution même hors mode DEBUG (production).",
+        )
+
     def handle(self, *args, **options):
+        if not settings.DEBUG and not options['force']:
+            raise CommandError(
+                "Commande de démonstration : refus de créer des comptes seed "
+                "hors mode DEBUG. Relancez avec --force si c'est volontaire."
+            )
+
         crees, ignores = 0, 0
         with transaction.atomic():
             for data in BANQUES:
