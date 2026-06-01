@@ -78,3 +78,28 @@ class BanqueDeSangSaveTest(TestCase):
         banque.telephone = '90000099'  # adresse inchangée
         banque.save()
         mock_geo.assert_not_called()
+
+
+from io import StringIO
+from django.core.management import call_command
+
+
+class GeocoderBanquesCommandTest(TestCase):
+    @patch('_auth.models.geocoder_adresse', return_value=None)
+    def test_commande_geocode_banques_sans_coords(self, mock_save_geo):
+        # Créée sans coords (géocodage save renvoie None)
+        banque = BanqueDeSang.objects.create(
+            nom_etablissement='Banque D', responsable='R', adresse='Rue 4',
+            ville='Lomé', code_postal='00000', pays='Togo', telephone='90000003',
+            user=User.objects.create_user(username='b4', password='x', role='blood_bank'),
+        )
+        self.assertIsNone(banque.latitude)
+
+        with patch('_auth.management.commands.geocoder_banques.geocoder_adresse',
+                   return_value=(6.13, 1.22)):
+            out = StringIO()
+            call_command('geocoder_banques', stdout=out)
+
+        banque.refresh_from_db()
+        self.assertEqual(banque.latitude, 6.13)
+        self.assertEqual(banque.longitude, 1.22)
