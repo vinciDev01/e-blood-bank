@@ -273,4 +273,9 @@ def carteBanques(request):
     context = {
         'banques': donnees,
     }
-    return render(request, 'frontend/serviceMedicaux/carte_banques_de_sang.html', context)
+    response = render(request, 'frontend/serviceMedicaux/carte_banques_de_sang.html', context)
+    # Les serveurs de tuiles OpenStreetMap exigent un en-tête Referer. La politique
+    # globale 'same-origin' le supprime en cross-origin ; on transmet l'origine
+    # (sans le chemin) uniquement pour cette page.
+    response['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+    return response

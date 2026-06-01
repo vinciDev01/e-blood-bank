@@ -45,3 +45,10 @@ class CarteBanquesViewTest(TestCase):
         self.client.force_login(autre)
         resp = self.client.get(reverse('serviceMedicaux:carteBanques'))
         self.assertEqual(resp.status_code, 302)
+
+    def test_carte_transmet_referer_pour_tuiles_osm(self):
+        # OpenStreetMap exige un Referer ; la politique globale 'same-origin'
+        # n'en envoie aucun en cross-origin. La page doit transmettre l'origine.
+        self.client.force_login(self.medical)
+        resp = self.client.get(reverse('serviceMedicaux:carteBanques'))
+        self.assertEqual(resp.headers['Referrer-Policy'], 'strict-origin-when-cross-origin')
