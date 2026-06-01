@@ -2,9 +2,57 @@ from unittest.mock import patch
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
-from _auth.models import BanqueDeSang
+from _auth.models import BanqueDeSang, ServiceMedicaux
+from serviceMedicaux.models import DemandeDeSang
 
 User = get_user_model()
+
+
+class DemandeGroupeSanguinTest(TestCase):
+    """`groupeSanguin()` / `nombrePoches()` indexent un dict JSON par l'email du
+    service. Si cet email change après la création de la demande, la clé ne
+    correspond plus : la méthode doit se rabattre sur la donnée plutôt que lever
+    un KeyError."""
+
+    def _service(self, email):
+        user = User.objects.create_user(username='svc_' + email[:4], password='x', role='medical')
+        return ServiceMedicaux.objects.create(
+            nom_etablissement='Hôpital', type_etablissement='Public', responsable='R',
+            adresse='Rue', email=email, ville='Lomé', code_postal='00000', pays='Togo',
+            telephone='90000000', numero_licence='L1', numero_enregistrement='E1', user=user,
+        )
+
+    def test_repli_quand_email_du_service_a_change(self):
+        service = self._service('nouveau@example.com')
+        demande = DemandeDeSang.objects.create(
+            serviceMedicaux=service, type_produit='Sang total',
+            urgence='Immédiate', motif='Accident',
+            groupe_sanguin={'ancien@example.com': ['A+']},
+            nombre_poches={'ancien@example.com': [2]},
+        )
+        # La clé du dict ('ancien@...') ne correspond plus à l'email du service.
+        self.assertEqual(demande.groupeSanguin(), ['A+'])
+        self.assertEqual(demande.nombrePoches(), [2])
+
+    def test_acces_normal_quand_email_correspond(self):
+        service = self._service('match@example.com')
+        demande = DemandeDeSang.objects.create(
+            serviceMedicaux=service, type_produit='Sang total',
+            urgence='Immédiate', motif='Accident',
+            groupe_sanguin={'match@example.com': ['O-']},
+            nombre_poches={'match@example.com': [3]},
+        )
+        self.assertEqual(demande.groupeSanguin(), ['O-'])
+        self.assertEqual(demande.nombrePoches(), [3])
+
+    def test_dict_vide_renvoie_liste_vide(self):
+        service = self._service('vide@example.com')
+        demande = DemandeDeSang.objects.create(
+            serviceMedicaux=service, type_produit='Sang total',
+            urgence='Immédiate', motif='Accident',
+        )
+        self.assertEqual(demande.groupeSanguin(), [])
+        self.assertEqual(demande.nombrePoches(), [])
 
 
 class CarteBanquesViewTest(TestCase):

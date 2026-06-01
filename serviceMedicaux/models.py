@@ -79,11 +79,27 @@ class DemandeDeSang(models.Model):
     def nom_etablissement(self):
         return self.serviceMedicaux.nom_etablissement
 
+    def _valeur_pour_service(self, donnees):
+        """Valeur d'un dict JSON indexé par l'email du service.
+
+        Repli : si l'email courant du service est absent des clés (ex. email du
+        service modifié après la création de la demande), on renvoie l'unique
+        valeur présente — une demande n'étant rattachée qu'à un seul service —
+        plutôt que de lever un KeyError.
+        """
+        if not isinstance(donnees, dict) or not donnees:
+            return []
+        email = self.serviceMedicaux.email if self.serviceMedicaux else None
+        if email in donnees:
+            return donnees[email]
+        valeurs = list(donnees.values())
+        return valeurs[0] if len(valeurs) == 1 else []
+
     def groupeSanguin(self):
-        return self.groupe_sanguin[self.serviceMedicaux.email]
+        return self._valeur_pour_service(self.groupe_sanguin)
 
     def nombrePoches(self):
-        return self.nombre_poches[self.serviceMedicaux.email]
+        return self._valeur_pour_service(self.nombre_poches)
 
     def nom_patient(self):
         return self.patient.nom_complet
