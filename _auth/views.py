@@ -95,6 +95,20 @@ def register(request):
 
 # ---------- Login with 2FA OTP ----------
 
+def _rediriger_apres_login(user):
+    """Redirection vers le tableau de bord correspondant au rôle de l'utilisateur."""
+    if user.role == 'admin' or user.is_superuser:
+        return redirect('_auth:administrationDashboard')
+
+    role_redirects = {
+        'medical': 'serviceMedicaux:accueilServiceMedicaux',
+        'generic': 'frontend:accueil',
+        'donor': 'donneur:accueilDonneur',
+        'blood_bank': 'bankDeSang:accueilBankDeSang',
+    }
+    return redirect(role_redirects.get(user.role, 'frontend:accueil'))
+
+
 def logIn(request):
     if request.method == 'POST':
         username = request.POST.get('email')
@@ -104,6 +118,11 @@ def logIn(request):
         if user is None or not user.is_active:
             messages.error(request, 'Nom d\'utilisateur ou mot de passe incorrect')
             return redirect('_auth:login')
+
+        # OTP désactivé (test/dev) : connexion directe, sans code ni email.
+        if not getattr(settings, 'OTP_ENABLED', True):
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+            return _rediriger_apres_login(user)
 
         # Invalidate previous unused OTP codes
         OTPCode.objects.filter(user=user, is_used=False).update(is_used=True)
@@ -165,16 +184,7 @@ def verifyOTP(request):
 
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
 
-            if user.role == 'admin' or user.is_superuser:
-                return redirect('_auth:administrationDashboard')
-
-            role_redirects = {
-                'medical': 'serviceMedicaux:accueilServiceMedicaux',
-                'generic': 'frontend:accueil',
-                'donor': 'donneur:accueilDonneur',
-                'blood_bank': 'bankDeSang:accueilBankDeSang',
-            }
-            return redirect(role_redirects.get(user.role, 'frontend:accueil'))
+            return _rediriger_apres_login(user)
         else:
             messages.error(request, 'Code invalide ou expire. Veuillez reessayer.')
             return redirect('_auth:verifyOTP')

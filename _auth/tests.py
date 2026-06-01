@@ -1,6 +1,7 @@
 import json
 from unittest.mock import patch, MagicMock
-from django.test import TestCase
+from django.test import TestCase, override_settings
+from django.urls import reverse
 from _auth.geocoding import geocoder_adresse
 
 
@@ -126,3 +127,35 @@ class SeedBanquesCommandTest(TestCase):
         with self.settings(DEBUG=False):
             with self.assertRaises(CommandError):
                 call_command('seed_banques', stdout=StringIO())
+
+
+from _auth.models import OTPCode
+
+
+class OtpParametrableTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username='login_test', password='motdepasse123', role='generic'
+        )
+
+    @override_settings(OTP_ENABLED=False)
+    def test_login_direct_quand_otp_desactive(self):
+        resp = self.client.post(reverse('_auth:login'), {
+            'email': 'login_test', 'password': 'motdepasse123',
+        })
+        self.assertEqual(resp.status_code, 302)
+        # Aucun code OTP généré, utilisateur connecté directement.
+        self.assertEqual(OTPCode.objects.count(), 0)
+        self.assertIn('_auth_user_id', self.client.session)
+
+    @override_settings(OTP_ENABLED=True)
+    @patch('_auth.views.send_html_email')
+    def test_flux_otp_quand_active(self, mock_send):
+        resp = self.client.post(reverse('_auth:login'), {
+            'email': 'login_test', 'password': 'motdepasse123',
+        })
+        self.assertEqual(resp.status_code, 302)
+        # Un code OTP est créé, l'utilisateur n'est PAS encore connecté.
+        self.assertEqual(OTPCode.objects.count(), 1)
+        self.assertNotIn('_auth_user_id', self.client.session)
+        self.assertEqual(self.client.session.get('otp_user_id'), self.user.pk)

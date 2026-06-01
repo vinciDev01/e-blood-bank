@@ -38,3 +38,7 @@ ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL', '')
 
 # Clé Google Maps (Geocoding API côté serveur + Maps JavaScript API côté client).
 GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY', '')
+
+# Vérification OTP au login. Mettre OTP_ENABLED=False dans .env pour la désactiver
+# en test/dev (login direct). Activée par défaut (sécurité en production).
+OTP_ENABLED = os.environ.get('OTP_ENABLED', 'True').strip().lower() == 'true'
