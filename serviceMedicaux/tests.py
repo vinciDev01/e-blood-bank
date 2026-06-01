@@ -59,3 +59,10 @@ class CarteBanquesViewTest(TestCase):
         resp = self.client.get(reverse('serviceMedicaux:carteBanques'))
         self.assertContains(resp, 'maxBounds')
         self.assertContains(resp, 'bornesTogo')
+
+    def test_carte_propose_itineraire(self):
+        # Le bouton d'itinéraire et l'appel au routage OSRM sont présents.
+        self.client.force_login(self.medical)
+        resp = self.client.get(reverse('serviceMedicaux:carteBanques'))
+        self.assertContains(resp, 'Itinéraire')
+        self.assertContains(resp, 'router.project-osrm.org')

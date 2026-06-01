@@ -43,6 +43,52 @@
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(carte);
 
+        // Itinéraire courant : une seule route à la fois.
+        let coucheItineraire = null;
+        let marqueurDepart = null;
+
+        function effacerItineraire() {
+            if (coucheItineraire) { carte.removeLayer(coucheItineraire); coucheItineraire = null; }
+            if (marqueurDepart) { carte.removeLayer(marqueurDepart); marqueurDepart = null; }
+        }
+
+        function tracerItineraire(b, infoEl) {
+            if (!navigator.geolocation) {
+                infoEl.textContent = 'Géolocalisation non disponible sur ce navigateur.';
+                return;
+            }
+            infoEl.textContent = 'Localisation en cours…';
+            navigator.geolocation.getCurrentPosition(function (pos) {
+                const depLat = pos.coords.latitude;
+                const depLng = pos.coords.longitude;
+                const url = 'https://router.project-osrm.org/route/v1/driving/'
+                    + depLng + ',' + depLat + ';' + b.lng + ',' + b.lat
+                    + '?overview=full&geometries=geojson';
+                infoEl.textContent = 'Calcul de l\'itinéraire…';
+                fetch(url).then(function (r) { return r.json(); }).then(function (data) {
+                    if (data.code !== 'Ok' || !data.routes || !data.routes.length) {
+                        infoEl.textContent = 'Itinéraire introuvable.';
+                        return;
+                    }
+                    effacerItineraire();
+                    const route = data.routes[0];
+                    const coords = route.geometry.coordinates.map(function (c) { return [c[1], c[0]]; });
+                    coucheItineraire = L.polyline(coords, { color: '#c0392b', weight: 5, opacity: 0.85 }).addTo(carte);
+                    marqueurDepart = L.marker([depLat, depLng]).addTo(carte).bindPopup('Votre position');
+                    carte.fitBounds(coucheItineraire.getBounds(), { padding: [40, 40] });
+                    const km = (route.distance / 1000).toFixed(1);
+                    const min = Math.round(route.duration / 60);
+                    infoEl.textContent = 'Distance : ' + km + ' km · Durée : ~' + min + ' min';
+                }).catch(function () {
+                    infoEl.textContent = 'Service d\'itinéraire indisponible.';
+                });
+            }, function (err) {
+                infoEl.textContent = (err.code === 1)
+                    ? 'Géolocalisation refusée.'
+                    : 'Position indisponible.';
+            }, { enableHighAccuracy: true, timeout: 10000 });
+        }
+
         banques.forEach(function (b) {
             const marqueur = L.marker([b.lat, b.lng]).addTo(carte);
 
@@ -62,6 +108,21 @@
             tel.href = 'tel:' + encodeURIComponent(b.telephone);
             tel.textContent = b.telephone;
             wrapper.appendChild(tel);
+
+            wrapper.appendChild(document.createElement('br'));
+            const btnItineraire = document.createElement('button');
+            btnItineraire.type = 'button';
+            btnItineraire.textContent = 'Itinéraire';
+            btnItineraire.style.marginTop = '6px';
+            btnItineraire.style.cursor = 'pointer';
+            const infoItineraire = document.createElement('div');
+            infoItineraire.style.marginTop = '4px';
+            infoItineraire.style.color = '#374151';
+            btnItineraire.addEventListener('click', function () {
+                tracerItineraire(b, infoItineraire);
+            });
+            wrapper.appendChild(btnItineraire);
+            wrapper.appendChild(infoItineraire);
 
             marqueur.bindPopup(wrapper);
         });
