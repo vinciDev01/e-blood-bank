@@ -52,3 +52,10 @@ class CarteBanquesViewTest(TestCase):
         self.client.force_login(self.medical)
         resp = self.client.get(reverse('serviceMedicaux:carteBanques'))
         self.assertEqual(resp.headers['Referrer-Policy'], 'strict-origin-when-cross-origin')
+
+    def test_carte_est_bornee_au_togo(self):
+        # La carte est verrouillée sur la boîte englobante du Togo.
+        self.client.force_login(self.medical)
+        resp = self.client.get(reverse('serviceMedicaux:carteBanques'))
+        self.assertContains(resp, 'maxBounds')
+        self.assertContains(resp, 'bornesTogo')

@@ -30,17 +30,21 @@
             return;
         }
 
-        const carte = L.map(conteneur);
+        // Boîte englobante du Togo (avec une légère marge) : la carte est
+        // verrouillée sur le pays, sans débordement vers les pays voisins.
+        const bornesTogo = L.latLngBounds([5.9, -0.4], [11.3, 2.0]);
+
+        const carte = L.map(conteneur, {
+            maxBounds: bornesTogo,
+            maxBoundsViscosity: 1.0,
+        });
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(carte);
 
-        const coordonnees = [];
-
         banques.forEach(function (b) {
             const marqueur = L.marker([b.lat, b.lng]).addTo(carte);
-            coordonnees.push([b.lat, b.lng]);
 
             const wrapper = document.createElement('div');
             wrapper.style.fontSize = '13px';
@@ -62,7 +66,9 @@
             marqueur.bindPopup(wrapper);
         });
 
-        carte.fitBounds(coordonnees, { padding: [40, 40] });
+        // Vue initiale = le Togo entier, et on interdit de dézoomer au-delà.
+        carte.fitBounds(bornesTogo);
+        carte.setMinZoom(carte.getZoom());
     }
 
     document.addEventListener('DOMContentLoaded', initCarteBanques);
