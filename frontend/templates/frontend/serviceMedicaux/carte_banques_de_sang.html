@@ -1,5 +1,10 @@
 {% extends 'frontend/serviceMedicaux/base.html' %}
 {% block content %}
+<link rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin="anonymous" />
+
 <div style="padding:16px;">
     <h1 style="font-size:20px;font-weight:600;margin-bottom:12px;">Carte des banques de sang</h1>
     <div id="carte-banques" style="width:100%;height:70vh;border-radius:12px;"></div>
@@ -10,6 +15,10 @@
 
 {{ banques|json_script:"banques-data" }}
 
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin="anonymous"></script>
 <script>
     function initCarteBanques() {
         const banques = JSON.parse(document.getElementById('banques-data').textContent);
@@ -21,43 +30,41 @@
             return;
         }
 
-        const carte = new google.maps.Map(conteneur, { zoom: 6 });
-        const bounds = new google.maps.LatLngBounds();
-        const infoWindow = new google.maps.InfoWindow();
+        const carte = L.map(conteneur);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(carte);
+
+        const coordonnees = [];
 
         banques.forEach(function (b) {
-            const position = { lat: b.lat, lng: b.lng };
-            const marqueur = new google.maps.Marker({ position: position, map: carte, title: b.nom });
-            bounds.extend(position);
+            const marqueur = L.marker([b.lat, b.lng]).addTo(carte);
+            coordonnees.push([b.lat, b.lng]);
 
-            marqueur.addListener('click', function () {
-                const wrapper = document.createElement('div');
-                wrapper.style.fontSize = '13px';
-                wrapper.style.maxWidth = '220px';
+            const wrapper = document.createElement('div');
+            wrapper.style.fontSize = '13px';
+            wrapper.style.maxWidth = '220px';
 
-                const titre = document.createElement('strong');
-                titre.textContent = b.nom;
-                wrapper.appendChild(titre);
-                wrapper.appendChild(document.createElement('br'));
+            const titre = document.createElement('strong');
+            titre.textContent = b.nom;
+            wrapper.appendChild(titre);
+            wrapper.appendChild(document.createElement('br'));
 
-                wrapper.appendChild(document.createTextNode(b.adresse + ', ' + b.ville));
-                wrapper.appendChild(document.createElement('br'));
+            wrapper.appendChild(document.createTextNode(b.adresse + ', ' + b.ville));
+            wrapper.appendChild(document.createElement('br'));
 
-                const tel = document.createElement('a');
-                tel.href = 'tel:' + encodeURIComponent(b.telephone);
-                tel.textContent = b.telephone;
-                wrapper.appendChild(tel);
+            const tel = document.createElement('a');
+            tel.href = 'tel:' + encodeURIComponent(b.telephone);
+            tel.textContent = b.telephone;
+            wrapper.appendChild(tel);
 
-                infoWindow.setContent(wrapper);
-                infoWindow.open(carte, marqueur);
-            });
+            marqueur.bindPopup(wrapper);
         });
 
-        carte.fitBounds(bounds);
+        carte.fitBounds(coordonnees, { padding: [40, 40] });
     }
-    window.initCarteBanques = initCarteBanques;
-</script>
-<script async
-    src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initCarteBanques">
+
+    document.addEventListener('DOMContentLoaded', initCarteBanques);
 </script>
 {% endblock %}

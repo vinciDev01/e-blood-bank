@@ -1,5 +1,5 @@
 from unittest.mock import patch
-from django.test import TestCase, override_settings
+from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from _auth.models import BanqueDeSang
@@ -7,7 +7,6 @@ from _auth.models import BanqueDeSang
 User = get_user_model()
 
 
-@override_settings(GOOGLE_MAPS_API_KEY='TEST_KEY')
 class CarteBanquesViewTest(TestCase):
     def setUp(self):
         self.medical = User.objects.create_user(
@@ -30,7 +29,8 @@ class CarteBanquesViewTest(TestCase):
         self.client.force_login(self.medical)
         resp = self.client.get(reverse('serviceMedicaux:carteBanques'))
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(resp.context['google_maps_api_key'], 'TEST_KEY')
+        # L'îlot de données JSON est présent (carte rendue côté client par Leaflet).
+        self.assertContains(resp, 'id="banques-data"')
 
     def test_seules_les_banques_geocodees_sont_envoyees(self):
         self.client.force_login(self.medical)
