@@ -1,3 +1,6 @@
 .venv/
 
 media/**
+
+# Secrets — ne jamais versionner
+.env
