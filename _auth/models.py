@@ -2,6 +2,7 @@ from django.db import models
 from datetime import date, timedelta
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.utils import timezone
+from _auth.geocoding import geocoder_adresse
 import os
 import random
 import string
@@ -161,15 +162,33 @@ class BanqueDeSang(models.Model):
     pays = models.CharField(max_length=100)
     telephone = models.CharField(max_length=20)
     profil = models.ImageField(upload_to=renomer_image, default='images/default.jpg')
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
 
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='banque_de_sang')
 
     groups = models.ManyToManyField(Group, related_name="banques_de_sang")
     user_permissions = models.ManyToManyField(Permission, related_name="banques_de_sang_permissions")
 
+    def _adresse_complete(self):
+        return f'{self.adresse}|{self.ville}|{self.code_postal}|{self.pays}'
+
+    def save(self, *args, **kwargs):
+        adresse_changee = True
+        if self.pk:
+            ancienne = BanqueDeSang.objects.filter(pk=self.pk).first()
+            if ancienne:
+                adresse_changee = ancienne._adresse_complete() != self._adresse_complete()
+        besoin_geocodage = adresse_changee or self.latitude is None or self.longitude is None
+        if besoin_geocodage:
+            coords = geocoder_adresse(self.adresse, self.ville, self.code_postal, self.pays)
+            if coords:
+                self.latitude, self.longitude = coords
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.nom_etablissement
-    
+
     class Meta:
         verbose_name = "Banque de Sang"
         verbose_name_plural = "Banques de Sang"
