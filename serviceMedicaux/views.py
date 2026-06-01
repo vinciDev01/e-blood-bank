@@ -1,3 +1,5 @@
+import json
+from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
@@ -6,7 +8,7 @@ from datetime import datetime
 
 from .models import DemandeDeSang, Patient, Stock_de_sang
 from bankDeSang.models import PocheDeSang, StockDeSang
-from _auth.models import ServiceMedicaux
+from _auth.models import ServiceMedicaux, BanqueDeSang
 from decorateurs import check_role
 
 
@@ -251,3 +253,27 @@ def recevoir_poches(request):
         messages.success(request, 'Les poches ont ete recues avec succes')
 
     return redirect('serviceMedicaux:mesDemandesDeSang')
+
+
+@login_required
+@check_role('medical')
+def carteBanques(request):
+    banques = BanqueDeSang.objects.filter(
+        latitude__isnull=False, longitude__isnull=False
+    )
+    donnees = [
+        {
+            'nom': b.nom_etablissement,
+            'adresse': b.adresse,
+            'ville': b.ville,
+            'telephone': b.telephone,
+            'lat': b.latitude,
+            'lng': b.longitude,
+        }
+        for b in banques
+    ]
+    context = {
+        'banques_json': json.dumps(donnees),
+        'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY,
+    }
+    return render(request, 'frontend/serviceMedicaux/carte_banques_de_sang.html', context)

@@ -10,6 +10,7 @@ urlpatterns = [
     #path('inscriptionServiceMedicaux/', views.inscriptionServiceMedicaux, name='inscriptionServiceMedicaux'),
     path('faireDemandeDeSang/', views.faireDemandeDeSang, name='faireDemandeDeSang'),
     path('recevoir_poches/', views.recevoir_poches, name='recevoir_poches'),
+    path('carteBanques/', views.carteBanques, name='carteBanques'),
     # path('getToutesDemande/', views.getToutesDemande, name='getToutesDemande'),
     #path('authentification/', views.authentification, name='authentification'),
 ]
