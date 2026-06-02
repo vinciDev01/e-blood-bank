@@ -217,9 +217,19 @@
             <circle cx="12" cy="7" r="4"></circle>
           </svg>
         </a>
-        <button class="px-4 py-2 text-white bg-red-600 rounded-full">PRENDRE RENDEZ-VOUS</button>
+        <a href="{% url 'frontend:centresDeDon' %}" class="px-4 py-2 text-white bg-red-600 rounded-full">Trouver un lieu de don</a>
         {% else %}
-        <button class="px-4 py-2 text-white bg-red-600 rounded-full">PRENDRE RENDEZ-VOUS</button>
+        {% if user.role == 'medical' %}
+        <a href="{% url 'serviceMedicaux:accueilServiceMedicaux' %}" class="px-4 py-2 text-white bg-red-600 rounded-full">Mon tableau de bord</a>
+        {% elif user.role == 'blood_bank' %}
+        <a href="{% url 'bankDeSang:accueilBankDeSang' %}" class="px-4 py-2 text-white bg-red-600 rounded-full">Mon tableau de bord</a>
+        {% elif user.role == 'donor' %}
+        <a href="{% url 'donneur:accueilDonneur' %}" class="px-4 py-2 text-white bg-red-600 rounded-full">Mon tableau de bord</a>
+        {% elif user.role == 'admin' or user.is_superuser %}
+        <a href="{% url '_auth:administrationDashboard' %}" class="px-4 py-2 text-white bg-red-600 rounded-full">Mon tableau de bord</a>
+        {% else %}
+        <a href="{% url 'frontend:centresDeDon' %}" class="px-4 py-2 text-white bg-red-600 rounded-full">Trouver un lieu de don</a>
+        {% endif %}
         <div @click.outside="dropdownOpen = false" class="relative" x-data="{ dropdownOpen: false }">
           <a @click.prevent="dropdownOpen = ! dropdownOpen" class="flex items-center gap-4" href="#">
             <span class="hidden text-right lg:block">

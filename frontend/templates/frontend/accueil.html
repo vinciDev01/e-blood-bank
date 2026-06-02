@@ -8,30 +8,10 @@
 <main class="relative flex flex-col items-center justify-center flex-1 bg-cover"
 style="background-image: url({% static 'img/bg_login.jpg' %});">
 
-<div class="absolute top-4 right-4 z-10 flex items-center gap-2">
-  {% if user.is_authenticated %}
-    {% if user.role == 'medical' %}
-    <a href="{% url 'serviceMedicaux:accueilServiceMedicaux' %}"
-      class="bg-red-600 text-white font-semibold px-4 py-2 rounded-full shadow-md hover:bg-red-700">
-      Mon tableau de bord
-    </a>
-    {% elif user.role == 'blood_bank' %}
-    <a href="{% url 'bankDeSang:accueilBankDeSang' %}"
-      class="bg-red-600 text-white font-semibold px-4 py-2 rounded-full shadow-md hover:bg-red-700">
-      Mon tableau de bord
-    </a>
-    {% elif user.role == 'donor' %}
-    <a href="{% url 'donneur:accueilDonneur' %}"
-      class="bg-red-600 text-white font-semibold px-4 py-2 rounded-full shadow-md hover:bg-red-700">
-      Mon tableau de bord
-    </a>
-    {% endif %}
-  {% endif %}
-  <a href="{% url '_auth:administrationDashboard' %}"
-    class="bg-white text-red-600 font-semibold px-4 py-2 rounded-full shadow-md hover:bg-red-50">
-    Administration
-  </a>
-</div>
+<a href="{% url '_auth:administrationDashboard' %}"
+  class="absolute top-4 right-4 z-10 bg-white text-red-600 font-semibold px-4 py-2 rounded-full shadow-md hover:bg-red-50">
+  Administration
+</a>
 
 <div class="text-center bg-white shadow-md p-8 rounded-lg justify-start" style="margin-right: 55rem;">
   <h1 class="text-2xl font-bold text-left" style="color: #4a8fcd;">
