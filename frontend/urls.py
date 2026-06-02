@@ -5,6 +5,7 @@ app_name = 'frontend'
 
 urlpatterns = [
     path('', accueil, name='accueil'),
+    path('centres/', centresDeDon, name='centresDeDon'),
     path('listeHopitaux', listeHopitaux, name='listeHopitaux'),
     path('hopital/<int:id>', hopital, name='hopital'),
     path('listeDemandeDeSang', listeDemandeDeSang, name='listeDemandeDeSang'),

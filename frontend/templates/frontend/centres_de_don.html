@@ -1,0 +1,26 @@
+{% extends 'frontend/base.html' %}
+{% block title %}Centres de don — eBloodBank{% endblock %}
+
+{% block content %}
+<div style="padding:16px;max-width:1100px;margin:0 auto;">
+    <h1 style="font-size:22px;font-weight:700;margin-bottom:16px;">Centres de don disponibles</h1>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-bottom:24px;">
+        {% for c in centres %}
+        <div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px;">
+            <div style="font-weight:600;color:#0f172a;margin-bottom:4px;">{{ c.nom_etablissement }}</div>
+            <div style="font-size:13px;color:#475569;">{{ c.adresse }}, {{ c.ville }}</div>
+            {% if c.telephone %}
+            <div style="font-size:13px;margin-top:6px;">
+                <a href="tel:{{ c.telephone }}" style="color:#c0392b;">{{ c.telephone }}</a>
+            </div>
+            {% endif %}
+        </div>
+        {% empty %}
+        <p style="color:#94a3b8;">Aucun centre de don disponible pour le moment.</p>
+        {% endfor %}
+    </div>
+
+    {% include 'frontend/_carte_banques_contenu.html' %}
+</div>
+{% endblock %}

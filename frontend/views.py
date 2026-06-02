@@ -67,3 +67,16 @@ def listeDemandeDeSang(request):
 #         return redirect('accueil')
 #     return render(request, 'frontend/accueil.html')
 
+
+
+def centresDeDon(request):
+    """Page publique : liste des centres de don (banques) + carte avec itinéraire."""
+    centres = BanqueDeSang.objects.all()
+    response = render(request, 'frontend/centres_de_don.html', {
+        'centres': centres,
+        'banques': BanqueDeSang.donnees_carte(),
+    })
+    # Les tuiles OpenStreetMap exigent un en-tête Referer (politique 'same-origin'
+    # globale le supprimerait en cross-origin).
+    response['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+    return response
