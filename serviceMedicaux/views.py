@@ -256,24 +256,9 @@ def recevoir_poches(request):
 @login_required
 @check_role('medical')
 def carteBanques(request):
-    banques = BanqueDeSang.objects.filter(
-        latitude__isnull=False, longitude__isnull=False
-    )
-    donnees = [
-        {
-            'nom': b.nom_etablissement,
-            'adresse': b.adresse,
-            'ville': b.ville,
-            'telephone': b.telephone,
-            'lat': b.latitude,
-            'lng': b.longitude,
-        }
-        for b in banques
-    ]
-    context = {
-        'banques': donnees,
-    }
-    response = render(request, 'frontend/serviceMedicaux/carte_banques_de_sang.html', context)
+    response = render(request, 'frontend/serviceMedicaux/carte_banques_de_sang.html', {
+        'banques': BanqueDeSang.donnees_carte(),
+    })
     # Les serveurs de tuiles OpenStreetMap exigent un en-tête Referer. La politique
     # globale 'same-origin' le supprime en cross-origin ; on transmet l'origine
     # (sans le chemin) uniquement pour cette page.

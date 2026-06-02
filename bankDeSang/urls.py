@@ -5,6 +5,7 @@ app_name = 'bankDeSang'
 
 urlpatterns = [
     path('', views.accueilBankDeSang, name='accueilBankDeSang'),
+    path('carteBanques/', views.carteBanques, name='carteBanques'),
     path('listeDemandesDeSang/', views.listeDemandesDeSang, name='listeDemandesDeSang'),
     path('historiqueDemandes/', views.historiqueDemandesDeSang, name='historiqueDemandes'),
     path('accepterDemande', views.accepter_demande, name='accepterDemande'),

@@ -196,6 +196,21 @@ class BanqueDeSang(models.Model):
     groups = models.ManyToManyField(Group, related_name="banques_de_sang")
     user_permissions = models.ManyToManyField(Permission, related_name="banques_de_sang_permissions")
 
+    @classmethod
+    def donnees_carte(cls):
+        """Banques géocodées, sérialisées pour la carte (liste de dicts)."""
+        return [
+            {
+                'nom': b.nom_etablissement,
+                'adresse': b.adresse,
+                'ville': b.ville,
+                'telephone': b.telephone,
+                'lat': b.latitude,
+                'lng': b.longitude,
+            }
+            for b in cls.objects.filter(latitude__isnull=False, longitude__isnull=False)
+        ]
+
     def _adresse_complete(self):
         return f'{self.adresse}|{self.ville}|{self.code_postal}|{self.pays}'
 

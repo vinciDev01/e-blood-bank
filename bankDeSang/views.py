@@ -8,7 +8,7 @@ import random
 import json
 
 from .models import PocheDeSang, StockDeSang
-from _auth.models import Donneur
+from _auth.models import Donneur, BanqueDeSang
 from serviceMedicaux.models import DemandeDeSang, Stock_de_sang
 from decorateurs import check_role
 
@@ -485,3 +485,15 @@ def accepter_demande(request):
             messages.error(request, f'Erreur: {str(e)}')
 
     return redirect('bankDeSang:listeDemandesDeSang')
+
+
+@login_required
+@check_role('blood_bank')
+def carteBanques(request):
+    response = render(request, 'frontend/bankDeSang/carte_banques_de_sang.html', {
+        'banques': BanqueDeSang.donnees_carte(),
+    })
+    # Les serveurs de tuiles OpenStreetMap exigent un en-tête Referer ; la politique
+    # globale 'same-origin' le supprime en cross-origin -> on transmet l'origine ici.
+    response['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+    return response

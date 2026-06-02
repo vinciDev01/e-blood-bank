@@ -47,3 +47,20 @@ class GestionStockDonneurTest(TestCase):
         self.assertEqual(resp.status_code, 302)
         # ...et aucune poche n'est créée pour un numéro de donneur invalide.
         self.assertFalse(PocheDeSang.objects.filter(matricule='PS-TEST-0001').exists())
+
+
+class CarteBanquesBankDeSangTest(TestCase):
+    def test_banque_connectee_voit_la_carte(self):
+        user = _creer_banque('bank_carte')
+        self.client.force_login(user)
+        resp = self.client.get(reverse('bankDeSang:carteBanques'))
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'id="banques-data"')
+        # En-tête Referer requis par les tuiles OSM.
+        self.assertEqual(resp.headers['Referrer-Policy'], 'strict-origin-when-cross-origin')
+
+    def test_role_non_banque_est_redirige(self):
+        user = User.objects.create_user(username='med_x', password='x', role='medical')
+        self.client.force_login(user)
+        resp = self.client.get(reverse('bankDeSang:carteBanques'))
+        self.assertEqual(resp.status_code, 302)
