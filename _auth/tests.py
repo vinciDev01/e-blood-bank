@@ -196,3 +196,49 @@ class NomAffichageTest(TestCase):
     def test_sans_profil_renvoie_username(self):
         u = User.objects.create_user(username='solo', password='x', role='generic')
         self.assertEqual(u.nom_affichage, 'solo')
+
+
+from _auth.models import Donneur, ServiceMedicaux, Utilisateur
+
+
+class SeedComptesCommandTest(TestCase):
+    COMPTES = [
+        ('donneur@ebloodbank.com', 'donor'),
+        ('banque@ebloodbank.com', 'blood_bank'),
+        ('medical@ebloodbank.com', 'medical'),
+        ('generic@ebloodbank.com', 'generic'),
+        ('admin@ebloodbank.com', 'admin'),
+    ]
+
+    def test_cree_un_compte_par_role_avec_profil(self):
+        call_command('seed_comptes', force=True, stdout=StringIO())
+        for email, role in self.COMPTES:
+            u = User.objects.filter(username=email).first()
+            self.assertIsNotNone(u, email)
+            self.assertEqual(u.role, role)
+        self.assertTrue(User.objects.get(username='admin@ebloodbank.com').is_superuser)
+        self.assertTrue(Donneur.objects.filter(user__username='donneur@ebloodbank.com').exists())
+        self.assertTrue(BanqueDeSang.objects.filter(user__username='banque@ebloodbank.com').exists())
+        self.assertTrue(ServiceMedicaux.objects.filter(user__username='medical@ebloodbank.com').exists())
+        self.assertTrue(Utilisateur.objects.filter(user__username='generic@ebloodbank.com').exists())
+
+    def test_cree_les_donnees_metier(self):
+        from serviceMedicaux.models import DemandeDeSang
+        from bankDeSang.models import PocheDeSang, StockDeSang, DonDeSang
+        call_command('seed_comptes', force=True, stdout=StringIO())
+        self.assertTrue(DemandeDeSang.objects.exists())
+        self.assertTrue(PocheDeSang.objects.exists())
+        self.assertTrue(StockDeSang.objects.exists())
+        self.assertTrue(DonDeSang.objects.exists())
+
+    def test_est_idempotent(self):
+        call_command('seed_comptes', force=True, stdout=StringIO())
+        n = User.objects.count()
+        call_command('seed_comptes', force=True, stdout=StringIO())
+        self.assertEqual(User.objects.count(), n)
+
+    def test_refuse_hors_debug_sans_force(self):
+        from django.core.management.base import CommandError
+        with self.settings(DEBUG=False):
+            with self.assertRaises(CommandError):
+                call_command('seed_comptes', stdout=StringIO())

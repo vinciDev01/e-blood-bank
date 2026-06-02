@@ -8,7 +8,7 @@ from django.conf import settings
 
 # Définition du modèle DonDeSang
 def default_date_expiration():
-    return PocheDeSang.date_de_prelevement + timedelta(days=42)
+    return date.today() + timedelta(days=42)
 
 # une méthode qui génère un code qr avec les informations d'une poche de sang
 def code_qr_poche_de_sang(instance, filename):
