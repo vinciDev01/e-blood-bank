@@ -30,3 +30,13 @@ class CentresDeDonTest(TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertContains(resp, reverse('_auth:administrationDashboard'))
         self.assertContains(resp, reverse('frontend:centresDeDon'))
+
+    def test_accueil_montre_le_dashboard_medical_si_connecte(self):
+        medecin = User.objects.create_user(username='med_acc', password='x', role='medical')
+        self.client.force_login(medecin)
+        resp = self.client.get(reverse('frontend:accueil'))
+        self.assertContains(resp, reverse('serviceMedicaux:accueilServiceMedicaux'))
+
+    def test_accueil_sans_dashboard_pour_anonyme(self):
+        resp = self.client.get(reverse('frontend:accueil'))
+        self.assertNotContains(resp, reverse('serviceMedicaux:accueilServiceMedicaux'))
