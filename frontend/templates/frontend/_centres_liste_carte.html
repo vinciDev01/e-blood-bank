@@ -1,0 +1,67 @@
+{% comment %}
+Disposition deux colonnes : liste des banques à gauche, carte (+ itinéraire) à droite.
+Attend `banques` dans le contexte : liste de dicts {nom, adresse, ville, telephone, lat, lng}.
+Partagé par /centres/ et les pages "Carte des banques" des dashboards.
+{% endcomment %}
+<style>
+  .clc-layout { display:grid; grid-template-columns:1fr; gap:22px; align-items:start; }
+  .clc-count { font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:#94a3b8; margin-bottom:12px; }
+  .clc-items { display:flex; flex-direction:column; gap:12px; }
+  @media (min-width:1024px) {
+    .clc-layout { grid-template-columns:360px 1fr; }
+    .clc-list { max-height:74vh; overflow-y:auto; padding-right:6px; }
+  }
+  .clc-card {
+    display:flex; gap:13px; align-items:flex-start;
+    background:#fff; border:1px solid #e8edf3; border-radius:14px; padding:14px 16px;
+    transition:box-shadow .2s ease, border-color .2s ease;
+  }
+  .clc-card:hover { box-shadow:0 10px 26px -14px rgba(15,23,42,.30); border-color:#cbd5e1; }
+  .clc-card__icon { flex-shrink:0; width:40px; height:40px; border-radius:11px; display:grid; place-items:center; color:#dc2626; background:#fef2f2; }
+  .clc-card__name { font-weight:700; color:#0f172a; line-height:1.3; font-size:14.5px; }
+  .clc-card__loc { display:flex; align-items:flex-start; gap:6px; color:#64748b; font-size:12.5px; margin-top:5px; }
+  .clc-card__tel { display:inline-flex; align-items:center; gap:6px; margin-top:9px; color:#b91c1c; font-size:13px; font-weight:600; }
+  .clc-card__tel:hover { color:#7f1d1d; }
+  .clc-map { background:#fff; border:1px solid #e2e8f0; border-radius:16px; overflow:hidden; }
+  .clc-empty { background:#fff; border:1px dashed #cbd5e1; border-radius:12px; padding:40px 16px; text-align:center; color:#94a3b8; }
+</style>
+
+<div class="clc-layout">
+  <aside class="clc-list">
+    <p class="clc-count">{{ banques|length }} banque{{ banques|length|pluralize }} localisée{{ banques|length|pluralize }}</p>
+    <div class="clc-items">
+      {% for b in banques %}
+      <article class="clc-card">
+        <div class="clc-card__icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 2s6 6.6 6 11a6 6 0 1 1-12 0c0-4.4 6-11 6-11z" />
+          </svg>
+        </div>
+        <div style="min-width:0;">
+          <h3 class="clc-card__name">{{ b.nom }}</h3>
+          <p class="clc-card__loc">
+            <svg style="flex-shrink:0;margin-top:2px" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" />
+            </svg>
+            <span>{{ b.adresse }}, {{ b.ville }}</span>
+          </p>
+          {% if b.telephone %}
+          <a href="tel:{{ b.telephone }}" class="clc-card__tel">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" />
+            </svg>
+            {{ b.telephone }}
+          </a>
+          {% endif %}
+        </div>
+      </article>
+      {% empty %}
+      <div class="clc-empty">Aucune banque localisée pour le moment.</div>
+      {% endfor %}
+    </div>
+  </aside>
+
+  <div class="clc-map">
+    {% include 'frontend/_carte_banques_contenu.html' %}
+  </div>
+</div>

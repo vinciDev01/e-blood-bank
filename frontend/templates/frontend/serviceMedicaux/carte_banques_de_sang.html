@@ -1,4 +1,7 @@
 {% extends 'frontend/serviceMedicaux/base.html' %}
 {% block content %}
-{% include 'frontend/_carte_banques_contenu.html' %}
+<div style="padding:16px;">
+  <h1 style="font-size:20px;font-weight:600;margin-bottom:16px;">Carte des banques de sang</h1>
+  {% include 'frontend/_centres_liste_carte.html' %}
+</div>
 {% endblock %}
