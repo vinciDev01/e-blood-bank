@@ -7,7 +7,7 @@ from django.db import models
 import random
 import json
 
-from .models import PocheDeSang, StockDeSang
+from .models import PocheDeSang, StockDeSang, HistoriqueStock
 from _auth.models import Donneur, BanqueDeSang
 from serviceMedicaux.models import DemandeDeSang, Stock_de_sang
 from decorateurs import check_role
@@ -124,6 +124,11 @@ def gestionStock(request):
             bank_de_sang=request.user.banque_de_sang,
         )
         StockDeSang.enregistrer_stock(poche_de_sang, 1)
+        HistoriqueStock.enregistrer(
+            banque=request.user.banque_de_sang, utilisateur=request.user,
+            action='ajout', groupe_sanguin=poche_de_sang.groupe_sanguin,
+            description=f"Ajout de la poche {poche_de_sang.matricule} ({poche_de_sang.groupe_sanguin}).",
+        )
         messages.success(request, 'Poche de sang enregistrée avec succès.')
         return redirect('bankDeSang:gestionStock')
 
@@ -511,8 +516,14 @@ def modifierStock(request, stock_id):
         messages.error(request, 'Le nombre de poches doit être un entier positif.')
         return redirect('bankDeSang:detailStock', stock_id=stock.id)
 
+    ancien = stock.nombre_de_poches
     stock.nombre_de_poches = int(valeur)
     stock.save()
+    HistoriqueStock.enregistrer(
+        banque=request.user.banque_de_sang, utilisateur=request.user,
+        action='modification', groupe_sanguin=stock.groupe_sanguin,
+        description=f"Stock {stock.groupe_sanguin} : {ancien} → {stock.nombre_de_poches} poches.",
+    )
     messages.success(request, 'Stock mis à jour avec succès.')
     return redirect('bankDeSang:detailStock', stock_id=stock.id)
 
@@ -526,11 +537,27 @@ def supprimerStock(request, stock_id):
 
     # Retirer (sans effacer) les poches de ce groupe pour la banque connectée :
     # on conserve la traçabilité tout en évitant des poches orphelines disponibles.
-    PocheDeSang.objects.filter(
+    nb_retirees = PocheDeSang.objects.filter(
         groupe_sanguin=stock.groupe_sanguin,
         bank_de_sang=request.user.banque_de_sang,
+        est_disponible=True,
     ).update(est_disponible=False)
 
+    groupe = stock.groupe_sanguin
     stock.delete()
+    HistoriqueStock.enregistrer(
+        banque=request.user.banque_de_sang, utilisateur=request.user,
+        action='suppression', groupe_sanguin=groupe,
+        description=f"Suppression du stock {groupe} ({nb_retirees} poche(s) retirée(s)).",
+    )
     messages.success(request, 'Stock supprimé ; les poches du groupe ont été retirées.')
     return redirect('bankDeSang:gestionStock')
+
+
+@login_required
+@check_role('blood_bank')
+def historiqueStock(request):
+    historique = HistoriqueStock.objects.filter(banque=request.user.banque_de_sang)
+    return render(request, 'frontend/bankDeSang/historique_stock.html', {
+        'historique': historique,
+    })

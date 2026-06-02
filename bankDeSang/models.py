@@ -117,3 +117,36 @@ class StockDeSang(models.Model):
             self.save()
         else:
             raise ValueError("Stock insuffisant")
+
+
+class HistoriqueStock(models.Model):
+    ACTION_CHOICES = [
+        ('ajout', 'Ajout'),
+        ('modification', 'Modification'),
+        ('suppression', 'Suppression'),
+    ]
+    banque = models.ForeignKey(
+        BanqueDeSang, on_delete=models.CASCADE, null=True, related_name='historique_stock'
+    )
+    utilisateur = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True
+    )
+    action = models.CharField(max_length=20, choices=ACTION_CHOICES)
+    groupe_sanguin = models.CharField(max_length=3, null=True, blank=True)
+    description = models.TextField()
+    date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-date']
+        verbose_name = "Historique de stock"
+        verbose_name_plural = "Historiques de stock"
+
+    def __str__(self):
+        return f"{self.get_action_display()} - {self.groupe_sanguin or ''} ({self.date:%Y-%m-%d %H:%M})"
+
+    @classmethod
+    def enregistrer(cls, banque, utilisateur, action, groupe_sanguin, description):
+        return cls.objects.create(
+            banque=banque, utilisateur=utilisateur, action=action,
+            groupe_sanguin=groupe_sanguin, description=description,
+        )

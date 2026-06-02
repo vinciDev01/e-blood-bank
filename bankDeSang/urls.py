@@ -15,6 +15,7 @@ urlpatterns = [
     path('listeDonneurs/', views.listeDonneurs, name='listeDonneurs'),
     path('donneurMonetaire/', views.donneurMonetaire, name='donneurMonetaire'),
     path('gestionStock/', views.gestionStock, name='gestionStock'),
+    path('historiqueStock/', views.historiqueStock, name='historiqueStock'),
     path('detailStock/<int:stock_id>/', views.detailStock, name='detailStock'),
     path('modifierStock/<int:stock_id>/', views.modifierStock, name='modifierStock'),
     path('supprimerStock/<int:stock_id>/', views.supprimerStock, name='supprimerStock'),

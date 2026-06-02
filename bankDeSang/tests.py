@@ -7,7 +7,7 @@ from django.contrib.auth import get_user_model
 from datetime import date
 
 from _auth.models import BanqueDeSang
-from bankDeSang.models import PocheDeSang, StockDeSang
+from bankDeSang.models import PocheDeSang, StockDeSang, HistoriqueStock
 
 User = get_user_model()
 
@@ -131,3 +131,47 @@ class ModifierSupprimerStockTest(TestCase):
             reverse('bankDeSang:supprimerStock', args=[self.stock.id]), follow=True,
         )
         self.assertContains(resp, 'Stock supprimé')
+
+
+class HistoriqueStockTest(TestCase):
+    def setUp(self):
+        self.user = _creer_banque('bank_hist')
+        self.bank = self.user.banque_de_sang
+        self.stock = StockDeSang.objects.create(groupe_sanguin='A+', nombre_de_poches=5)
+        self.client.force_login(self.user)
+
+    @patch('bankDeSang.models.PocheDeSang.generate_qr_code')
+    def test_ajout_de_poche_est_journalise(self, _qr):
+        self.client.post(reverse('bankDeSang:gestionStock'), {
+            'matricule': 'PS-HIST-1', 'donneur': '',
+            'date_de_prelevement': '2026-06-01', 'groupe_sanguin': 'A+',
+            'type_produit': 'Sang total',
+        })
+        self.assertTrue(HistoriqueStock.objects.filter(action='ajout', banque=self.bank).exists())
+
+    def test_modification_est_journalisee(self):
+        self.client.post(reverse('bankDeSang:modifierStock', args=[self.stock.id]),
+                         {'nombre_de_poches': '9'})
+        h = HistoriqueStock.objects.filter(action='modification', banque=self.bank).first()
+        self.assertIsNotNone(h)
+        self.assertIn('5', h.description)
+        self.assertIn('9', h.description)
+
+    def test_suppression_est_journalisee(self):
+        self.client.post(reverse('bankDeSang:supprimerStock', args=[self.stock.id]))
+        self.assertTrue(HistoriqueStock.objects.filter(action='suppression', banque=self.bank).exists())
+
+    def test_page_historique_liste_les_entrees(self):
+        HistoriqueStock.objects.create(
+            banque=self.bank, utilisateur=self.user, action='modification',
+            groupe_sanguin='A+', description='Entrée de test historique',
+        )
+        resp = self.client.get(reverse('bankDeSang:historiqueStock'))
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Entrée de test historique')
+
+    def test_page_historique_refuse_role_non_banque(self):
+        autre = User.objects.create_user(username='med_h', password='x', role='medical')
+        self.client.force_login(autre)
+        resp = self.client.get(reverse('bankDeSang:historiqueStock'))
+        self.assertEqual(resp.status_code, 302)
