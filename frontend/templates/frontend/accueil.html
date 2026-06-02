@@ -27,7 +27,8 @@ style="background-image: url({% static 'img/bg_login.jpg' %});">
 <!-- Search Bar -->
 <div class="absolute bottom-0 left-0 right-0 p-4 flex items-center justify-start w-full">
   <div class="relative w-full max-w-md mt-4">
-    <form method="get" action="{% url 'frontend:centresDeDon' %}" class="flex items-center bg-white rounded-full shadow-md">
+    <form method="get" action="{% url 'frontend:centresDeDon' %}" class="flex items-center bg-white rounded-full shadow-md"
+      onsubmit="return allerVersCentres(event)">
       <button type="submit" class="p-2 text-red-600">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
@@ -50,8 +51,7 @@ style="background-image: url({% static 'img/bg_login.jpg' %});">
       </style>
       <input id="input" placeholder="Trouver un lieu de don" class="w-full px-4 py-2 border-none rounded-full"
         type="text" readonly style="input-security:auto;cursor:pointer;"
-        onclick="window.location.href='{% url 'frontend:centresDeDon' %}'"
-        onfocus="window.location.href='{% url 'frontend:centresDeDon' %}'">
+        onclick="allerVersCentres(event)">
       <button type="submit" class="p-2 text-red-600">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
           style="fill: rgba(255, 0, 0, 1);transform: ;msFilter:;">
@@ -64,6 +64,23 @@ style="background-image: url({% static 'img/bg_login.jpg' %});">
     </form>
   </div>
 </div>
+
+<style>
+  main.is-leaving { opacity: 0; transition: opacity .24s ease; }
+  @media (prefers-reduced-motion: reduce) { main.is-leaving { transition: none; } }
+</style>
+<script>
+  function allerVersCentres(event) {
+    if (event) event.preventDefault();
+    var url = "{% url 'frontend:centresDeDon' %}";
+    var main = document.querySelector('main');
+    var reduit = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!main || reduit) { window.location.href = url; return false; }
+    main.classList.add('is-leaving');
+    setTimeout(function () { window.location.href = url; }, 230);
+    return false;
+  }
+</script>
 <p class="mt-4 text-sm text-gray-600 absolute bottom-0 left-50 right-50 p-4 flex items-center justify-center">
   Faites glisser !
 </p>
