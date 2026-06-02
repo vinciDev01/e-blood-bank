@@ -54,7 +54,7 @@ class Command(BaseCommand):
             f"Seed des comptes terminé. Mot de passe commun : {MOT_DE_PASSE}"
         ))
 
-    # -- utilitaire ---------------------------------------------------------
+    # -- utilitaire ---
     def _creer_user(self, email, role, **extra):
         if User.objects.filter(username=email).exists():
             self.stdout.write(self.style.WARNING(f"Ignoré (existe déjà) : {email}"))
@@ -64,7 +64,7 @@ class Command(BaseCommand):
             role=role, is_active=True, **extra,
         )
 
-    # -- comptes ------------------------------------------------------------
+    # -- comptes 
     def _donneur(self):
         u = self._creer_user('donneur@ebloodbank.com', 'donor')
         if not u:
@@ -118,17 +118,24 @@ class Command(BaseCommand):
             ville='Lomé', code_postal='01BP', pays='Togo', telephone='+228 90 00 00 03',
             numero_licence='LIC-DEMO', numero_enregistrement='ENR-DEMO',
         )
-        patient = Patient.objects.create(
-            nom_complet='Patient Démo', date_de_naissance=date(2000, 1, 1), proche='Proche Démo',
-            groupe_sanguin='O+', telephone_proche='+228 90 00 00 09',
-        )
-        DemandeDeSang.objects.create(
-            serviceMedicaux=service, patient=patient,
-            groupe_sanguin={service.email: ['O+']}, type_produit='Sang total',
-            nombre_poches={service.email: [3]}, urgence='24 heures', motif='Chirurgie',
-            etat_groupes={'O+': 'En attente'}, notification_envoyee=False,
-        )
-        self.stdout.write(self.style.SUCCESS('Créé : medical@ebloodbank.com (+ patient, demande)'))
+        groupes = ['O+', 'A+', 'B+', 'AB+', 'O-', 'A-', 'B-', 'AB-']
+        urgences = ['Immédiate', '24 heures', 'Non urgent']
+        motifs = ['Chirurgie', 'Accident', 'Maladie', 'Autre']
+        produits = ['Sang total', 'Plasma', 'Plaquettes', 'Concentré de globules rouges']
+        for i in range(12):
+            grp = groupes[i % len(groupes)]
+            patient = Patient.objects.create(
+                nom_complet=f'Patient Démo {i + 1}', date_de_naissance=date(1990, 1, 1),
+                proche='Proche Démo', groupe_sanguin=grp, telephone_proche='+228 90 00 00 09',
+            )
+            DemandeDeSang.objects.create(
+                serviceMedicaux=service, patient=patient,
+                groupe_sanguin={service.email: [grp]}, type_produit=produits[i % len(produits)],
+                nombre_poches={service.email: [(i % 4) + 1]}, urgence=urgences[i % len(urgences)],
+                motif=motifs[i % len(motifs)], etat='En attente',
+                etat_groupes={grp: 'En attente'}, notification_envoyee=False,
+            )
+        self.stdout.write(self.style.SUCCESS('Créé : medical@ebloodbank.com (+ patients, 12 demandes)'))
 
     def _generic(self):
         u = self._creer_user('generic@ebloodbank.com', 'generic')

@@ -1,9 +1,10 @@
+from datetime import date
 from unittest.mock import patch
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from _auth.models import BanqueDeSang, ServiceMedicaux
-from serviceMedicaux.models import DemandeDeSang
+from serviceMedicaux.models import DemandeDeSang, Patient
 
 User = get_user_model()
 
@@ -114,3 +115,35 @@ class CarteBanquesViewTest(TestCase):
         resp = self.client.get(reverse('serviceMedicaux:carteBanques'))
         self.assertContains(resp, 'Itinéraire')
         self.assertContains(resp, 'router.project-osrm.org')
+
+
+class SuiviDemandesTest(TestCase):
+    def _service_avec_demande(self):
+        u = User.objects.create_user(username='svc_np', password='x', role='medical')
+        service = ServiceMedicaux.objects.create(
+            nom_etablissement='Hôpital Test', type_etablissement='Public', responsable='R',
+            adresse='A', email='svc_np@example.com', ville='Lomé', code_postal='0', pays='Togo',
+            telephone='0', numero_licence='L', numero_enregistrement='E', user=u,
+        )
+        # Patient SANS utilisateur lié (cas du formulaire médical et du seed)
+        patient = Patient.objects.create(
+            nom_complet='Patient Démo', date_de_naissance=date(2000, 1, 1), proche='',
+            groupe_sanguin='A+', telephone_proche='',
+        )
+        demande = DemandeDeSang.objects.create(
+            serviceMedicaux=service, patient=patient,
+            groupe_sanguin={service.email: ['A+']}, type_produit='Sang total',
+            nombre_poches={service.email: ['2']}, urgence='24 heures', motif='Chirurgie',
+            etat='En attente', etat_groupes={'A+': 'En attente'},
+        )
+        return u, demande
+
+    def test_nbr_poches_patient_ne_crashe_pas_sans_utilisateur(self):
+        _, demande = self._service_avec_demande()
+        self.assertEqual(demande.nbr_poches_patient(), '2')
+
+    def test_page_suivi_demandes_rend_200(self):
+        u, _ = self._service_avec_demande()
+        self.client.force_login(u)
+        resp = self.client.get(reverse('serviceMedicaux:listeDemandeDeSang'))
+        self.assertEqual(resp.status_code, 200)

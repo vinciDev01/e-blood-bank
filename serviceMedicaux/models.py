@@ -108,7 +108,13 @@ class DemandeDeSang(models.Model):
         return self.patient.groupe_sanguin
 
     def nbr_poches_patient(self):
-        return self.nombre_poches[self.patient.utilisateur.email]
+        # Robuste : le patient peut ne pas avoir d'utilisateur lié, et nombre_poches
+        # est indexé par l'email du service (pas du patient). On réutilise la même
+        # logique de repli que nombrePoches() et on renvoie un affichage simple.
+        valeurs = self._valeur_pour_service(self.nombre_poches)
+        if isinstance(valeurs, list):
+            return ', '.join(str(v) for v in valeurs)
+        return valeurs
 
     @classmethod
     def nbre_demande_en_attente_service_medicaux(cls):

@@ -226,7 +226,7 @@ class SeedComptesCommandTest(TestCase):
         from serviceMedicaux.models import DemandeDeSang
         from bankDeSang.models import PocheDeSang, StockDeSang, DonDeSang
         call_command('seed_comptes', force=True, stdout=StringIO())
-        self.assertTrue(DemandeDeSang.objects.exists())
+        self.assertGreaterEqual(DemandeDeSang.objects.count(), 10)
         self.assertTrue(PocheDeSang.objects.exists())
         self.assertTrue(StockDeSang.objects.exists())
         self.assertTrue(DonDeSang.objects.exists())
