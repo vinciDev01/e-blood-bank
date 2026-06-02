@@ -115,3 +115,19 @@ class ModifierSupprimerStockTest(TestCase):
         resp = self.client.post(reverse('bankDeSang:supprimerStock', args=[self.stock.id]))
         self.assertEqual(resp.status_code, 302)
         self.assertTrue(StockDeSang.objects.filter(id=self.stock.id).exists())
+
+    def test_modifier_affiche_un_message_de_confirmation(self):
+        stock = StockDeSang.objects.create(groupe_sanguin='B+', nombre_de_poches=2)
+        self.client.force_login(self.user)
+        resp = self.client.post(
+            reverse('bankDeSang:modifierStock', args=[stock.id]),
+            {'nombre_de_poches': '7'}, follow=True,
+        )
+        self.assertContains(resp, 'Stock mis à jour')
+
+    def test_supprimer_affiche_un_message_de_confirmation(self):
+        self.client.force_login(self.user)
+        resp = self.client.post(
+            reverse('bankDeSang:supprimerStock', args=[self.stock.id]), follow=True,
+        )
+        self.assertContains(resp, 'Stock supprimé')
