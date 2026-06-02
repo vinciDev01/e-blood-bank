@@ -159,3 +159,40 @@ class OtpParametrableTest(TestCase):
         self.assertEqual(OTPCode.objects.count(), 1)
         self.assertNotIn('_auth_user_id', self.client.session)
         self.assertEqual(self.client.session.get('otp_user_id'), self.user.pk)
+
+
+from datetime import date as _date
+from _auth.models import Donneur, ServiceMedicaux
+
+
+class NomAffichageTest(TestCase):
+    def test_donneur_renvoie_nom_prenom(self):
+        u = User.objects.create_user(username='d1', password='x', role='donor')
+        Donneur.objects.create(
+            nom='Doe', prenom='John', date_naissance=_date(2000, 1, 1), sexe='M',
+            groupe_sanguin='A+', adresse='A', ville='Lomé', code_postal='0',
+            pays='Togo', telephone='0', user=u,
+        )
+        self.assertEqual(u.nom_affichage, 'Doe John')
+
+    @patch('_auth.models.geocoder_adresse', return_value=None)
+    def test_banque_renvoie_nom_etablissement(self, _geo):
+        u = User.objects.create_user(username='b1', password='x', role='blood_bank')
+        BanqueDeSang.objects.create(
+            nom_etablissement='Ma Banque', responsable='R', adresse='A', ville='Lomé',
+            code_postal='0', pays='Togo', telephone='0', user=u,
+        )
+        self.assertEqual(u.nom_affichage, 'Ma Banque')
+
+    def test_service_medical_renvoie_nom_etablissement(self):
+        u = User.objects.create_user(username='s1', password='x', role='medical')
+        ServiceMedicaux.objects.create(
+            nom_etablissement='Mon Hôpital', type_etablissement='Public', responsable='R',
+            adresse='A', email='s1@example.com', ville='Lomé', code_postal='0',
+            pays='Togo', telephone='0', numero_licence='L', numero_enregistrement='E', user=u,
+        )
+        self.assertEqual(u.nom_affichage, 'Mon Hôpital')
+
+    def test_sans_profil_renvoie_username(self):
+        u = User.objects.create_user(username='solo', password='x', role='generic')
+        self.assertEqual(u.nom_affichage, 'solo')

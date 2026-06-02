@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ObjectDoesNotExist
 from datetime import date, timedelta
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.utils import timezone
@@ -60,7 +61,32 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username
-    
+
+    @property
+    def nom_affichage(self):
+        """Nom lisible de l'utilisateur connecté, selon son profil lié.
+
+        Donneur / Utilisateur -> « Nom Prénom » ; Service médical / Banque de sang
+        -> nom de l'établissement ; sinon nom complet ou, à défaut, le username.
+        """
+        try:
+            return f"{self.donneur.nom} {self.donneur.prenom}".strip()
+        except ObjectDoesNotExist:
+            pass
+        try:
+            return f"{self.utilisateur.nom} {self.utilisateur.prenom}".strip()
+        except ObjectDoesNotExist:
+            pass
+        try:
+            return self.service_medical.nom_etablissement
+        except ObjectDoesNotExist:
+            pass
+        try:
+            return self.banque_de_sang.nom_etablissement
+        except ObjectDoesNotExist:
+            pass
+        return self.get_full_name() or self.username
+
     # def set_profil(self, image):
     #     self.profil = image
     #     self.save()

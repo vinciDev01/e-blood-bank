@@ -634,7 +634,7 @@
                         <div @click.away="dropdownOpen = false" class="relative" x-data="{ dropdownOpen: false }">
                             <a @click.prevent="dropdownOpen = ! dropdownOpen" class="flex items-center gap-4" href="#">
                                 <span class="hidden text-right lg:block">
-                                    <span class="block text-sm font-medium text-black dark:text-white">{{ user.banque_de_sang.nom_etablissement }}</span>
+                                    <span class="block text-sm font-medium text-black dark:text-white">{{ user.nom_affichage }}</span>
                                     <span class="block text-xs font-medium">{{ user.username }}</span>
                                 </span>
                                 <span class="h-12 w-12 rounded-full">
