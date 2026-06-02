@@ -16,6 +16,8 @@ urlpatterns = [
     path('donneurMonetaire/', views.donneurMonetaire, name='donneurMonetaire'),
     path('gestionStock/', views.gestionStock, name='gestionStock'),
     path('detailStock/<int:stock_id>/', views.detailStock, name='detailStock'),
+    path('modifierStock/<int:stock_id>/', views.modifierStock, name='modifierStock'),
+    path('supprimerStock/<int:stock_id>/', views.supprimerStock, name='supprimerStock'),
     path('statistiques/', views.statistiques, name='statistiques'),
     path('poches_disponibles/', views.poches_disponibles, name='poches_disponibles'),
 ]

@@ -4,8 +4,10 @@ from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 
+from datetime import date
+
 from _auth.models import BanqueDeSang
-from bankDeSang.models import PocheDeSang
+from bankDeSang.models import PocheDeSang, StockDeSang
 
 User = get_user_model()
 
@@ -64,3 +66,52 @@ class CarteBanquesBankDeSangTest(TestCase):
         self.client.force_login(user)
         resp = self.client.get(reverse('bankDeSang:carteBanques'))
         self.assertEqual(resp.status_code, 302)
+
+
+class ModifierSupprimerStockTest(TestCase):
+    def setUp(self):
+        self.user = _creer_banque('bank_stockmod')
+        self.bank = self.user.banque_de_sang
+        self.stock = StockDeSang.objects.create(groupe_sanguin='A+', nombre_de_poches=5)
+        PocheDeSang.objects.bulk_create([
+            PocheDeSang(matricule='P-A-1', groupe_sanguin='A+', type_produit='Sang total',
+                        date_de_prelevement=date(2026, 6, 1), date_expiration=date(2026, 7, 13),
+                        est_disponible=True, bank_de_sang=self.bank),
+            PocheDeSang(matricule='P-A-2', groupe_sanguin='A+', type_produit='Sang total',
+                        date_de_prelevement=date(2026, 6, 1), date_expiration=date(2026, 7, 13),
+                        est_disponible=True, bank_de_sang=self.bank),
+        ])
+
+    def test_modifier_met_a_jour_le_nombre_de_poches(self):
+        self.client.force_login(self.user)
+        resp = self.client.post(
+            reverse('bankDeSang:modifierStock', args=[self.stock.id]),
+            {'nombre_de_poches': '12'},
+        )
+        self.assertEqual(resp.status_code, 302)
+        self.stock.refresh_from_db()
+        self.assertEqual(self.stock.nombre_de_poches, 12)
+
+    def test_modifier_refuse_en_get(self):
+        self.client.force_login(self.user)
+        resp = self.client.get(reverse('bankDeSang:modifierStock', args=[self.stock.id]))
+        self.assertEqual(resp.status_code, 302)
+        self.stock.refresh_from_db()
+        self.assertEqual(self.stock.nombre_de_poches, 5)  # inchangé
+
+    def test_supprimer_retire_les_poches_et_supprime_le_stock(self):
+        self.client.force_login(self.user)
+        resp = self.client.post(reverse('bankDeSang:supprimerStock', args=[self.stock.id]))
+        self.assertEqual(resp.status_code, 302)
+        self.assertFalse(StockDeSang.objects.filter(id=self.stock.id).exists())
+        # Les poches existent toujours mais sont retirées (traçabilité conservée).
+        poches = PocheDeSang.objects.filter(groupe_sanguin='A+', bank_de_sang=self.bank)
+        self.assertEqual(poches.count(), 2)
+        self.assertEqual(poches.filter(est_disponible=True).count(), 0)
+
+    def test_supprimer_refuse_role_non_banque(self):
+        autre = User.objects.create_user(username='med_z', password='x', role='medical')
+        self.client.force_login(autre)
+        resp = self.client.post(reverse('bankDeSang:supprimerStock', args=[self.stock.id]))
+        self.assertEqual(resp.status_code, 302)
+        self.assertTrue(StockDeSang.objects.filter(id=self.stock.id).exists())

@@ -497,3 +497,40 @@ def carteBanques(request):
     # globale 'same-origin' le supprime en cross-origin -> on transmet l'origine ici.
     response['Referrer-Policy'] = 'strict-origin-when-cross-origin'
     return response
+
+
+@login_required
+@check_role('blood_bank')
+def modifierStock(request, stock_id):
+    stock = get_object_or_404(StockDeSang, id=stock_id)
+    if request.method != 'POST':
+        return redirect('bankDeSang:detailStock', stock_id=stock.id)
+
+    valeur = (request.POST.get('nombre_de_poches') or '').strip()
+    if not valeur.isdigit():
+        messages.error(request, 'Le nombre de poches doit être un entier positif.')
+        return redirect('bankDeSang:detailStock', stock_id=stock.id)
+
+    stock.nombre_de_poches = int(valeur)
+    stock.save()
+    messages.success(request, 'Stock mis à jour avec succès.')
+    return redirect('bankDeSang:detailStock', stock_id=stock.id)
+
+
+@login_required
+@check_role('blood_bank')
+def supprimerStock(request, stock_id):
+    stock = get_object_or_404(StockDeSang, id=stock_id)
+    if request.method != 'POST':
+        return redirect('bankDeSang:detailStock', stock_id=stock.id)
+
+    # Retirer (sans effacer) les poches de ce groupe pour la banque connectée :
+    # on conserve la traçabilité tout en évitant des poches orphelines disponibles.
+    PocheDeSang.objects.filter(
+        groupe_sanguin=stock.groupe_sanguin,
+        bank_de_sang=request.user.banque_de_sang,
+    ).update(est_disponible=False)
+
+    stock.delete()
+    messages.success(request, 'Stock supprimé ; les poches du groupe ont été retirées.')
+    return redirect('bankDeSang:gestionStock')
