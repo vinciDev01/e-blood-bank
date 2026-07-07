@@ -1,294 +1,678 @@
 {% extends 'frontend/serviceMedicaux/base.html' %}
 {% block title %}Liste Demande{% endblock %}
 {% load static %}
-{% block content %}
-{% if demandes %}
 
-<div class="container mx-auto my-12">
-  <h3 class="text-xl font-bold mb-6">{% if mes_demandes%} Mes demandes {% else %} Liste des demandes{% endif %}</h3>
-  <div class="flex justify-between items-center mb-4">
-    <div>
-      <select class="form-select border rounded py-2 px-4" aria-label="Nombre de résultats">
-        <option selected>5</option>
+{% block content %}
+<style>
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  .page {
+    padding: 2rem;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    color: #111;
+  }
+
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .page-header h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #111;
+  }
+
+  .toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+
+  .toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #6b7280;
+  }
+
+  .toolbar-left select,
+  .toolbar-right input {
+    font-size: 13px;
+    padding: 6px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: #fff;
+    color: #111;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .toolbar-left select:focus,
+  .toolbar-right input:focus {
+    border-color: #1565C0;
+    box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.08);
+  }
+
+  .toolbar-right input {
+    width: 220px;
+  }
+
+  .sort-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+
+  .sort-bar span {
+    font-size: 12px;
+    color: #6b7280;
+    margin-right: 2px;
+  }
+
+  .sort-btn {
+    font-size: 12px;
+    padding: 4px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 20px;
+    background: #fff;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .sort-btn:hover {
+    border-color: #C62828;
+    color: #C62828;
+  }
+
+  .sort-btn.active {
+    background: #C62828;
+    color: #fff;
+    border-color: #C62828;
+  }
+
+  .table-wrap {
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead tr {
+    background: #f9fafb;
+  }
+
+  th {
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid #e5e7eb;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  th:hover {
+    color: #111;
+  }
+
+  th .arr {
+    font-size: 10px;
+    margin-left: 4px;
+    opacity: 0.35;
+  }
+
+  th.sorted .arr {
+    opacity: 1;
+    color: #C62828;
+  }
+
+  td {
+    padding: 11px 14px;
+    border-bottom: 1px solid #f3f4f6;
+    vertical-align: middle;
+    font-size: 13px;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  tbody tr.data-row:hover {
+    background: #fafafa;
+  }
+
+  .detail-row td {
+    padding: 0;
+  }
+
+  .detail-inner {
+    padding: 14px 18px;
+    background: #f9fafb;
+    border-top: 1px solid #f3f4f6;
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    font-size: 13px;
+  }
+
+  .detail-inner p {
+    margin: 0 0 4px;
+    color: #6b7280;
+  }
+
+  .detail-inner strong {
+    color: #111;
+  }
+
+  .priority-cell {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .dot-high {
+    background: #DC2626;
+  }
+
+  .dot-med {
+    background: #D97706;
+  }
+
+  .dot-low {
+    background: #16A34A;
+  }
+
+  .score-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .bar-track {
+    width: 52px;
+    height: 4px;
+    background: #e5e7eb;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 2px;
+  }
+
+  .bar-high {
+    background: #DC2626;
+  }
+
+  .bar-med {
+    background: #D97706;
+  }
+
+  .bar-low {
+    background: #16A34A;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 9px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  .badge-red {
+    background: #FEE2E2;
+    color: #7F1D1D;
+  }
+
+  .badge-amber {
+    background: #FEF3C7;
+    color: #78350F;
+  }
+
+  .badge-green {
+    background: #D1FAE5;
+    color: #064E3B;
+  }
+
+  .badge-blue {
+    background: #DBEAFE;
+    color: #1E3A8A;
+  }
+
+  .badge-gray {
+    background: #F3F4F6;
+    color: #374151;
+  }
+
+  .btn-eye {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    color: #9ca3af;
+    display: flex;
+    align-items: center;
+    border-radius: 6px;
+    transition: color 0.15s, background 0.15s;
+  }
+
+  .btn-eye:hover {
+    color: #111;
+    background: #f3f4f6;
+  }
+
+  .empty {
+    text-align: center;
+    padding: 3rem;
+    color: #9ca3af;
+    font-size: 13px;
+  }
+
+  .pager {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    margin-top: 1.25rem;
+  }
+
+  .pager button {
+    font-size: 13px;
+    padding: 5px 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background: #fff;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .pager button:hover:not(.active) {
+    background: #f9fafb;
+  }
+
+  .pager button.active {
+    background: #111;
+    color: #fff;
+    border-color: #111;
+  }
+
+  .pager button:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+</style>
+
+{% if demandes %}
+<div class="page">
+
+  <div class="page-header">
+    <h3>{% if mes_demandes %}Mes demandes{% else %}Liste des demandes{% endif %}</h3>
+  </div>
+
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <span>Afficher</span>
+      <select id="perPage">
+        <option value="5">5</option>
         <option value="10">10</option>
         <option value="20">20</option>
       </select>
+      <span>résultats</span>
     </div>
-    <div>
-      <input type="text" class="form-control border rounded py-2 px-4" placeholder="Rechercher">
+    <div class="toolbar-right">
+      <input type="text" id="searchInput" placeholder="Rechercher…">
     </div>
   </div>
-  <div class="bg-white shadow rounded-lg overflow-hidden">
-    {% if mes_demandes %}
-    <table class="min-w-full bg-white">
+
+  <div class="sort-bar">
+    <span>Trier par :</span>
+    <button class="sort-btn active" data-sort="score">Score global</button>
+    <button class="sort-btn" data-sort="urgence">Urgence</button>
+    <button class="sort-btn" data-sort="motif">Motif</button>
+    <button class="sort-btn" data-sort="date">Date</button>
+    <button class="sort-btn" data-sort="etat">État</button>
+  </div>
+
+  <div class="table-wrap">
+    <table id="demandesTable">
       <thead>
-        <tr class="bg-gray-100 border-b">
-          <th class="py-2 px-4 text-left">Groupes Sanguins</th>
-          <th class="py-2 px-4 text-left">Quantité</th>
-          <th class="py-2 px-4 text-left">Date de la demande</th>
-          <th class="py-2 px-4 text-left">Urgence</th>
-          <th class="py-2 px-4 text-left">État</th>
-          <th class="py-2 px-4 text-left">Actions</th>
+        <tr>
+          <th style="width:36px"></th>
+          <th style="width:100px" data-col="score" class="sorted">Priorité <span class="arr">↓</span></th>
+          {% if not mes_demandes %}
+          <th style="width:130px" data-col="patient">Patient <span class="arr">↕</span></th>
+          {% endif %}
+          <th style="width:80px" data-col="groupe">Groupe <span class="arr">↕</span></th>
+          <th style="width:60px" data-col="qty">Qté <span class="arr">↕</span></th>
+          <th style="width:110px" data-col="date">Date <span class="arr">↕</span></th>
+          <th style="width:100px" data-col="urgence">Urgence <span class="arr">↕</span></th>
+          <th data-col="motif">Motif <span class="arr">↕</span></th>
+          <th style="width:100px" data-col="etat">État <span class="arr">↕</span></th>
+          <th style="width:44px"></th>
         </tr>
       </thead>
-      <tbody>
+      <tbody id="tbody">
         {% for demande in demandes %}
-        <tr class="main-row border-b" data-id="{{ demande.id }}">
-          <td class="py-2 px-4">
-            {% for grp in demande.groupeSanguin %}
-            <span class="block">{{ grp }}</span>
-            {% endfor %}
-          </td>
-          <td class="py-2 px-4">
-            {% for poche in demande.nombrePoches %}
-            <span class="block">{{ poche }}</span>
-            {% endfor %}
-          </td>
-          <td class="py-2 px-4">{{ demande.date_demande|date:"F j, Y" }}</td>
-          <td class="py-2 px-4">
-            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {% if demande.urgence == 'Immédiate' %}bg-red-100 text-red-800{% elif demande.urgence == '24 heures' %}bg-yellow-100 text-yellow-800{% else %}bg-green-100 text-green-800{% endif %}">{{ demande.urgence }}</span>
-          </td>
-          <td class="py-2 px-4">
-            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {% if demande.etat == 'En attente' %}bg-yellow-100 text-yellow-800{% elif demande.etat == 'Approuvée' %}bg-green-100 text-green-800{% elif demande.etat == 'Rejetée' %}bg-red-100 text-red-800{% else %}bg-blue-100 text-blue-800{% endif %}">{{ demande.etat }}</span>
-          </td>
-          <td class="py-2 px-4">
-            <button class="text-gray-500 hover:text-gray-700 view-details" data-id="{{ demande.id }}">
-              <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-              color="#000000" stroke-width="1.5">
-              <path d="M3 13C6.6 5 17.4 5 21 13" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                stroke-linejoin="round"></path>
-              <path
-                d="M12 17C10.3431 17 9 15.6569 9 14C9 12.3431 10.3431 11 12 11C13.6569 11 15 12.3431 15 14C15 15.6569 13.6569 17 12 17Z"
-                fill="#000000" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              </path>
-            </svg>
-
-            </button>
-          </td>
-        </tr>
-        <tr id="details-{{ demande.id }}" class="details-row hidden">
-          <td colspan="6" class="bg-gray-50 p-4">
-            <p><strong>Motif:</strong> {{ demande.motif }}</p>
-            {% if demande.etat == 'Approuvée' or demande.etat == 'Complétée' %}
-            <div style="display: flex; align-items: center; margin-left: 300px;" class="space-x-1">
-              {% if demande.etat == 'Complétée' %}
-                <img src="{% static 'img/icons8-livraison2.gif' %}" alt="gif" style="width: 100px; height: 100px;">
-                <div>
-                    <!--Afficher les poches de sang en cours de transition vers ce service médical-->
-                  <p><strong>Matricules des Poches Reçue:</strong></p>
-                  <ul>
-                    {% for poche in poches_allouees %}
-                    <input type="checkbox" checked>{{ poche }}</input><br>
-                    {% endfor %}
-                  </ul>
-                </div>
-              {% else %}
-                <img src="{% static 'img/icons8-livraison.gif' %}" alt="gif" style="width: 100px; height: 100px;">
-                <div>
-                    <!--Afficher les poches de sang en cours de transition vers ce service médical-->
-                  <p><strong>Matricules des Poches arrivant:</strong></p>
-                  <ul>
-                    {% for poche in poches_allouees %}
-                    <li>{{ poche }}</li>
-                    {% endfor %}
-                  </ul>
-                </div>
-              {% endif %}
-            </div>
-            <style>
-              .modal {
-                display: none;
-                position: fixed;
-                z-index: 99999;
-                left: 0;
-                top: 0;
-                width: 100%;
-                height: 100%;
-                overflow: auto;
-                background-color: rgba(0, 0, 0, 0.4);
-              }
-            
-              .modal-content {
-                background-color: #fefefe;
-                margin: 15% auto;
-                padding: 20px;
-                border: 1px solid #888;
-                width: 80%;
-                max-width: 500px;
-              }
-            
-              .close {
-                color: #aaa;
-                float: right;
-                font-size: 28px;
-                font-weight: bold;
-              }
-            
-              .close:hover,
-              .close:focus {
-                color: black;
-                text-decoration: none;
-                cursor: pointer;
-              }
-            </style>
-            <div class="flex justify-center">
-            {% if demande.etat != 'Complétée' %}
-              <a href="#" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-2 rounded" id="openModalButton">Confirmation</a>
-              <div id="confirmationModal" class="modal">
-                <div class="modal-content bg-white rounded-lg shadow-lg p-6 mx-auto mt-20 max-w-lg">
-                  <span class="close absolute top-2 right-2 text-gray-500 cursor-pointer">&times;</span>
-                  <h2 class="text-xl font-bold mb-4">Confirmation</h2>
-                  <p>Quelles sont les poches de sang que vous avez reçues?</p>
-                  <form action="{% url 'serviceMedicaux:recevoir_poches' %}" method="post" class="mt-4">
-                    {% csrf_token %}
-                    <input type="hidden" name="demande_id" value="{{ id_demande }}">
-                    {% for poche in poches_allouees %}
-                    <div class="mb-4 flex items-center space-x-2">
-                      <input type="checkbox" name="poches[]" id="poche-{{ poche }}" value="{{ poche }}" class="form-checkbox h-4 w-4" {% if poche in poches_recues %}checked{% endif %}>
-                      <label for="poche-{{ poche }}" class="block text-sm font-medium text-gray-700">{{ poche }}</label>
-                    </div>
-                    {% endfor %}
-                  <div class="mt-4 flex justify-center">
-                    <button id="confirmButton" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2">Confirmer</button>
-                    <button id="cancelButton" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Annuler</button>
+        <tr class="data-row" data-id="{{ demande.id }}" data-urgence="{{ demande.urgence }}"
+          data-motif="{{ demande.motif|default:'' }}" data-etat="{{ demande.etat }}"
+          data-date="{{ demande.date_demande|date:'Y-m-d' }}" {% if not mes_demandes %}
+          data-patient="{{ demande.nom_patient }}" {% endif %}>
+          <td></td>
+          <td>
+            <div class="priority-cell">
+              <span class="dot
+                {% if demande.urgence == 'Immédiate' %}dot-high
+                {% elif demande.urgence == '24 heures' %}dot-med
+                {% else %}dot-low{% endif %}">
+              </span>
+              <div class="score-bar">
+                <div class="bar-track">
+                  <div class="bar-fill
+                    {% if demande.urgence == 'Immédiate' %}bar-high
+                    {% elif demande.urgence == '24 heures' %}bar-med
+                    {% else %}bar-low{% endif %}" style="width:
+                      {% if demande.urgence == 'Immédiate' %}100%
+                      {% elif demande.urgence == '24 heures' %}60%
+                      {% else %}25%{% endif %}">
                   </div>
-                  </form>
                 </div>
               </div>
-              <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                  const openModalButton = document.getElementById('openModalButton');
-                  const modal = document.getElementById('confirmationModal');
-                  const closeButton = modal.querySelector('.close');
-                  const cancelButton = document.getElementById('cancelButton');
-              
-                  openModalButton.addEventListener('click', function (event) {
-                    event.preventDefault();
-                    modal.style.display = 'block';
-                  });
-              
-                  closeButton.addEventListener('click', function () {
-                    modal.style.display = 'none';
-                  });
-              
-                  cancelButton.addEventListener('click', function () {
-                    modal.style.display = 'none';
-                  });
-              
-                  window.addEventListener('click', function (event) {
-                    if (event.target === modal) {
-                      modal.style.display = 'none';
-                    }
-                  });
-                });
-              </script>
-            {% endif %}
             </div>
+          </td>
+          {% if not mes_demandes %}
+          <td>{{ demande.nom_patient }}</td>
+          {% endif %}
+          <td>
+            {% if mes_demandes %}
+            {% for grp in demande.groupeSanguin %}<span style="display:block">{{ grp }}</span>{% endfor %}
             {% else %}
-            <i style="margin-top: 5px;">Veuillez attendre que la banque de sang réponde à votre demande.</i>
+            {{ demande.grp_sanguin_patient }}
             {% endif %}
           </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    {% else %}
-    <table class="min-w-full bg-white">
-      <thead>
-        <tr class="bg-gray-100 border-b">
-          <th class="py-2 px-4 text-left">Nom du patient</th>
-          <th class="py-2 px-4 text-left">Groupes Sanguins</th>
-          <th class="py-2 px-4 text-left">Quantité</th>
-          <th class="py-2 px-4 text-left">Date de la demande</th>
-          <th class="py-2 px-4 text-left">Urgence</th>
-          <th class="py-2 px-4 text-left">État</th>
-          <th class="py-2 px-4 text-left">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for demande in demandes %}
-        <tr class="main-row border-b" data-id="{{ demande.id }}">
-          <td class="py-2 px-4">{{ demande.nom_patient }}</td>
-          <td class="py-2 px-4">
-            <span class="block">{{ demande.grp_sanguin_patient }}</span>
+          <td>
+            {% if mes_demandes %}
+            {% for p in demande.nombrePoches %}<span style="display:block">{{ p }}</span>{% endfor %}
+            {% else %}
+            {{ demande.nbr_poches_patient }}
+            {% endif %}
           </td>
-          <td class="py-2 px-4">
-            <span class="block">{{ demande.nbr_poches_patient  }}</span>
+          <td>{{ demande.date_demande|date:"d/m/Y" }}</td>
+          <td>
+            <span class="badge
+              {% if demande.urgence == 'Immédiate' %}badge-red
+              {% elif demande.urgence == '24 heures' %}badge-amber
+              {% else %}badge-green{% endif %}">
+              {{ demande.urgence }}
+            </span>
           </td>
-          <td class="py-2 px-4">{{ demande.date_demande|date:"F j, Y" }}</td>
-          <td class="py-2 px-4">
-            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {% if demande.urgence == 'Immédiate' %}bg-red-100 text-red-800{% elif demande.urgence == '24 heures' %}bg-yellow-100 text-yellow-800{% else %}bg-green-100 text-green-800{% endif %}">{{ demande.urgence }}</span>
+          <td style="color:#6b7280">{{ demande.motif|default:"—"|truncatechars:40 }}</td>
+          <td>
+            <span class="badge
+              {% if demande.etat == 'En attente' %}badge-amber
+              {% elif demande.etat == 'Approuvée' or demande.etat == 'Acceptée' %}badge-green
+              {% elif demande.etat == 'Complétée' %}badge-blue
+              {% elif demande.etat == 'Rejetée' %}badge-red
+              {% else %}badge-gray{% endif %}">
+              {{ demande.etat }}
+            </span>
           </td>
-          <td class="py-2 px-4">
-            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {% if demande.etat == 'En attente' %}bg-yellow-100 text-yellow-800{% elif demande.etat == 'Acceptée' %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %}">{{ demande.etat }}</span>
-          </td>
-          <td class="py-2 px-4">
-            <button class="text-gray-500 hover:text-gray-700 view-details" data-id="{{ demande.id }}">
-              <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-              color="#000000" stroke-width="1.5">
-              <path d="M3 13C6.6 5 17.4 5 21 13" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                stroke-linejoin="round"></path>
-              <path
-                d="M12 17C10.3431 17 9 15.6569 9 14C9 12.3431 10.3431 11 12 11C13.6569 11 15 12.3431 15 14C15 15.6569 13.6569 17 12 17Z"
-                fill="#000000" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              </path>
-            </svg>
-
+          <td>
+            <button class="btn-eye" data-id="{{ demande.id }}" title="Voir détails">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 13C6.6 5 17.4 5 21 13" />
+                <circle cx="12" cy="14" r="3" fill="currentColor" stroke="currentColor" />
+              </svg>
             </button>
           </td>
         </tr>
-        <tr id="details-{{ demande.id }}" class="details-row hidden">
-          <td colspan="6" class="bg-gray-50 p-4">
-            <p><strong>Motif:</strong> {{ demande.motif }}</p>
-            <p><strong>Nom du proche ({{ demande.patient.relation_proche_patient }}) : </strong> {{ demande.patient.proche }}</p>
-            <p><strong>Email du proche({{ demande.patient.relation_proche_patient }}):</strong> {{ demande.patient.utilisateur.email }}</p>
-            <p><strong>Numero du proche({{ demande.patient.relation_proche_patient }}):</strong> {{ demande.patient.telephone_proche }}</p>
+        <tr id="detail-{{ demande.id }}" class="detail-row" style="display:none">
+          <td colspan="{% if mes_demandes %}9{% else %}10{% endif %}">
+            <div class="detail-inner">
+              <div>
+                <p>Motif</p>
+                <strong>{{ demande.motif|default:"Non renseigné" }}</strong>
+              </div>
+              <div>
+                <p>Urgence</p>
+                <strong>{{ demande.urgence }}</strong>
+              </div>
+              <div>
+                <p>État</p>
+                <strong>{{ demande.etat }}</strong>
+              </div>
+              {% if not mes_demandes %}
+              <div>
+                <p>Proche ({{ demande.patient.relation_proche_patient }})</p>
+                <strong>{{ demande.patient.proche }}</strong>
+              </div>
+              <div>
+                <p>Contact</p>
+                <strong>{{ demande.patient.telephone_proche }}</strong>
+              </div>
+              {% endif %}
+              {% if mes_demandes and demande.etat == 'Approuvée' or demande.etat == 'Complétée' %}
+              <div>
+                <p>Poches allouées</p>
+                {% for poche in poches_allouees %}
+                <strong style="display:block">{{ poche }}</strong>
+                {% endfor %}
+              </div>
+              {% endif %}
+            </div>
           </td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
-    {% endif %}
+  </div>
 
-  </div>
-  <div class="flex justify-center my-4">
-    <nav aria-label="Page navigation">
-      <ul class="pagination flex space-x-1">
-        <li><a class="page-link px-4 py-2 border rounded text-gray-700 hover:bg-gray-100" href="#">Previous</a></li>
-        <li><a class="page-link px-4 py-2 border rounded text-gray-700 hover:bg-gray-100" href="#">1</a></li>
-        <li><a class="page-link px-4 py-2 border rounded text-gray-700 hover:bg-gray-100" href="#">2</a></li>
-        <li><a class="page-link px-4 py-2 border rounded text-gray-700 hover:bg-gray-100" href="#">3</a></li>
-        <li><a class="page-link px-4 py-2 border rounded text-gray-700 hover:bg-gray-100" href="#">Next</a></li>
-      </ul>
-    </nav>
-  </div>
+  <div class="pager" id="pager"></div>
+
 </div>
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    const getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
 
-    const comparer = (idx, asc) => (a, b) => ((v1, v2) =>
-      v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2)
-    )(getCellValue(asc ? a : b, idx), getCellValue(asc ? b : a, idx));
+    const URGENCE_SCORE = { 'Immédiate': 3, '24 heures': 2, 'Non urgent': 1 };
+    const ETAT_SCORE = { 'En attente': 3, 'Approuvée': 2, 'Acceptée': 2, 'Complétée': 1, 'Rejetée': 0 };
 
-    document.querySelectorAll('th[data-sort]').forEach(th => th.addEventListener('click', (() => {
-      const table = th.closest('table');
-      Array.from(table.querySelectorAll('tr:nth-child(n+2)'))
-      .sort(comparer(Array.from(th.parentNode.children).indexOf(th), this.asc = !this.asc))
-      .forEach(tr => table.appendChild(tr));
-    })));
-    
-    document.querySelectorAll('.view-details').forEach(button => {
-      button.addEventListener('click', function() {
-        const id = this.getAttribute('data-id');
-        const detailsRow = document.getElementById('details-' + id);
-        detailsRow.classList.toggle('hidden');
+    function priorityScore(row) {
+      const u = row.dataset.urgence || '';
+      const e = row.dataset.etat || '';
+      const d = row.dataset.date || '';
+      const us = URGENCE_SCORE[u] || 0;
+      const es = ETAT_SCORE[e] || 0;
+      const age = d ? Math.floor((Date.now() - new Date(d)) / 86400000) : 0;
+      return us * 100 + es * 10 + Math.min(age, 9);
+    }
+
+    let allRows = Array.from(document.querySelectorAll('.data-row'));
+    let sortKey = 'score';
+    let sortAsc = false;
+    let page = 1;
+    let perPage = parseInt(document.getElementById('perPage').value);
+    let query = '';
+
+    function getRows() {
+      return allRows.filter(r => {
+        if (!query) return true;
+        return r.innerText.toLowerCase().includes(query.toLowerCase());
+      });
+    }
+
+    function sortRows(rows) {
+      return rows.slice().sort((a, b) => {
+        let va, vb;
+        if (sortKey === 'score') {
+          va = priorityScore(a); vb = priorityScore(b);
+          return sortAsc ? va - vb : vb - va;
+        }
+        if (sortKey === 'urgence') {
+          va = URGENCE_SCORE[a.dataset.urgence] || 0;
+          vb = URGENCE_SCORE[b.dataset.urgence] || 0;
+          return sortAsc ? va - vb : vb - va;
+        }
+        if (sortKey === 'etat') {
+          va = ETAT_SCORE[a.dataset.etat] || 0;
+          vb = ETAT_SCORE[b.dataset.etat] || 0;
+          return sortAsc ? va - vb : vb - va;
+        }
+        if (sortKey === 'date') {
+          va = a.dataset.date; vb = b.dataset.date;
+          return sortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
+        }
+        if (sortKey === 'motif') {
+          va = (a.dataset.motif || '').toLowerCase();
+          vb = (b.dataset.motif || '').toLowerCase();
+          return sortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
+        }
+        if (sortKey === 'patient') {
+          va = (a.dataset.patient || '').toLowerCase();
+          vb = (b.dataset.patient || '').toLowerCase();
+          return sortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
+        }
+        return 0;
+      });
+    }
+
+    function render() {
+      const tbody = document.getElementById('tbody');
+      const rows = sortRows(getRows());
+      const total = rows.length;
+      const pages = Math.max(1, Math.ceil(total / perPage));
+      if (page > pages) page = pages;
+      const start = (page - 1) * perPage;
+      const visible = rows.slice(start, start + perPage);
+      const ids = visible.map(r => r.dataset.id);
+
+      allRows.forEach(r => {
+        const det = document.getElementById('detail-' + r.dataset.id);
+        const show = ids.includes(r.dataset.id);
+        r.style.display = show ? '' : 'none';
+        if (det) det.style.display = 'none';
+      });
+
+      const sorted = visible;
+      sorted.forEach(r => { tbody.appendChild(r); const d = document.getElementById('detail-' + r.dataset.id); if (d) tbody.appendChild(d); });
+
+      renderPager(pages);
+    }
+
+    function renderPager(pages) {
+      const p = document.getElementById('pager');
+      p.innerHTML = '';
+      const prev = document.createElement('button');
+      prev.textContent = '←';
+      prev.disabled = page === 1;
+      prev.addEventListener('click', () => { page--; render(); });
+      p.appendChild(prev);
+      for (let i = 1; i <= pages; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = i;
+        if (i === page) btn.classList.add('active');
+        btn.addEventListener('click', () => { page = i; render(); });
+        p.appendChild(btn);
+      }
+      const next = document.createElement('button');
+      next.textContent = '→';
+      next.disabled = page === pages;
+      next.addEventListener('click', () => { page++; render(); });
+      p.appendChild(next);
+    }
+
+    document.querySelectorAll('.sort-btn').forEach(btn => {
+      btn.addEventListener('click', function () {
+        const key = this.dataset.sort;
+        if (sortKey === key) { sortAsc = !sortAsc; }
+        else { sortKey = key; sortAsc = key === 'motif' || key === 'patient'; }
+        document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        page = 1;
+        render();
       });
     });
+
+    document.querySelectorAll('th[data-col]').forEach(th => {
+      th.addEventListener('click', function () {
+        const col = this.dataset.col;
+        const map = { score: 'score', urgence: 'urgence', motif: 'motif', date: 'date', etat: 'etat', patient: 'patient', groupe: 'groupe', qty: 'qty' };
+        if (!map[col]) return;
+        if (sortKey === map[col]) sortAsc = !sortAsc; else { sortKey = map[col]; sortAsc = false; }
+        document.querySelectorAll('th .arr').forEach(a => a.textContent = '↕');
+        document.querySelectorAll('th').forEach(t => t.classList.remove('sorted'));
+        this.classList.add('sorted');
+        this.querySelector('.arr').textContent = sortAsc ? '↑' : '↓';
+        page = 1; render();
+      });
+    });
+
+    document.getElementById('perPage').addEventListener('change', function () {
+      perPage = parseInt(this.value); page = 1; render();
+    });
+
+    let searchTimer;
+    document.getElementById('searchInput').addEventListener('input', function () {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(() => { query = this.value; page = 1; render(); }, 200);
+    });
+
+    document.querySelectorAll('.btn-eye').forEach(btn => {
+      btn.addEventListener('click', function () {
+        const id = this.dataset.id;
+        const det = document.getElementById('detail-' + id);
+        if (!det) return;
+        const open = det.style.display !== 'none';
+        det.style.display = open ? 'none' : '';
+      });
+    });
+
+    render();
   });
 </script>
+
 {% else %}
-<p>Aucune demande de sang pour le moment.</p>
+<div class="page">
+  <p style="color:#9ca3af;font-size:14px;padding:2rem 0;">Aucune demande de sang pour le moment.</p>
+</div>
 {% endif %}
+
 {% endblock %}

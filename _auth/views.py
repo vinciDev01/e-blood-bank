@@ -38,8 +38,7 @@ def send_html_email(subject, html_message, recipient_email):
     )
 
 
-# ---------- Registration ----------
-
+#  Registration 
 def register(request):
     if request.method == 'POST':
         firstname = request.POST['firstName']
@@ -93,8 +92,7 @@ def register(request):
         return render(request, 'auth/users/register.html')
 
 
-# ---------- Login with 2FA OTP ----------
-
+#  Login with 2FA OTP 
 def _rediriger_apres_login(user):
     """Redirection vers le tableau de bord correspondant au rôle de l'utilisateur."""
     if user.role == 'admin' or user.is_superuser:
@@ -224,16 +222,14 @@ def resendOTP(request):
     return redirect('_auth:verifyOTP')
 
 
-# ---------- Logout ----------
-
+#  Logout 
 def logOut(request):
     logout(request)
     messages.success(request, 'Vous avez bien ete deconnecte')
     return redirect('_auth:login')
 
 
-# ---------- Email activation ----------
-
+#  Email activation 
 def activate(request, uidb64, token):
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
@@ -251,8 +247,7 @@ def activate(request, uidb64, token):
         return redirect('frontend:accueil')
 
 
-# ---------- Password reset ----------
-
+#  Password reset 
 def resetPassword(request):
     return render(request, 'auth/users/resetPassword.html')
 
@@ -304,8 +299,7 @@ def resetPasswordConfirm(request, uidb64, token):
         return redirect('frontend:accueil')
 
 
-# ---------- Administration (custom admin interface) ----------
-
+#  Administration (custom admin interface) 
 ROLE_LABELS = {
     'blood_bank': 'Banque de sang',
     'medical': 'Service médical',
@@ -466,8 +460,7 @@ def creerUtilisateur(request):
     })
 
 
-# ---------- ServiceMedicaux registration ----------
-
+#  ServiceMedicaux registration 
 def inscriptionServiceMedicaux(request):
     if request.method == 'POST':
         nom_etablissement = request.POST['nom_etablissement']

@@ -1,12 +1,19 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscription - eBloodBank</title>
     <style>
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
@@ -16,30 +23,36 @@
             color: #1d1d1f;
         }
 
-        /* --- Left panel --- */
+        /*  Left panel  */
         .panel-left {
             display: none;
             width: 50%;
             position: relative;
             overflow: hidden;
         }
+
         @media (min-width: 960px) {
-            .panel-left { display: block; }
+            .panel-left {
+                display: block;
+            }
         }
+
         .panel-left img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
+
         .panel-overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(160deg, rgba(185,28,28,0.82) 0%, rgba(30,30,30,0.7) 100%);
+            background: linear-gradient(160deg, rgba(185, 28, 28, 0.82) 0%, rgba(30, 30, 30, 0.7) 100%);
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
             padding: 3.5rem;
         }
+
         .panel-overlay h2 {
             color: #fff;
             font-size: 2rem;
@@ -48,15 +61,16 @@
             margin-bottom: 0.75rem;
             animation: fadeUp 0.7s ease-out both;
         }
+
         .panel-overlay p {
-            color: rgba(255,255,255,0.8);
+            color: rgba(255, 255, 255, 0.8);
             font-size: 1rem;
             line-height: 1.6;
             max-width: 380px;
             animation: fadeUp 0.7s 0.15s ease-out both;
         }
 
-        /* --- Right panel --- */
+        /*  Right panel  */
         .panel-right {
             flex: 1;
             display: flex;
@@ -65,6 +79,7 @@
             padding: 2rem;
             overflow-y: auto;
         }
+
         .form-wrapper {
             width: 100%;
             max-width: 440px;
@@ -79,17 +94,20 @@
             gap: 10px;
             margin-bottom: 1.75rem;
         }
+
         .logo-row span {
             font-size: 1.2rem;
             font-weight: 700;
             color: #b91c1c;
             letter-spacing: -0.02em;
         }
+
         .form-header h1 {
             font-size: 1.65rem;
             font-weight: 700;
             margin-bottom: 0.3rem;
         }
+
         .form-header p {
             color: #6e6e73;
             font-size: 0.92rem;
@@ -97,7 +115,10 @@
         }
 
         /* Fields */
-        .field { margin-bottom: 1.1rem; }
+        .field {
+            margin-bottom: 1.1rem;
+        }
+
         .field label {
             display: block;
             font-size: 0.82rem;
@@ -105,11 +126,15 @@
             color: #3a3a3c;
             margin-bottom: 0.35rem;
         }
+
         .field-row {
             display: flex;
             gap: 14px;
         }
-        .field-row .field { flex: 1; }
+
+        .field-row .field {
+            flex: 1;
+        }
 
         .input-group {
             display: flex;
@@ -121,16 +146,19 @@
             height: 46px;
             transition: border-color 0.2s, box-shadow 0.2s;
         }
+
         .input-group:focus-within {
             border-color: #b91c1c;
-            box-shadow: 0 0 0 3px rgba(185,28,28,0.08);
+            box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.08);
         }
+
         .input-group svg {
             flex-shrink: 0;
             width: 17px;
             height: 17px;
             color: #8e8e93;
         }
+
         .input-group input {
             flex: 1;
             border: none;
@@ -141,7 +169,10 @@
             height: 100%;
             color: #1d1d1f;
         }
-        .input-group input::placeholder { color: #aeaeb2; }
+
+        .input-group input::placeholder {
+            color: #aeaeb2;
+        }
 
         .eye-btn {
             background: none;
@@ -152,7 +183,10 @@
             color: #8e8e93;
             transition: color 0.15s;
         }
-        .eye-btn:hover { color: #3a3a3c; }
+
+        .eye-btn:hover {
+            color: #3a3a3c;
+        }
 
         /* Password strength indicator */
         .pwd-strength {
@@ -160,6 +194,7 @@
             gap: 4px;
             margin-top: 6px;
         }
+
         .pwd-bar {
             flex: 1;
             height: 3px;
@@ -178,6 +213,7 @@
             color: #3a3a3c;
             line-height: 1.45;
         }
+
         .check-row input[type="checkbox"] {
             margin-top: 2px;
             width: 16px;
@@ -186,12 +222,16 @@
             cursor: pointer;
             flex-shrink: 0;
         }
+
         .check-row a {
             color: #b91c1c;
             text-decoration: none;
             font-weight: 500;
         }
-        .check-row a:hover { text-decoration: underline; }
+
+        .check-row a:hover {
+            text-decoration: underline;
+        }
 
         /* Submit */
         .btn-submit {
@@ -206,8 +246,14 @@
             cursor: pointer;
             transition: background 0.2s, transform 0.1s;
         }
-        .btn-submit:hover { background: #991b1b; }
-        .btn-submit:active { transform: scale(0.985); }
+
+        .btn-submit:hover {
+            background: #991b1b;
+        }
+
+        .btn-submit:active {
+            transform: scale(0.985);
+        }
 
         .form-footer {
             text-align: center;
@@ -215,14 +261,18 @@
             font-size: 0.88rem;
             color: #6e6e73;
         }
+
         .form-footer a {
             color: #b91c1c;
             text-decoration: none;
             font-weight: 600;
         }
-        .form-footer a:hover { text-decoration: underline; }
 
-        /* --- Toast --- */
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /*  Toast  */
         #toast-container {
             position: fixed;
             top: 24px;
@@ -232,6 +282,7 @@
             flex-direction: column;
             gap: 10px;
         }
+
         .toast {
             display: flex;
             align-items: center;
@@ -240,17 +291,38 @@
             max-width: 400px;
             padding: 14px 18px;
             border-radius: 10px;
-            box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
             font-size: 0.88rem;
             font-weight: 500;
             animation: slideIn 0.35s ease-out;
             position: relative;
             overflow: hidden;
         }
-        .toast.out { opacity: 0; transform: translateX(60px); transition: all 0.25s; }
-        .toast-error { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
-        .toast-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
-        .toast svg.t-icon { flex-shrink: 0; width: 20px; height: 20px; }
+
+        .toast.out {
+            opacity: 0;
+            transform: translateX(60px);
+            transition: all 0.25s;
+        }
+
+        .toast-error {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+        }
+
+        .toast-success {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+        }
+
+        .toast svg.t-icon {
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+        }
+
         .toast-close {
             margin-left: auto;
             background: none;
@@ -261,7 +333,11 @@
             font-size: 16px;
             padding: 0;
         }
-        .toast-close:hover { opacity: 1; }
+
+        .toast-close:hover {
+            opacity: 1;
+        }
+
         .toast-bar {
             position: absolute;
             bottom: 0;
@@ -270,23 +346,51 @@
             border-radius: 0 0 10px 10px;
             animation: shrink 4s linear forwards;
         }
-        .toast-error .toast-bar { background: #f87171; }
-        .toast-success .toast-bar { background: #4ade80; }
+
+        .toast-error .toast-bar {
+            background: #f87171;
+        }
+
+        .toast-success .toast-bar {
+            background: #4ade80;
+        }
 
         @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(18px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
+
         @keyframes slideIn {
-            from { opacity: 0; transform: translateX(60px); }
-            to { opacity: 1; transform: translateX(0); }
+            from {
+                opacity: 0;
+                transform: translateX(60px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
+
         @keyframes shrink {
-            from { width: 100%; }
-            to { width: 0%; }
+            from {
+                width: 100%;
+            }
+
+            to {
+                width: 0%;
+            }
         }
     </style>
 </head>
+
 <body>
 
     <!-- Left panel -->
@@ -302,7 +406,8 @@
     <div class="panel-right">
         <div class="form-wrapper">
             <div class="logo-row">
-                <img src="{% static 'img/Logo_eBloodBank.png' %}" alt="eBloodBank" style="height: 40px; width: auto; display: block;">
+                <img src="{% static 'img/Logo_eBloodBank.png' %}" alt="eBloodBank"
+                    style="height: 40px; width: auto; display: block;">
             </div>
 
             <div class="form-header">
@@ -317,9 +422,10 @@
                     <div class="field">
                         <label for="firstName">Prenom</label>
                         <div class="input-group">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                                <circle cx="12" cy="7" r="4"/>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                <circle cx="12" cy="7" r="4" />
                             </svg>
                             <input type="text" name="firstName" id="firstName" placeholder="Votre prenom" required>
                         </div>
@@ -327,9 +433,10 @@
                     <div class="field">
                         <label for="lastName">Nom</label>
                         <div class="input-group">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                                <circle cx="12" cy="7" r="4"/>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                <circle cx="12" cy="7" r="4" />
                             </svg>
                             <input type="text" name="lastName" id="lastName" placeholder="Votre nom" required>
                         </div>
@@ -339,27 +446,34 @@
                 <div class="field">
                     <label for="email">Adresse email</label>
                     <div class="input-group">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="2" y="4" width="20" height="16" rx="2"/>
-                            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="4" width="20" height="16" rx="2" />
+                            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                         </svg>
-                        <input type="email" name="email" id="email" placeholder="nom@exemple.com" required autocomplete="email">
+                        <input type="email" name="email" id="email" placeholder="nom@exemple.com" required
+                            autocomplete="email">
                     </div>
                 </div>
 
                 <div class="field">
                     <label for="password">Mot de passe</label>
                     <div class="input-group">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                         </svg>
-                        <input type="password" name="password" id="password" placeholder="Min. 8 caracteres" required autocomplete="new-password" oninput="checkStrength(this.value)">
-                        <button type="button" class="eye-btn" onclick="togglePwd('password','eye1')" aria-label="Afficher">
-                            <svg id="eye1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
-                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
-                                <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
-                                <line x1="1" y1="1" x2="23" y2="23"/>
+                        <input type="password" name="password" id="password" placeholder="Min. 8 caracteres" required
+                            autocomplete="new-password" oninput="checkStrength(this.value)">
+                        <button type="button" class="eye-btn" onclick="togglePwd('password','eye1')"
+                            aria-label="Afficher">
+                            <svg id="eye1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                                <path
+                                    d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
+                                <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
+                                <line x1="1" y1="1" x2="23" y2="23" />
                             </svg>
                         </button>
                     </div>
@@ -374,16 +488,21 @@
                 <div class="field">
                     <label for="confirmPassword">Confirmer le mot de passe</label>
                     <div class="input-group">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                         </svg>
-                        <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Repetez le mot de passe" required autocomplete="new-password">
-                        <button type="button" class="eye-btn" onclick="togglePwd('confirmPassword','eye2')" aria-label="Afficher">
-                            <svg id="eye2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
-                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
-                                <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
-                                <line x1="1" y1="1" x2="23" y2="23"/>
+                        <input type="password" name="confirmPassword" id="confirmPassword"
+                            placeholder="Repetez le mot de passe" required autocomplete="new-password">
+                        <button type="button" class="eye-btn" onclick="togglePwd('confirmPassword','eye2')"
+                            aria-label="Afficher">
+                            <svg id="eye2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                                <path
+                                    d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
+                                <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
+                                <line x1="1" y1="1" x2="23" y2="23" />
                             </svg>
                         </button>
                     </div>
@@ -391,7 +510,8 @@
 
                 <div class="check-row">
                     <input type="checkbox" id="terms" required>
-                    <label for="terms">J'accepte les <a href="#">conditions d'utilisation</a> et la <a href="#">politique de confidentialite</a></label>
+                    <label for="terms">J'accepte les <a href="#">conditions d'utilisation</a> et la <a
+                            href="#">politique de confidentialite</a></label>
                 </div>
 
                 <button type="submit" class="btn-submit">Creer mon compte</button>
@@ -422,10 +542,10 @@
             if (/[a-z]/.test(val) && /[A-Z]/.test(val)) score++;
             if (/\d/.test(val)) score++;
             if (/[^a-zA-Z0-9]/.test(val)) score++;
-            var colors = ['#e5e5ea','#e5e5ea','#e5e5ea','#e5e5ea'];
+            var colors = ['#e5e5ea', '#e5e5ea', '#e5e5ea', '#e5e5ea'];
             var c = score <= 1 ? '#f87171' : score === 2 ? '#fb923c' : score === 3 ? '#facc15' : '#4ade80';
             for (var i = 0; i < score; i++) colors[i] = c;
-            for (var j = 0; j < 4; j++) document.getElementById('bar'+(j+1)).style.background = colors[j];
+            for (var j = 0; j < 4; j++) document.getElementById('bar' + (j + 1)).style.background = colors[j];
         }
 
         function showToast(msg, type) {
@@ -437,17 +557,18 @@
                 : '<svg class="t-icon" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd"/></svg>')
                 + '<span>' + msg + '</span><button class="toast-close" onclick="dismiss(this.parentElement)">&times;</button><div class="toast-bar"></div>';
             c.appendChild(t);
-            setTimeout(function(){ dismiss(t); }, 4000);
+            setTimeout(function () { dismiss(t); }, 4000);
         }
         function dismiss(t) {
             if (!t || t.classList.contains('out')) return;
             t.classList.add('out');
-            setTimeout(function(){ t.remove(); }, 250);
+            setTimeout(function () { t.remove(); }, 250);
         }
 
-        {% if messages %}{% for message in messages %}
+        {% if messages %} {% for message in messages %}
         showToast("{{ message|escapejs }}", "{{ message.tags }}");
-        {% endfor %}{% endif %}
+        {% endfor %} {% endif %}
     </script>
 </body>
+
 </html>

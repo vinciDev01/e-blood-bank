@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +9,7 @@
         :root {
             --critical: #dc2626;
             --high: #ea580c;
-            --medium: #ca8a04;
+            --medium: #ca8a04s;
             --low: #2563eb;
             --ok: #16a34a;
             --bg: #f8fafc;
@@ -18,7 +19,11 @@
             --text-muted: #64748b;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -34,8 +39,15 @@
             text-align: center;
         }
 
-        .header h1 { font-size: 2.2rem; margin-bottom: 0.5rem; }
-        .header p { opacity: 0.9; font-size: 1.1rem; }
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
 
         .stats-bar {
             display: flex;
@@ -56,14 +68,34 @@
             font-weight: 700;
         }
 
-        .stat-label { font-size: 0.85rem; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.05em; }
+        .stat-label {
+            font-size: 0.85rem;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
 
-        .stat-number.critical { color: #fca5a5; }
-        .stat-number.high { color: #fdba74; }
-        .stat-number.medium { color: #fde047; }
-        .stat-number.low { color: #93c5fd; }
+        .stat-number.critical {
+            color: #fca5a5;
+        }
 
-        .container { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
+        .stat-number.high {
+            color: #fdba74;
+        }
+
+        .stat-number.medium {
+            color: #fde047;
+        }
+
+        .stat-number.low {
+            color: #93c5fd;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
 
         .toc {
             background: var(--card);
@@ -73,12 +105,27 @@
             margin-bottom: 2rem;
         }
 
-        .toc h2 { margin-bottom: 1rem; font-size: 1.3rem; }
+        .toc h2 {
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
 
-        .toc ol { padding-left: 1.5rem; }
-        .toc li { margin-bottom: 0.4rem; }
-        .toc a { color: var(--critical); text-decoration: none; }
-        .toc a:hover { text-decoration: underline; }
+        .toc ol {
+            padding-left: 1.5rem;
+        }
+
+        .toc li {
+            margin-bottom: 0.4rem;
+        }
+
+        .toc a {
+            color: var(--critical);
+            text-decoration: none;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
 
         .section {
             background: var(--card);
@@ -96,7 +143,9 @@
             gap: 0.75rem;
         }
 
-        .section-header h2 { font-size: 1.3rem; }
+        .section-header h2 {
+            font-size: 1.3rem;
+        }
 
         .section-icon {
             width: 36px;
@@ -110,7 +159,9 @@
             flex-shrink: 0;
         }
 
-        .section-body { padding: 1.5rem 2rem; }
+        .section-body {
+            padding: 1.5rem 2rem;
+        }
 
         .issue {
             border-left: 4px solid var(--border);
@@ -120,15 +171,44 @@
             background: #f8fafc;
         }
 
-        .issue:last-child { margin-bottom: 0; }
+        .issue:last-child {
+            margin-bottom: 0;
+        }
 
-        .issue.critical { border-left-color: var(--critical); background: #fef2f2; }
-        .issue.high { border-left-color: var(--high); background: #fff7ed; }
-        .issue.medium { border-left-color: var(--medium); background: #fefce8; }
-        .issue.low { border-left-color: var(--low); background: #eff6ff; }
-        .issue.fixed { border-left-color: var(--ok); background: #f0fdf4; opacity: 0.75; }
-        .issue.fixed .issue-title { text-decoration: line-through; color: var(--text-muted); }
-        .badge.fixed { background: var(--ok); }
+        .issue.critical {
+            border-left-color: var(--critical);
+            background: #fef2f2;
+        }
+
+        .issue.high {
+            border-left-color: var(--high);
+            background: #fff7ed;
+        }
+
+        .issue.medium {
+            border-left-color: var(--medium);
+            background: #fefce8;
+        }
+
+        .issue.low {
+            border-left-color: var(--low);
+            background: #eff6ff;
+        }
+
+        .issue.fixed {
+            border-left-color: var(--ok);
+            background: #f0fdf4;
+            opacity: 0.75;
+        }
+
+        .issue.fixed .issue-title {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        .badge.fixed {
+            background: var(--ok);
+        }
 
         .issue-title {
             font-weight: 600;
@@ -149,10 +229,21 @@
             color: white;
         }
 
-        .badge.critical { background: var(--critical); }
-        .badge.high { background: var(--high); }
-        .badge.medium { background: var(--medium); }
-        .badge.low { background: var(--low); }
+        .badge.critical {
+            background: var(--critical);
+        }
+
+        .badge.high {
+            background: var(--high);
+        }
+
+        .badge.medium {
+            background: var(--medium);
+        }
+
+        .badge.low {
+            background: var(--low);
+        }
 
         .issue-location {
             font-family: 'Cascadia Code', 'Fira Code', monospace;
@@ -161,7 +252,10 @@
             margin-bottom: 0.4rem;
         }
 
-        .issue-desc { font-size: 0.92rem; margin-bottom: 0.5rem; }
+        .issue-desc {
+            font-size: 0.92rem;
+            margin-bottom: 0.5rem;
+        }
 
         .fix {
             background: #f0fdf4;
@@ -196,7 +290,11 @@
             margin: 0.5rem 0;
         }
 
-        pre code { background: none; color: inherit; padding: 0; }
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
 
         table {
             width: 100%;
@@ -204,16 +302,29 @@
             font-size: 0.9rem;
         }
 
-        th, td {
+        th,
+        td {
             padding: 0.65rem 0.9rem;
             text-align: left;
             border-bottom: 1px solid var(--border);
         }
 
-        th { background: #f8fafc; font-weight: 600; }
+        th {
+            background: #f8fafc;
+            font-weight: 600;
+        }
 
-        .subsection { margin-bottom: 1.5rem; }
-        .subsection h3 { font-size: 1.05rem; margin-bottom: 0.75rem; color: var(--text); border-bottom: 2px solid var(--border); padding-bottom: 0.4rem; }
+        .subsection {
+            margin-bottom: 1.5rem;
+        }
+
+        .subsection h3 {
+            font-size: 1.05rem;
+            margin-bottom: 0.75rem;
+            color: var(--text);
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 0.4rem;
+        }
 
         .footer {
             text-align: center;
@@ -223,749 +334,1253 @@
         }
 
         @media (max-width: 768px) {
-            .header h1 { font-size: 1.5rem; }
-            .stats-bar { gap: 1rem; }
-            .stat-number { font-size: 1.5rem; }
-            .section-body { padding: 1rem; }
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .stats-bar {
+                gap: 1rem;
+            }
+
+            .stat-number {
+                font-size: 1.5rem;
+            }
+
+            .section-body {
+                padding: 1rem;
+            }
         }
     </style>
 </head>
+
 <body>
 
-<div class="header">
-    <h1>Rapport d'Analyse Complet - eBloodBank</h1>
-    <p>Audit des incoherences, bugs et recommandations de corrections</p>
-    <p style="opacity:0.7; margin-top:0.5rem;">Genere le 1er avril 2026 &mdash; Mis a jour apres corrections authentification</p>
-</div>
+    <div class="header">
+        <h1>Rapport d'Analyse Complet - eBloodBank</h1>
+        <p>Audit des incoherences, bugs et recommandations de corrections</p>
+        <p style="opacity:0.7; margin-top:0.5rem;">Genere le 1er avril 2026 &mdash; Mis a jour apres corrections
+            authentification</p>
+    </div>
 
-<div class="stats-bar">
-    <div class="stat">
-        <div class="stat-number" style="color:#86efac;">19</div>
-        <div class="stat-label">Corrigees</div>
+    <div class="stats-bar">
+        <div class="stat">
+            <div class="stat-number" style="color:#86efac;">19</div>
+            <div class="stat-label">Corrigees</div>
+        </div>
+        <div class="stat">
+            <div class="stat-number critical">5</div>
+            <div class="stat-label">Critiques restantes</div>
+        </div>
+        <div class="stat">
+            <div class="stat-number high">6</div>
+            <div class="stat-label">Hautes restantes</div>
+        </div>
+        <div class="stat">
+            <div class="stat-number medium">14</div>
+            <div class="stat-label">Moyennes restantes</div>
+        </div>
+        <div class="stat">
+            <div class="stat-number low">12</div>
+            <div class="stat-label">Basses restantes</div>
+        </div>
     </div>
-    <div class="stat">
-        <div class="stat-number critical">5</div>
-        <div class="stat-label">Critiques restantes</div>
-    </div>
-    <div class="stat">
-        <div class="stat-number high">6</div>
-        <div class="stat-label">Hautes restantes</div>
-    </div>
-    <div class="stat">
-        <div class="stat-number medium">14</div>
-        <div class="stat-label">Moyennes restantes</div>
-    </div>
-    <div class="stat">
-        <div class="stat-number low">12</div>
-        <div class="stat-label">Basses restantes</div>
-    </div>
-</div>
 
-<div class="container">
+    <div class="container">
 
-<!-- TABLE DES MATIERES -->
-<div class="toc">
-    <h2>Table des matieres</h2>
-    <ol>
-        <li><a href="#securite">Securite et Credentials exposes</a></li>
-        <li><a href="#auth">Application _auth - Authentification et Modeles</a></li>
-        <li><a href="#bankdesang">Application bankDeSang - Gestion des poches</a></li>
-        <li><a href="#servicemedical">Application serviceMedicaux</a></li>
-        <li><a href="#donneur-frontend">Applications donneur et frontend</a></li>
-        <li><a href="#templates">Templates et Interface utilisateur</a></li>
-        <li><a href="#config">Configuration et Dependances</a></li>
-        <li><a href="#architecture">Incoherences architecturales</a></li>
-        <li><a href="#resume">Resume et plan de corrections</a></li>
-    </ol>
-</div>
-
-<!-- ============================================================ -->
-<!-- SECTION 1: SECURITE -->
-<!-- ============================================================ -->
-<div class="section" id="securite">
-    <div class="section-header">
-        <div class="section-icon" style="background:var(--critical);">&#128274;</div>
-        <h2>1. Securite et Credentials exposes</h2>
-    </div>
-    <div class="section-body">
-
-        <div class="issue critical" style="opacity:0.85;">
-            <div class="issue-title"><span class="badge critical">Critique</span> SECRET_KEY Django expose en dur (securite - hors scope auth)</div>
-            <div class="issue-location">eBloodBank/settings.py:23</div>
-            <div class="issue-desc">La cle secrete Django est codee en dur dans le code source : <code>'django-insecure-ya@s2s6hto^...'</code>. Cette cle signe les sessions, les tokens CSRF et les cookies. Si elle est compromise, toute la securite de l'application est en danger.</div>
-            <div class="fix"><span class="fix-label">Correction :</span> Utiliser une variable d'environnement : <code>SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')</code> et generer une nouvelle cle avec <code>django.core.management.utils.get_random_secret_key()</code>.</div>
+        <!-- TABLE DES MATIERES -->
+        <div class="toc">
+            <h2>Table des matieres</h2>
+            <ol>
+                <li><a href="#securite">Securite et Credentials exposes</a></li>
+                <li><a href="#auth">Application _auth - Authentification et Modeles</a></li>
+                <li><a href="#bankdesang">Application bankDeSang - Gestion des poches</a></li>
+                <li><a href="#servicemedical">Application serviceMedicaux</a></li>
+                <li><a href="#donneur-frontend">Applications donneur et frontend</a></li>
+                <li><a href="#templates">Templates et Interface utilisateur</a></li>
+                <li><a href="#config">Configuration et Dependances</a></li>
+                <li><a href="#architecture">Incoherences architecturales</a></li>
+                <li><a href="#resume">Resume et plan de corrections</a></li>
+            </ol>
         </div>
 
-        <div class="issue critical">
-            <div class="issue-title"><span class="badge critical">Critique</span> Credentials email Gmail exposes</div>
-            <div class="issue-location">eBloodBank/info.py:1-8</div>
-            <div class="issue-desc">Le fichier <code>info.py</code> contient en clair l'adresse email (<code>juniorbgj20@gmail.com</code>) et le mot de passe d'application (<code>bpkh mbsr syzh sygb</code>). Ce fichier est versionne dans le code source.</div>
-            <div class="fix"><span class="fix-label">Correction :</span> Deplacer dans un fichier <code>.env</code> non versionne, utiliser <code>python-dotenv</code> ou <code>django-environ</code> pour charger les variables. Revoquer immediatement le mot de passe d'application Gmail actuel et en generer un nouveau.</div>
-        </div>
-
-        <div class="issue critical">
-            <div class="issue-title"><span class="badge critical">Critique</span> Mot de passe base de donnees faible et expose</div>
-            <div class="issue-location">eBloodBank/settings.py:109-110</div>
-            <div class="issue-desc">La base de donnees MySQL utilise l'utilisateur <code>root</code> avec le mot de passe <code>12345678</code>, code en dur dans settings.py.</div>
-            <div class="fix"><span class="fix-label">Correction :</span> Creer un utilisateur MySQL dedie avec des privileges limites. Stocker les credentials dans des variables d'environnement. Ne jamais utiliser <code>root</code> en production.</div>
-        </div>
-
-        <div class="issue critical">
-            <div class="issue-title"><span class="badge critical">Critique</span> DEBUG = True en mode production</div>
-            <div class="issue-location">eBloodBank/settings.py:42</div>
-            <div class="issue-desc"><code>DEBUG = True</code> expose les traces d'erreur completes, les requetes SQL et la configuration de l'application aux utilisateurs.</div>
-            <div class="fix"><span class="fix-label">Correction :</span> <code>DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'</code></div>
-        </div>
-
-        <div class="issue critical">
-            <div class="issue-title"><span class="badge critical">Critique</span> ALLOWED_HOSTS vide</div>
-            <div class="issue-location">eBloodBank/settings.py:44</div>
-            <div class="issue-desc"><code>ALLOWED_HOSTS = []</code> bloquera toute requete en production (sauf localhost avec DEBUG=True).</div>
-            <div class="fix"><span class="fix-label">Correction :</span> <code>ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')</code></div>
-        </div>
-
-        <div class="issue high">
-            <div class="issue-title"><span class="badge high">Haute</span> Pas de fichier .gitignore</div>
-            <div class="issue-location">Racine du projet</div>
-            <div class="issue-desc">Aucun fichier <code>.gitignore</code> n'a ete detecte. Les fichiers sensibles (<code>info.py</code>, <code>db.sqlite3</code>, <code>.env</code>, <code>__pycache__</code>, <code>media/</code>) risquent d'etre commites.</div>
-            <div class="fix"><span class="fix-label">Correction :</span> Creer un <code>.gitignore</code> avec les exclusions standard Django : <code>*.pyc, __pycache__/, .env, db.sqlite3, media/, *.save</code>.</div>
-        </div>
-
-    </div>
-</div>
-
-<!-- ============================================================ -->
-<!-- SECTION 2: _AUTH -->
-<!-- ============================================================ -->
-<div class="section" id="auth">
-    <div class="section-header">
-        <div class="section-icon" style="background:#7c3aed;">&#128100;</div>
-        <h2>2. Application _auth - Authentification et Modeles</h2>
-    </div>
-    <div class="section-body">
-
-        <div class="subsection">
-            <h3>Bugs critiques dans les modeles</h3>
-
-            <div class="issue fixed">
-                <div class="issue-title"><span class="badge fixed">Corrige</span> Fonction numero_de_donneur() utilise Donneur.nom au lieu de instance.nom</div>
-                <div class="issue-location">_auth/models.py:23 &mdash; Corrige : utilise maintenant le compteur sans reference a l'instance</div>
-                <div class="issue-desc"><strong>Correction appliquee :</strong> La fonction genere maintenant le numero avec <code>f"{date.today().year}ebb{count:04d}"</code>.</div>
+        <!--  -->
+        <!-- SECTION 1: SECURITE -->
+        <!--  -->
+        <div class="section" id="securite">
+            <div class="section-header">
+                <div class="section-icon" style="background:var(--critical);">&#128274;</div>
+                <h2>1. Securite et Credentials exposes</h2>
             </div>
+            <div class="section-body">
 
-            <div class="issue fixed">
-                <div class="issue-title"><span class="badge fixed">Corrige</span> renomer_image() incompatible avec tous les modeles</div>
-                <div class="issue-location">_auth/models.py:7-21 &mdash; Corrige : utilise hasattr() pour verifier les champs disponibles</div>
-                <div class="issue-desc"><strong>Correction appliquee :</strong> La fonction verifie maintenant <code>hasattr(instance, 'nom')</code>, puis <code>'nom_etablissement'</code>, puis <code>'user'</code> comme fallback.</div>
-            </div>
+                <div class="issue critical" style="opacity:0.85;">
+                    <div class="issue-title"><span class="badge critical">Critique</span> SECRET_KEY Django expose en
+                        dur (securite - hors scope auth)</div>
+                    <div class="issue-location">eBloodBank/settings.py:23</div>
+                    <div class="issue-desc">La cle secrete Django est codee en dur dans le code source :
+                        <code>'django-insecure-ya@s2s6hto^...'</code>. Cette cle signe les sessions, les tokens CSRF et
+                        les cookies. Si elle est compromise, toute la securite de l'application est en danger.
+                    </div>
+                    <div class="fix"><span class="fix-label">Correction :</span> Utiliser une variable d'environnement :
+                        <code>SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')</code> et generer une nouvelle cle avec
+                        <code>django.core.management.utils.get_random_secret_key()</code>.
+                    </div>
+                </div>
 
-            <div class="issue fixed">
-                <div class="issue-title"><span class="badge fixed">Corrige</span> ServiceMedicaux definit USERNAME_FIELD et REQUIRED_FIELDS</div>
-                <div class="issue-location">_auth/models.py &mdash; Corrige : USERNAME_FIELD et REQUIRED_FIELDS supprimes du modele</div>
-                <div class="issue-desc"><strong>Correction appliquee :</strong> Les attributs d'authentification ont ete retires du modele de profil ServiceMedicaux.</div>
-            </div>
+                <div class="issue critical">
+                    <div class="issue-title"><span class="badge critical">Critique</span> Credentials email Gmail
+                        exposes</div>
+                    <div class="issue-location">eBloodBank/info.py:1-8</div>
+                    <div class="issue-desc">Le fichier <code>info.py</code> contient en clair l'adresse email
+                        (<code>juniorbgj20@gmail.com</code>) et le mot de passe d'application
+                        (<code>bpkh mbsr syzh sygb</code>). Ce fichier est versionne dans le code source.</div>
+                    <div class="fix"><span class="fix-label">Correction :</span> Deplacer dans un fichier
+                        <code>.env</code> non versionne, utiliser <code>python-dotenv</code> ou
+                        <code>django-environ</code> pour charger les variables. Revoquer immediatement le mot de passe
+                        d'application Gmail actuel et en generer un nouveau.
+                    </div>
+                </div>
 
-            <div class="issue medium">
-                <div class="issue-title"><span class="badge medium">Moyenne</span> Redondance du champ email entre CustomUser et Utilisateur</div>
-                <div class="issue-location">_auth/models.py</div>
-                <div class="issue-desc"><code>CustomUser.email</code> et <code>Utilisateur.email</code> existent en parallele, creant une duplication de donnees et des risques de desynchronisation.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Supprimer le champ <code>email</code> de <code>Utilisateur</code> et utiliser <code>utilisateur.user.email</code> partout.</div>
+                <div class="issue critical">
+                    <div class="issue-title"><span class="badge critical">Critique</span> Mot de passe base de donnees
+                        faible et expose</div>
+                    <div class="issue-location">eBloodBank/settings.py:109-110</div>
+                    <div class="issue-desc">La base de donnees MySQL utilise l'utilisateur <code>root</code> avec le mot
+                        de passe <code>12345678</code>, code en dur dans settings.py.</div>
+                    <div class="fix"><span class="fix-label">Correction :</span> Creer un utilisateur MySQL dedie avec
+                        des privileges limites. Stocker les credentials dans des variables d'environnement. Ne jamais
+                        utiliser <code>root</code> en production.</div>
+                </div>
+
+                <div class="issue critical">
+                    <div class="issue-title"><span class="badge critical">Critique</span> DEBUG = True en mode
+                        production</div>
+                    <div class="issue-location">eBloodBank/settings.py:42</div>
+                    <div class="issue-desc"><code>DEBUG = True</code> expose les traces d'erreur completes, les requetes
+                        SQL et la configuration de l'application aux utilisateurs.</div>
+                    <div class="fix"><span class="fix-label">Correction :</span>
+                        <code>DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'</code>
+                    </div>
+                </div>
+
+                <div class="issue critical">
+                    <div class="issue-title"><span class="badge critical">Critique</span> ALLOWED_HOSTS vide</div>
+                    <div class="issue-location">eBloodBank/settings.py:44</div>
+                    <div class="issue-desc"><code>ALLOWED_HOSTS = []</code> bloquera toute requete en production (sauf
+                        localhost avec DEBUG=True).</div>
+                    <div class="fix"><span class="fix-label">Correction :</span>
+                        <code>ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')</code>
+                    </div>
+                </div>
+
+                <div class="issue high">
+                    <div class="issue-title"><span class="badge high">Haute</span> Pas de fichier .gitignore</div>
+                    <div class="issue-location">Racine du projet</div>
+                    <div class="issue-desc">Aucun fichier <code>.gitignore</code> n'a ete detecte. Les fichiers
+                        sensibles (<code>info.py</code>, <code>db.sqlite3</code>, <code>.env</code>,
+                        <code>__pycache__</code>, <code>media/</code>) risquent d'etre commites.
+                    </div>
+                    <div class="fix"><span class="fix-label">Correction :</span> Creer un <code>.gitignore</code> avec
+                        les exclusions standard Django :
+                        <code>*.pyc, __pycache__/, .env, db.sqlite3, media/, *.save</code>.
+                    </div>
+                </div>
+
             </div>
         </div>
 
-        <div class="subsection">
-            <h3>Bugs critiques dans les vues</h3>
-
-            <div class="issue fixed">
-                <div class="issue-title"><span class="badge fixed">Corrige</span> resetPasswordEmail/Confirm utilise User au lieu de CustomUser</div>
-                <div class="issue-location">_auth/views.py:130, 162 &mdash; Corrige : remplace par CustomUser partout</div>
-                <div class="issue-desc"><strong>Correction appliquee :</strong> <code>User</code> remplace par <code>CustomUser</code> dans <code>resetPasswordEmail()</code> et <code>resetPasswordConfirm()</code>. Import de <code>User</code> supprime.</div>
+        <!--  -->
+        <!-- SECTION 2: _AUTH -->
+        <!--  -->
+        <div class="section" id="auth">
+            <div class="section-header">
+                <div class="section-icon" style="background:#7c3aed;">&#128100;</div>
+                <h2>2. Application _auth - Authentification et Modeles</h2>
             </div>
+            <div class="section-body">
 
-            <div class="issue fixed">
-                <div class="issue-title"><span class="badge fixed">Corrige</span> Redirect casse dans resetPasswordConfirm</div>
-                <div class="issue-location">_auth/views.py:177 &mdash; Corrige : namespace _auth: ajoute avec kwargs</div>
-                <div class="issue-desc"><strong>Correction appliquee :</strong> <code>redirect('_auth:resetPasswordConfirm', uidb64=uidb64, token=token)</code></div>
-            </div>
+                <div class="subsection">
+                    <h3>Bugs critiques dans les modeles</h3>
 
-            <div class="issue fixed">
-                <div class="issue-title"><span class="badge fixed">Corrige</span> 4 vues password reset sans URL pattern</div>
-                <div class="issue-location">_auth/urls.py &mdash; Corrige : 4 URL patterns ajoutes</div>
-                <div class="issue-desc"><strong>Correction appliquee :</strong> Les 4 chemins (resetPassword, resetPasswordEmail, resetPasswordConfirm, forgotPassword) sont maintenant enregistres dans urls.py.</div>
-            </div>
+                    <div class="issue fixed">
+                        <div class="issue-title"><span class="badge fixed">Corrige</span> Fonction numero_de_donneur()
+                            utilise Donneur.nom au lieu de instance.nom</div>
+                        <div class="issue-location">_auth/models.py:23 &mdash; Corrige : utilise maintenant le compteur
+                            sans reference a l'instance</div>
+                        <div class="issue-desc"><strong>Correction appliquee :</strong> La fonction genere maintenant le
+                            numero avec <code>f"{date.today().year}ebb{count:04d}"</code>.</div>
+                    </div>
 
-            <div class="issue fixed">
-                <div class="issue-title"><span class="badge fixed">Corrige</span> logoutServiceMedicaux() n'effectue pas la deconnexion</div>
-                <div class="issue-location">_auth/views.py:263-266 &mdash; Corrige : logout(request) ajoute + redirect vers login</div>
-                <div class="issue-desc"><strong>Correction appliquee :</strong> La vue appelle maintenant <code>logout(request)</code> et redirige vers <code>_auth:login</code>.</div>
-            </div>
+                    <div class="issue fixed">
+                        <div class="issue-title"><span class="badge fixed">Corrige</span> renomer_image() incompatible
+                            avec tous les modeles</div>
+                        <div class="issue-location">_auth/models.py:7-21 &mdash; Corrige : utilise hasattr() pour
+                            verifier les champs disponibles</div>
+                        <div class="issue-desc"><strong>Correction appliquee :</strong> La fonction verifie maintenant
+                            <code>hasattr(instance, 'nom')</code>, puis <code>'nom_etablissement'</code>, puis
+                            <code>'user'</code> comme fallback.
+                        </div>
+                    </div>
 
-            <div class="issue high">
-                <div class="issue-title"><span class="badge high">Haute</span> 4 templates email manquants (non corrige - creation de templates requise)</div>
-                <div class="issue-location">_auth/views.py:125, 134, 178, 183</div>
-                <div class="issue-desc">Les templates suivants sont references mais n'existent pas : <code>auth/users/resetPasswordMail.html</code>, <code>auth/users/resetPasswordConfirm.html</code>, <code>auth/users/forgotPassword.html</code>, <code>auth/users/resetPassword.html</code>. Les URLs sont maintenant accessibles mais les templates doivent etre crees.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Creer les 4 templates dans <code>_auth/templates/auth/users/</code>.</div>
-            </div>
+                    <div class="issue fixed">
+                        <div class="issue-title"><span class="badge fixed">Corrige</span> ServiceMedicaux definit
+                            USERNAME_FIELD et REQUIRED_FIELDS</div>
+                        <div class="issue-location">_auth/models.py &mdash; Corrige : USERNAME_FIELD et REQUIRED_FIELDS
+                            supprimes du modele</div>
+                        <div class="issue-desc"><strong>Correction appliquee :</strong> Les attributs d'authentification
+                            ont ete retires du modele de profil ServiceMedicaux.</div>
+                    </div>
 
-            <div class="issue fixed">
-                <div class="issue-title"><span class="badge fixed">Corrige</span> try-except masque les erreurs dans logIn</div>
-                <div class="issue-location">_auth/views.py:79-101 &mdash; Corrige : logique reecrite avec if/dict de redirections</div>
-                <div class="issue-desc"><strong>Correction appliquee :</strong> La vue utilise maintenant <code>if user is None or not user.is_active</code> suivi d'un dictionnaire <code>role_redirects</code>. Plus de try-except.</div>
+                    <div class="issue medium">
+                        <div class="issue-title"><span class="badge medium">Moyenne</span> Redondance du champ email
+                            entre CustomUser et Utilisateur</div>
+                        <div class="issue-location">_auth/models.py</div>
+                        <div class="issue-desc"><code>CustomUser.email</code> et <code>Utilisateur.email</code> existent
+                            en parallele, creant une duplication de donnees et des risques de desynchronisation.</div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Supprimer le champ
+                            <code>email</code> de <code>Utilisateur</code> et utiliser
+                            <code>utilisateur.user.email</code> partout.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Bugs critiques dans les vues</h3>
+
+                    <div class="issue fixed">
+                        <div class="issue-title"><span class="badge fixed">Corrige</span> resetPasswordEmail/Confirm
+                            utilise User au lieu de CustomUser</div>
+                        <div class="issue-location">_auth/views.py:130, 162 &mdash; Corrige : remplace par CustomUser
+                            partout</div>
+                        <div class="issue-desc"><strong>Correction appliquee :</strong> <code>User</code> remplace par
+                            <code>CustomUser</code> dans <code>resetPasswordEmail()</code> et
+                            <code>resetPasswordConfirm()</code>. Import de <code>User</code> supprime.
+                        </div>
+                    </div>
+
+                    <div class="issue fixed">
+                        <div class="issue-title"><span class="badge fixed">Corrige</span> Redirect casse dans
+                            resetPasswordConfirm</div>
+                        <div class="issue-location">_auth/views.py:177 &mdash; Corrige : namespace _auth: ajoute avec
+                            kwargs</div>
+                        <div class="issue-desc"><strong>Correction appliquee :</strong>
+                            <code>redirect('_auth:resetPasswordConfirm', uidb64=uidb64, token=token)</code>
+                        </div>
+                    </div>
+
+                    <div class="issue fixed">
+                        <div class="issue-title"><span class="badge fixed">Corrige</span> 4 vues password reset sans URL
+                            pattern</div>
+                        <div class="issue-location">_auth/urls.py &mdash; Corrige : 4 URL patterns ajoutes</div>
+                        <div class="issue-desc"><strong>Correction appliquee :</strong> Les 4 chemins (resetPassword,
+                            resetPasswordEmail, resetPasswordConfirm, forgotPassword) sont maintenant enregistres dans
+                            urls.py.</div>
+                    </div>
+
+                    <div class="issue fixed">
+                        <div class="issue-title"><span class="badge fixed">Corrige</span> logoutServiceMedicaux()
+                            n'effectue pas la deconnexion</div>
+                        <div class="issue-location">_auth/views.py:263-266 &mdash; Corrige : logout(request) ajoute +
+                            redirect vers login</div>
+                        <div class="issue-desc"><strong>Correction appliquee :</strong> La vue appelle maintenant
+                            <code>logout(request)</code> et redirige vers <code>_auth:login</code>.
+                        </div>
+                    </div>
+
+                    <div class="issue high">
+                        <div class="issue-title"><span class="badge high">Haute</span> 4 templates email manquants (non
+                            corrige - creation de templates requise)</div>
+                        <div class="issue-location">_auth/views.py:125, 134, 178, 183</div>
+                        <div class="issue-desc">Les templates suivants sont references mais n'existent pas :
+                            <code>auth/users/resetPasswordMail.html</code>,
+                            <code>auth/users/resetPasswordConfirm.html</code>,
+                            <code>auth/users/forgotPassword.html</code>, <code>auth/users/resetPassword.html</code>. Les
+                            URLs sont maintenant accessibles mais les templates doivent etre crees.
+                        </div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Creer les 4 templates dans
+                            <code>_auth/templates/auth/users/</code>.
+                        </div>
+                    </div>
+
+                    <div class="issue fixed">
+                        <div class="issue-title"><span class="badge fixed">Corrige</span> try-except masque les erreurs
+                            dans logIn</div>
+                        <div class="issue-location">_auth/views.py:79-101 &mdash; Corrige : logique reecrite avec
+                            if/dict de redirections</div>
+                        <div class="issue-desc"><strong>Correction appliquee :</strong> La vue utilise maintenant
+                            <code>if user is None or not user.is_active</code> suivi d'un dictionnaire
+                            <code>role_redirects</code>. Plus de try-except.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Incoherences des roles</h3>
+
+                    <div class="issue medium">
+                        <div class="issue-title"><span class="badge medium">Moyenne</span> roles.py incoherent avec
+                            CustomUser.ROLE_CHOICES</div>
+                        <div class="issue-location">_auth/roles.py vs _auth/models.py</div>
+                        <div class="issue-desc"><code>roles.py</code> definit <code>'banque_de_sang'</code> mais
+                            <code>CustomUser.ROLE_CHOICES</code> utilise <code>'blood_bank'</code>. Les constantes de
+                            <code>roles.py</code> ne sont jamais importees (import commente). Deux systemes de roles
+                            coexistent sans aucun lien.
+                        </div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Supprimer <code>roles.py</code> ou
+                            l'aligner avec <code>ROLE_CHOICES</code> et l'utiliser comme source unique de verite.</div>
+                    </div>
+
+                    <div class="issue low">
+                        <div class="issue-title"><span class="badge low">Basse</span> admin.py vide - aucun modele
+                            enregistre</div>
+                        <div class="issue-location">_auth/admin.py</div>
+                        <div class="issue-desc">Aucun des 5 modeles (<code>CustomUser</code>, <code>Utilisateur</code>,
+                            <code>Donneur</code>, <code>BanqueDeSang</code>, <code>ServiceMedicaux</code>) n'est
+                            enregistre dans l'interface d'administration Django.
+                        </div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Enregistrer les modeles avec
+                            <code>admin.site.register()</code> et creer des classes <code>ModelAdmin</code> appropriees.
+                        </div>
+                    </div>
+
+                    <div class="issue fixed">
+                        <div class="issue-title"><span class="badge fixed">Corrige</span> Import duplique de models
+                        </div>
+                        <div class="issue-location">_auth/models.py:1 &mdash; Corrige : doublon supprime</div>
+                        <div class="issue-desc"><strong>Correction appliquee :</strong> L'import duplique a ete
+                            supprime.</div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="subsection">
-            <h3>Incoherences des roles</h3>
-
-            <div class="issue medium">
-                <div class="issue-title"><span class="badge medium">Moyenne</span> roles.py incoherent avec CustomUser.ROLE_CHOICES</div>
-                <div class="issue-location">_auth/roles.py vs _auth/models.py</div>
-                <div class="issue-desc"><code>roles.py</code> definit <code>'banque_de_sang'</code> mais <code>CustomUser.ROLE_CHOICES</code> utilise <code>'blood_bank'</code>. Les constantes de <code>roles.py</code> ne sont jamais importees (import commente). Deux systemes de roles coexistent sans aucun lien.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Supprimer <code>roles.py</code> ou l'aligner avec <code>ROLE_CHOICES</code> et l'utiliser comme source unique de verite.</div>
+        <!--  -->
+        <!-- SECTION 3: BANKDESANG -->
+        <!--  -->
+        <div class="section" id="bankdesang">
+            <div class="section-header">
+                <div class="section-icon" style="background:#dc2626;">&#129656;</div>
+                <h2>3. Application bankDeSang - Gestion des poches de sang</h2>
             </div>
+            <div class="section-body">
 
-            <div class="issue low">
-                <div class="issue-title"><span class="badge low">Basse</span> admin.py vide - aucun modele enregistre</div>
-                <div class="issue-location">_auth/admin.py</div>
-                <div class="issue-desc">Aucun des 5 modeles (<code>CustomUser</code>, <code>Utilisateur</code>, <code>Donneur</code>, <code>BanqueDeSang</code>, <code>ServiceMedicaux</code>) n'est enregistre dans l'interface d'administration Django.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Enregistrer les modeles avec <code>admin.site.register()</code> et creer des classes <code>ModelAdmin</code> appropriees.</div>
-            </div>
+                <div class="subsection">
+                    <h3>Bugs critiques</h3>
 
-            <div class="issue fixed">
-                <div class="issue-title"><span class="badge fixed">Corrige</span> Import duplique de models</div>
-                <div class="issue-location">_auth/models.py:1 &mdash; Corrige : doublon supprime</div>
-                <div class="issue-desc"><strong>Correction appliquee :</strong> L'import duplique a ete supprime.</div>
+                    <div class="issue fixed">
+                        <div class="issue-title"><span class="badge fixed">Corrige</span> notification() utilise le
+                            champ inexistant 'statut'</div>
+                        <div class="issue-location">bankDeSang/views.py:35 &mdash; Corrige : statut remplace par etat
+                        </div>
+                        <div class="issue-desc"><strong>Correction appliquee :</strong> Le filtre utilise maintenant
+                            <code>etat='En attente'</code>.
+                        </div>
+                    </div>
+
+                    <div class="issue critical">
+                        <div class="issue-title"><span class="badge critical">Critique</span> Filtrage JSONField
+                            incorrect dans listeDemandesDeSang</div>
+                        <div class="issue-location">bankDeSang/views.py:128</div>
+                        <div class="issue-desc">
+                            <code>PocheDeSang.objects.filter(groupe_sanguin=demande.groupe_sanguin)</code> compare un
+                            <code>CharField</code> avec un <code>JSONField</code> (dictionnaire). Le filtre ne
+                            retournera jamais de resultats.
+                        </div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Iterer sur les cles du JSONField et
+                            filtrer par chaque groupe sanguin individuellement.</div>
+                    </div>
+
+                    <div class="issue critical">
+                        <div class="issue-title"><span class="badge critical">Critique</span> Etat '1/2 Approuvee'
+                            absent des choix du modele</div>
+                        <div class="issue-location">bankDeSang/views.py:116</div>
+                        <div class="issue-desc">Le filtre utilise <code>'1/2 Approuvee'</code> comme valeur d'etat, mais
+                            <code>DemandeDeSang.etat_choices</code> ne contient que :
+                            <code>En attente, Approuvee, Rejetee, Completee</code>. Les demandes partiellement
+                            approuvees ne seront jamais trouvees.
+                        </div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Ajouter
+                            <code>('1/2 Approuvee', '1/2 Approuvee')</code> dans les choix du modele ou revoir la
+                            logique de filtrage.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Securite et logique</h3>
+
+                    <div class="issue high">
+                        <div class="issue-title"><span class="badge high">Haute</span> poches_disponibles() retourne les
+                            poches de TOUTES les banques</div>
+                        <div class="issue-location">bankDeSang/views.py:217</div>
+                        <div class="issue-desc">Le filtre
+                            <code>PocheDeSang.objects.filter(groupe_sanguin=..., est_disponible=True)</code> ne filtre
+                            pas par banque de sang. Une banque peut voir et allouer les poches des autres banques.
+                        </div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Ajouter
+                            <code>bank_de_sang=request.user.banque_de_sang</code> au filtre.
+                        </div>
+                    </div>
+
+                    <div class="issue fixed">
+                        <div class="issue-title"><span class="badge fixed">Corrige</span> notification() sans decorateur
+                            d'authentification</div>
+                        <div class="issue-location">bankDeSang/views.py:33-35 &mdash; Corrige : @login_required et
+                            @check_role ajoutes</div>
+                        <div class="issue-desc"><strong>Correction appliquee :</strong> Decorateurs
+                            <code>@login_required</code> et <code>@check_role('blood_bank')</code> ajoutes.
+                        </div>
+                    </div>
+
+                    <div class="issue high">
+                        <div class="issue-title"><span class="badge high">Haute</span> Pas de try-except pour
+                            Donneur.objects.get() dans gestionStock</div>
+                        <div class="issue-location">bankDeSang/views.py:74</div>
+                        <div class="issue-desc">Si l'ID du donneur est invalide,
+                            <code>Donneur.objects.get(id=donneur_id)</code> leve <code>DoesNotExist</code> et provoque
+                            une erreur 500.
+                        </div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Utiliser
+                            <code>get_object_or_404(Donneur, id=donneur_id)</code>.
+                        </div>
+                    </div>
+
+                    <div class="issue medium">
+                        <div class="issue-title"><span class="badge medium">Moyenne</span> Import non standard de
+                            settings</div>
+                        <div class="issue-location">bankDeSang/models.py:10</div>
+                        <div class="issue-desc"><code>from eBloodBank import settings</code> au lieu de
+                            <code>from django.conf import settings</code>. Peut echouer dans certaines configurations.
+                        </div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Utiliser
+                            <code>from django.conf import settings</code>.
+                        </div>
+                    </div>
+
+                    <div class="issue medium">
+                        <div class="issue-title"><span class="badge medium">Moyenne</span> Champ en_transition jamais
+                            remis a False</div>
+                        <div class="issue-location">bankDeSang/views.py (accepter_demande)</div>
+                        <div class="issue-desc">Le champ <code>en_transition</code> est mis a <code>True</code> lors de
+                            l'acceptation mais n'est jamais remis a <code>False</code> apres reception. Les poches
+                            restent en etat de transition indefiniment.</div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Mettre
+                            <code>en_transition=False</code> dans la vue <code>recevoir_poches</code> apres reception.
+                        </div>
+                    </div>
+
+                    <div class="issue low">
+                        <div class="issue-title"><span class="badge low">Basse</span> Instructions print() de debug
+                            laissees dans le code</div>
+                        <div class="issue-location">bankDeSang/views.py:35, 43, 44, 140-145</div>
+                        <div class="issue-desc">Plusieurs <code>print()</code> de debug sont presents dans le code de
+                            production.</div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Supprimer tous les
+                            <code>print()</code> ou les remplacer par <code>logging.debug()</code>.
+                        </div>
+                    </div>
+
+                    <div class="issue fixed">
+                        <div class="issue-title"><span class="badge fixed">Corrige</span> login_url code en dur dans
+                            tous les decorateurs</div>
+                        <div class="issue-location">bankDeSang/views.py, serviceMedicaux/views.py, settings.py &mdash;
+                            Corrige</div>
+                        <div class="issue-desc"><strong>Correction appliquee :</strong>
+                            <code>LOGIN_URL = '/_auth/login/'</code> ajoute dans settings.py. Tous les
+                            <code>@login_required(login_url=...)</code> remplaces par <code>@login_required</code> sans
+                            argument.
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
 
-<!-- ============================================================ -->
-<!-- SECTION 3: BANKDESANG -->
-<!-- ============================================================ -->
-<div class="section" id="bankdesang">
-    <div class="section-header">
-        <div class="section-icon" style="background:#dc2626;">&#129656;</div>
-        <h2>3. Application bankDeSang - Gestion des poches de sang</h2>
-    </div>
-    <div class="section-body">
-
-        <div class="subsection">
-            <h3>Bugs critiques</h3>
-
-            <div class="issue fixed">
-                <div class="issue-title"><span class="badge fixed">Corrige</span> notification() utilise le champ inexistant 'statut'</div>
-                <div class="issue-location">bankDeSang/views.py:35 &mdash; Corrige : statut remplace par etat</div>
-                <div class="issue-desc"><strong>Correction appliquee :</strong> Le filtre utilise maintenant <code>etat='En attente'</code>.</div>
+        <!--  -->
+        <!-- SECTION 4: SERVICE MEDICAUX -->
+        <!--  -->
+        <div class="section" id="servicemedical">
+            <div class="section-header">
+                <div class="section-icon" style="background:#0284c7;">&#127973;</div>
+                <h2>4. Application serviceMedicaux</h2>
             </div>
+            <div class="section-body">
 
-            <div class="issue critical">
-                <div class="issue-title"><span class="badge critical">Critique</span> Filtrage JSONField incorrect dans listeDemandesDeSang</div>
-                <div class="issue-location">bankDeSang/views.py:128</div>
-                <div class="issue-desc"><code>PocheDeSang.objects.filter(groupe_sanguin=demande.groupe_sanguin)</code> compare un <code>CharField</code> avec un <code>JSONField</code> (dictionnaire). Le filtre ne retournera jamais de resultats.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Iterer sur les cles du JSONField et filtrer par chaque groupe sanguin individuellement.</div>
-            </div>
+                <div class="subsection">
+                    <h3>Bugs critiques</h3>
 
-            <div class="issue critical">
-                <div class="issue-title"><span class="badge critical">Critique</span> Etat '1/2 Approuvee' absent des choix du modele</div>
-                <div class="issue-location">bankDeSang/views.py:116</div>
-                <div class="issue-desc">Le filtre utilise <code>'1/2 Approuvee'</code> comme valeur d'etat, mais <code>DemandeDeSang.etat_choices</code> ne contient que : <code>En attente, Approuvee, Rejetee, Completee</code>. Les demandes partiellement approuvees ne seront jamais trouvees.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Ajouter <code>('1/2 Approuvee', '1/2 Approuvee')</code> dans les choix du modele ou revoir la logique de filtrage.</div>
-            </div>
-        </div>
-
-        <div class="subsection">
-            <h3>Securite et logique</h3>
-
-            <div class="issue high">
-                <div class="issue-title"><span class="badge high">Haute</span> poches_disponibles() retourne les poches de TOUTES les banques</div>
-                <div class="issue-location">bankDeSang/views.py:217</div>
-                <div class="issue-desc">Le filtre <code>PocheDeSang.objects.filter(groupe_sanguin=..., est_disponible=True)</code> ne filtre pas par banque de sang. Une banque peut voir et allouer les poches des autres banques.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Ajouter <code>bank_de_sang=request.user.banque_de_sang</code> au filtre.</div>
-            </div>
-
-            <div class="issue fixed">
-                <div class="issue-title"><span class="badge fixed">Corrige</span> notification() sans decorateur d'authentification</div>
-                <div class="issue-location">bankDeSang/views.py:33-35 &mdash; Corrige : @login_required et @check_role ajoutes</div>
-                <div class="issue-desc"><strong>Correction appliquee :</strong> Decorateurs <code>@login_required</code> et <code>@check_role('blood_bank')</code> ajoutes.</div>
-            </div>
-
-            <div class="issue high">
-                <div class="issue-title"><span class="badge high">Haute</span> Pas de try-except pour Donneur.objects.get() dans gestionStock</div>
-                <div class="issue-location">bankDeSang/views.py:74</div>
-                <div class="issue-desc">Si l'ID du donneur est invalide, <code>Donneur.objects.get(id=donneur_id)</code> leve <code>DoesNotExist</code> et provoque une erreur 500.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Utiliser <code>get_object_or_404(Donneur, id=donneur_id)</code>.</div>
-            </div>
-
-            <div class="issue medium">
-                <div class="issue-title"><span class="badge medium">Moyenne</span> Import non standard de settings</div>
-                <div class="issue-location">bankDeSang/models.py:10</div>
-                <div class="issue-desc"><code>from eBloodBank import settings</code> au lieu de <code>from django.conf import settings</code>. Peut echouer dans certaines configurations.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Utiliser <code>from django.conf import settings</code>.</div>
-            </div>
-
-            <div class="issue medium">
-                <div class="issue-title"><span class="badge medium">Moyenne</span> Champ en_transition jamais remis a False</div>
-                <div class="issue-location">bankDeSang/views.py (accepter_demande)</div>
-                <div class="issue-desc">Le champ <code>en_transition</code> est mis a <code>True</code> lors de l'acceptation mais n'est jamais remis a <code>False</code> apres reception. Les poches restent en etat de transition indefiniment.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Mettre <code>en_transition=False</code> dans la vue <code>recevoir_poches</code> apres reception.</div>
-            </div>
-
-            <div class="issue low">
-                <div class="issue-title"><span class="badge low">Basse</span> Instructions print() de debug laissees dans le code</div>
-                <div class="issue-location">bankDeSang/views.py:35, 43, 44, 140-145</div>
-                <div class="issue-desc">Plusieurs <code>print()</code> de debug sont presents dans le code de production.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Supprimer tous les <code>print()</code> ou les remplacer par <code>logging.debug()</code>.</div>
-            </div>
-
-            <div class="issue fixed">
-                <div class="issue-title"><span class="badge fixed">Corrige</span> login_url code en dur dans tous les decorateurs</div>
-                <div class="issue-location">bankDeSang/views.py, serviceMedicaux/views.py, settings.py &mdash; Corrige</div>
-                <div class="issue-desc"><strong>Correction appliquee :</strong> <code>LOGIN_URL = '/_auth/login/'</code> ajoute dans settings.py. Tous les <code>@login_required(login_url=...)</code> remplaces par <code>@login_required</code> sans argument.</div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- ============================================================ -->
-<!-- SECTION 4: SERVICE MEDICAUX -->
-<!-- ============================================================ -->
-<div class="section" id="servicemedical">
-    <div class="section-header">
-        <div class="section-icon" style="background:#0284c7;">&#127973;</div>
-        <h2>4. Application serviceMedicaux</h2>
-    </div>
-    <div class="section-body">
-
-        <div class="subsection">
-            <h3>Bugs critiques</h3>
-
-            <div class="issue critical">
-                <div class="issue-title"><span class="badge critical">Critique</span> Reference a StockDeSang supprime dans recevoir_poches</div>
-                <div class="issue-location">serviceMedicaux/views.py:232</div>
-                <div class="issue-desc"><code>StockDeSang.enregistrer_stock(poche, -1)</code> reference une classe supprimee dans la migration <code>0006</code>. Provoque un <code>NameError</code> a l'execution. Seul <code>Stock_de_sang</code> existe encore.</div>
-                <pre><code># ACTUEL (bugge) - StockDeSang n'existe plus
+                    <div class="issue critical">
+                        <div class="issue-title"><span class="badge critical">Critique</span> Reference a StockDeSang
+                            supprime dans recevoir_poches</div>
+                        <div class="issue-location">serviceMedicaux/views.py:232</div>
+                        <div class="issue-desc"><code>StockDeSang.enregistrer_stock(poche, -1)</code> reference une
+                            classe supprimee dans la migration <code>0006</code>. Provoque un <code>NameError</code> a
+                            l'execution. Seul <code>Stock_de_sang</code> existe encore.</div>
+                        <pre><code># ACTUEL (bugge) - StockDeSang n'existe plus
 StockDeSang.enregistrer_stock(poche, -1)  # NameError!
 Stock_de_sang.enregistrer_stock(poche, 1)
 
 # CORRECTION - utiliser uniquement Stock_de_sang
 # Retirer du stock de la banque (via bankDeSang.models.StockDeSang si necessaire)
 Stock_de_sang.enregistrer_stock(poche, 1)</code></pre>
-            </div>
+                    </div>
 
-            <div class="issue critical">
-                <div class="issue-title"><span class="badge critical">Critique</span> getToutesDemande() utilise .get() au lieu de .filter()</div>
-                <div class="issue-location">serviceMedicaux/views.py:206</div>
-                <div class="issue-desc"><code>DemandeDeSang.objects.get(etat='En attente')</code> leve <code>MultipleObjectsReturned</code> des qu'il y a plus d'une demande en attente.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Remplacer <code>.get()</code> par <code>.filter()</code>.</div>
-            </div>
+                    <div class="issue critical">
+                        <div class="issue-title"><span class="badge critical">Critique</span> getToutesDemande() utilise
+                            .get() au lieu de .filter()</div>
+                        <div class="issue-location">serviceMedicaux/views.py:206</div>
+                        <div class="issue-desc"><code>DemandeDeSang.objects.get(etat='En attente')</code> leve
+                            <code>MultipleObjectsReturned</code> des qu'il y a plus d'une demande en attente.
+                        </div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Remplacer <code>.get()</code> par
+                            <code>.filter()</code>.
+                        </div>
+                    </div>
 
-            <div class="issue critical">
-                <div class="issue-title"><span class="badge critical">Critique</span> Comparaison semantiquement incorrecte dans recevoir_poches</div>
-                <div class="issue-location">serviceMedicaux/views.py:218-222</div>
-                <div class="issue-desc">Le code compare des groupes sanguins (ex: <code>"A+"</code>) avec des matricules de poches (ex: <code>"2024ebb0001"</code>). La condition <code>if groupe in poches</code> ne sera jamais vraie, car ce sont des types de donnees differents.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Revoir la logique pour verifier si le groupe sanguin a des poches associees dans <code>nombre_poches_allouees</code>.</div>
+                    <div class="issue critical">
+                        <div class="issue-title"><span class="badge critical">Critique</span> Comparaison semantiquement
+                            incorrecte dans recevoir_poches</div>
+                        <div class="issue-location">serviceMedicaux/views.py:218-222</div>
+                        <div class="issue-desc">Le code compare des groupes sanguins (ex: <code>"A+"</code>) avec des
+                            matricules de poches (ex: <code>"2024ebb0001"</code>). La condition
+                            <code>if groupe in poches</code> ne sera jamais vraie, car ce sont des types de donnees
+                            differents.
+                        </div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Revoir la logique pour verifier si
+                            le groupe sanguin a des poches associees dans <code>nombre_poches_allouees</code>.</div>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Securite et authentification</h3>
+
+                    <div class="issue fixed">
+                        <div class="issue-title"><span class="badge fixed">Corrige</span> 4 vues sans @login_required
+                        </div>
+                        <div class="issue-location">serviceMedicaux/views.py &mdash; Corrige : @login_required et
+                            @check_role('medical') ajoutes</div>
+                        <div class="issue-desc"><strong>Correction appliquee :</strong> <code>mesDemandesDeSang</code>,
+                            <code>listeDemandeDeSang</code> et <code>recevoir_poches</code> sont maintenant proteges par
+                            <code>@login_required</code> et <code>@check_role('medical')</code>.
+                        </div>
+                    </div>
+
+                    <div class="issue high">
+                        <div class="issue-title"><span class="badge high">Haute</span> Pas de gestion d'erreur dans
+                            recevoir_poches</div>
+                        <div class="issue-location">serviceMedicaux/views.py:215, 227</div>
+                        <div class="issue-desc">Les appels <code>.get()</code> sans <code>try-except</code> provoqueront
+                            des erreurs 500 si l'ID de demande ou le matricule de poche est invalide.</div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Utiliser
+                            <code>get_object_or_404()</code>.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Structure des donnees JSON</h3>
+
+                    <div class="issue medium">
+                        <div class="issue-title"><span class="badge medium">Moyenne</span> Structure JSONField
+                            incoherente selon le role</div>
+                        <div class="issue-location">serviceMedicaux/views.py:72-119</div>
+                        <div class="issue-desc">La vue <code>faireDemandeDeSang</code> cree des structures JSON
+                            differentes selon le role : <code>&#123;email: [liste]&#125;</code> pour 'medical',
+                            <code>&#123;"groupe_sanguin": valeur&#125;</code> pour 'donor',
+                            <code>&#123;user_email: valeur&#125;</code> pour 'generic'. Les vues de lecture supposent
+                            une structure unique.
+                        </div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Normaliser la structure JSON.
+                            Utiliser un format uniforme comme
+                            <code>&#123;"groupes": ["A+", "B-"], "quantites": [2, 1]&#125;</code>.
+                        </div>
+                    </div>
+
+                    <div class="issue medium">
+                        <div class="issue-title"><span class="badge medium">Moyenne</span> Acces aux JSONField sans
+                            gestion de KeyError</div>
+                        <div class="issue-location">serviceMedicaux/views.py:33-34</div>
+                        <div class="issue-desc"><code>demande.groupe_sanguin[service_medical.email]</code> leve
+                            <code>KeyError</code> si l'email n'est pas une cle du dictionnaire JSON.
+                        </div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Utiliser
+                            <code>.get(service_medical.email, [])</code>.
+                        </div>
+                    </div>
+
+                    <div class="issue low">
+                        <div class="issue-title"><span class="badge low">Basse</span> Import duplique dans models.py
+                        </div>
+                        <div class="issue-location">serviceMedicaux/models.py:2, 4</div>
+                        <div class="issue-desc"><code>from _auth.models import *</code> est importe deux fois.</div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Supprimer la ligne dupliquee.</div>
+                    </div>
+
+                    <div class="issue low">
+                        <div class="issue-title"><span class="badge low">Basse</span> Import inutilise de check_role
+                        </div>
+                        <div class="issue-location">serviceMedicaux/views.py:11</div>
+                        <div class="issue-desc"><code>from decorateurs import check_role</code> est importe mais jamais
+                            utilise dans ce fichier.</div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Supprimer l'import ou l'utiliser
+                            sur les vues qui en ont besoin.</div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="subsection">
-            <h3>Securite et authentification</h3>
-
-            <div class="issue fixed">
-                <div class="issue-title"><span class="badge fixed">Corrige</span> 4 vues sans @login_required</div>
-                <div class="issue-location">serviceMedicaux/views.py &mdash; Corrige : @login_required et @check_role('medical') ajoutes</div>
-                <div class="issue-desc"><strong>Correction appliquee :</strong> <code>mesDemandesDeSang</code>, <code>listeDemandeDeSang</code> et <code>recevoir_poches</code> sont maintenant proteges par <code>@login_required</code> et <code>@check_role('medical')</code>.</div>
+        <!--  -->
+        <!-- SECTION 5: DONNEUR & FRONTEND -->
+        <!--  -->
+        <div class="section" id="donneur-frontend">
+            <div class="section-header">
+                <div class="section-icon" style="background:#059669;">&#127760;</div>
+                <h2>5. Applications donneur et frontend</h2>
             </div>
+            <div class="section-body">
 
-            <div class="issue high">
-                <div class="issue-title"><span class="badge high">Haute</span> Pas de gestion d'erreur dans recevoir_poches</div>
-                <div class="issue-location">serviceMedicaux/views.py:215, 227</div>
-                <div class="issue-desc">Les appels <code>.get()</code> sans <code>try-except</code> provoqueront des erreurs 500 si l'ID de demande ou le matricule de poche est invalide.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Utiliser <code>get_object_or_404()</code>.</div>
+                <div class="subsection">
+                    <h3>Application donneur</h3>
+
+                    <div class="issue medium">
+                        <div class="issue-title"><span class="badge medium">Moyenne</span> Vue listeDonneur() sans URL
+                            pattern</div>
+                        <div class="issue-location">donneur/views.py / donneur/urls.py</div>
+                        <div class="issue-desc">La vue <code>listeDonneur()</code> est definie mais n'est mappee sur
+                            aucune URL dans <code>urls.py</code>. Code mort inaccessible.</div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Ajouter
+                            <code>path('listeDonneurs/', views.listeDonneur, name='listeDonneur')</code> dans urls.py ou
+                            supprimer la vue.
+                        </div>
+                    </div>
+
+                    <div class="issue fixed">
+                        <div class="issue-title"><span class="badge fixed">Corrige</span> Decorateur @donneurLogin
+                            commente</div>
+                        <div class="issue-location">donneur/views.py:7-9 &mdash; Corrige : @login_required et
+                            @check_role('donor') ajoutes</div>
+                        <div class="issue-desc"><strong>Correction appliquee :</strong> Les deux vues
+                            (<code>accueilDonneur</code>, <code>listeDonneur</code>) sont maintenant protegees.
+                            L'app_name 'donneur' a ete ajoute dans urls.py.</div>
+                    </div>
+
+                    <div class="issue low">
+                        <div class="issue-title"><span class="badge low">Basse</span> Modeles dupliques et commentes
+                            dans donneur/models.py</div>
+                        <div class="issue-location">donneur/models.py</div>
+                        <div class="issue-desc">Un modele <code>Donneur</code> complet est commente (60 lignes). Le vrai
+                            modele est dans <code>_auth/models.py</code>. Cela prete a confusion.</div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Supprimer le code commente. Ajouter
+                            un commentaire indiquant que le modele est dans <code>_auth.models</code>.</div>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Application frontend</h3>
+
+                    <div class="issue high">
+                        <div class="issue-title"><span class="badge high">Haute</span> hopital() sans gestion d'erreur
+                            404</div>
+                        <div class="issue-location">frontend/views.py:19-24</div>
+                        <div class="issue-desc"><code>ServiceMedicaux.objects.get(id=id)</code> provoque une erreur 500
+                            si l'ID n'existe pas.</div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Utiliser
+                            <code>get_object_or_404(ServiceMedicaux, id=id)</code>.
+                        </div>
+                    </div>
+
+                    <div class="issue medium">
+                        <div class="issue-title"><span class="badge medium">Moyenne</span> Imports wildcard dans les
+                            vues</div>
+                        <div class="issue-location">frontend/views.py:4-5</div>
+                        <div class="issue-desc"><code>from _auth.models import *</code> et
+                            <code>from serviceMedicaux.models import *</code> polluent l'espace de noms et rendent les
+                            dependances opaques.
+                        </div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Importer explicitement :
+                            <code>from _auth.models import ServiceMedicaux</code>.
+                        </div>
+                    </div>
+
+                    <div class="issue medium">
+                        <div class="issue-title"><span class="badge medium">Moyenne</span> Variable 'id' ecrase le
+                            built-in Python</div>
+                        <div class="issue-location">frontend/views.py:29</div>
+                        <div class="issue-desc"><code>id = utilisateur.id</code> masque la fonction built-in
+                            <code>id()</code> de Python.
+                        </div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Renommer en
+                            <code>user_id = utilisateur.id</code>.
+                        </div>
+                    </div>
+
+                    <div class="issue low">
+                        <div class="issue-title"><span class="badge low">Basse</span> frontend/models.py vide avec
+                            commentaire de modele prevu</div>
+                        <div class="issue-location">frontend/models.py</div>
+                        <div class="issue-desc">Contient un commentaire mentionnant <code>DemandeDeSangU</code> qui n'a
+                            jamais ete implemente. Code mort.</div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Nettoyer le fichier (laisser vide
+                            ou supprimer le commentaire).</div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="subsection">
-            <h3>Structure des donnees JSON</h3>
-
-            <div class="issue medium">
-                <div class="issue-title"><span class="badge medium">Moyenne</span> Structure JSONField incoherente selon le role</div>
-                <div class="issue-location">serviceMedicaux/views.py:72-119</div>
-                <div class="issue-desc">La vue <code>faireDemandeDeSang</code> cree des structures JSON differentes selon le role : <code>&#123;email: [liste]&#125;</code> pour 'medical', <code>&#123;"groupe_sanguin": valeur&#125;</code> pour 'donor', <code>&#123;user_email: valeur&#125;</code> pour 'generic'. Les vues de lecture supposent une structure unique.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Normaliser la structure JSON. Utiliser un format uniforme comme <code>&#123;"groupes": ["A+", "B-"], "quantites": [2, 1]&#125;</code>.</div>
+        <!--  -->
+        <!-- SECTION 6: TEMPLATES -->
+        <!--  -->
+        <div class="section" id="templates">
+            <div class="section-header">
+                <div class="section-icon" style="background:#8b5cf6;">&#128196;</div>
+                <h2>6. Templates et Interface utilisateur</h2>
             </div>
+            <div class="section-body">
 
-            <div class="issue medium">
-                <div class="issue-title"><span class="badge medium">Moyenne</span> Acces aux JSONField sans gestion de KeyError</div>
-                <div class="issue-location">serviceMedicaux/views.py:33-34</div>
-                <div class="issue-desc"><code>demande.groupe_sanguin[service_medical.email]</code> leve <code>KeyError</code> si l'email n'est pas une cle du dictionnaire JSON.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Utiliser <code>.get(service_medical.email, [])</code>.</div>
-            </div>
+                <div class="subsection">
+                    <h3>Liens et URLs casses</h3>
 
-            <div class="issue low">
-                <div class="issue-title"><span class="badge low">Basse</span> Import duplique dans models.py</div>
-                <div class="issue-location">serviceMedicaux/models.py:2, 4</div>
-                <div class="issue-desc"><code>from _auth.models import *</code> est importe deux fois.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Supprimer la ligne dupliquee.</div>
-            </div>
+                    <div class="issue critical">
+                        <div class="issue-title"><span class="badge critical">Critique</span> URL
+                            'serviceMedicaux:detailStock' inexistante</div>
+                        <div class="issue-location">frontend/templates/frontend/serviceMedicaux/gestion_stock.html:22
+                        </div>
+                        <div class="issue-desc"><code>&#123;% url 'serviceMedicaux:detailStock' stock.id %&#125;</code>
+                            reference une URL non definie dans <code>serviceMedicaux/urls.py</code>. Provoque
+                            <code>NoReverseMatch</code> a chaque affichage de la page.
+                        </div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Creer la vue
+                            <code>detailStock</code> et son URL dans serviceMedicaux, ou supprimer le lien.
+                        </div>
+                    </div>
 
-            <div class="issue low">
-                <div class="issue-title"><span class="badge low">Basse</span> Import inutilise de check_role</div>
-                <div class="issue-location">serviceMedicaux/views.py:11</div>
-                <div class="issue-desc"><code>from decorateurs import check_role</code> est importe mais jamais utilise dans ce fichier.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Supprimer l'import ou l'utiliser sur les vues qui en ont besoin.</div>
+                    <div class="issue critical">
+                        <div class="issue-title"><span class="badge critical">Critique</span> URL
+                            '_auth:authentification' commentee</div>
+                        <div class="issue-location">_auth/templates/auth/serviceMedicaux/authentification.html:13</div>
+                        <div class="issue-desc"><code>&#123;% url '_auth:authentification' %&#125;</code> reference une
+                            URL commentee dans <code>_auth/urls.py</code>. Le formulaire de connexion des services
+                            medicaux est casse.</div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Decommentez l'URL dans
+                            <code>_auth/urls.py</code> ou redirigez vers <code>_auth:login</code>.
+                        </div>
+                    </div>
+
+                    <div class="issue high">
+                        <div class="issue-title"><span class="badge high">Haute</span> URL hardcodee dans le JavaScript
+                        </div>
+                        <div class="issue-location">
+                            frontend/templates/frontend/bankDeSang/historique_demandes_de_sang.html:205</div>
+                        <div class="issue-desc"><code>fetch('/bankDeSang/poches_disponibles/?...')</code> utilise un
+                            chemin absolu au lieu d'un tag <code>&#123;% url %&#125;</code>. Tout changement d'URL
+                            cassera cette fonctionnalite.</div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Passer l'URL via un attribut
+                            <code>data-url</code> sur un element HTML :
+                            <code>data-url="&#123;% url 'bankDeSang:poches_disponibles' %&#125;"</code>.
+                        </div>
+                    </div>
+
+                    <div class="issue high">
+                        <div class="issue-title"><span class="badge high">Haute</span> Fonction JavaScript
+                            refuserDemande() non definie</div>
+                        <div class="issue-location">
+                            frontend/templates/frontend/bankDeSang/historique_demandes_de_sang.html:140</div>
+                        <div class="issue-desc">Le bouton appelle <code>onclick="refuserDemande(...)"</code> mais cette
+                            fonction n'est definie nulle part dans le template. Clic = erreur JavaScript.</div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Definir la fonction
+                            <code>refuserDemande()</code> dans un bloc <code>&lt;script&gt;</code> ou dans un fichier JS
+                            externe.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Formulaires et navigation</h3>
+
+                    <div class="issue medium">
+                        <div class="issue-title"><span class="badge medium">Moyenne</span> Formulaire avec action="#"
+                            (placeholder)</div>
+                        <div class="issue-location">frontend/templates/frontend/bankDeSang/base.html:~52</div>
+                        <div class="issue-desc">Un formulaire POST a pour action <code>#</code>, ce qui signifie qu'il
+                            soumet vers la page actuelle sans traitement backend prevu.</div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Definir une URL d'action valide ou
+                            supprimer le formulaire s'il n'est pas necessaire.</div>
+                    </div>
+
+                    <div class="issue medium">
+                        <div class="issue-title"><span class="badge medium">Moyenne</span> Liens de navigation pointe
+                            vers href="#"</div>
+                        <div class="issue-location">Plusieurs templates (accueil.html,
+                            bankDeSang/accueil_bankDeSang.html, bankDeSang/base.html)</div>
+                        <div class="issue-desc">Environ 12 liens de navigation utilisent <code>href="#"</code> comme
+                            placeholder : "Comment s'engager ?", "Qui sommes-nous ?", elements de la sidebar, fil
+                            d'Ariane.</div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Creer les pages correspondantes ou
+                            supprimer les liens non fonctionnels.</div>
+                    </div>
+
+                    <div class="issue low">
+                        <div class="issue-title"><span class="badge low">Basse</span> Image placeholder.svg manquante
+                        </div>
+                        <div class="issue-location">frontend/templates/frontend/donneur/accueil_donneur.html:322, 336
+                        </div>
+                        <div class="issue-desc"><code>src="/placeholder.svg"</code> pointe vers un fichier inexistant.
+                        </div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Ajouter le fichier dans
+                            <code>static/img/</code> ou utiliser une vraie image.
+                        </div>
+                    </div>
+
+                    <div class="issue low">
+                        <div class="issue-title"><span class="badge low">Basse</span> URLs frontend sans slash final
+                        </div>
+                        <div class="issue-location">frontend/urls.py</div>
+                        <div class="issue-desc">Les URLs <code>listeHopitaux</code>,
+                            <code>hopital/&lt;int:id&gt;</code>, <code>listeDemandeDeSang</code> n'ont pas de slash
+                            final, contrairement a la convention Django.
+                        </div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Ajouter des trailing slashes :
+                            <code>listeHopitaux/</code>, <code>hopital/&lt;int:id&gt;/</code>.
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+
+        <!--  -->
+        <!-- SECTION 7: CONFIG & DEPS -->
+        <!--  -->
+        <div class="section" id="config">
+            <div class="section-header">
+                <div class="section-icon" style="background:#d97706;">&#9881;</div>
+                <h2>7. Configuration et Dependances</h2>
+            </div>
+            <div class="section-body">
+
+                <div class="subsection">
+                    <h3>Requirements.txt</h3>
+
+                    <div class="issue critical">
+                        <div class="issue-title"><span class="badge critical">Critique</span> Django absent de
+                            requirements.txt</div>
+                        <div class="issue-location">requirements.txt</div>
+                        <div class="issue-desc">Le framework Django lui-meme n'est pas liste dans les dependances ! Le
+                            fichier contient principalement des librairies d'image processing (opencv, rembg,
+                            scikit-image) dont l'usage dans le projet n'est pas documente.</div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Ajouter <code>Django==4.2.*</code>
+                            et <code>mysqlclient</code> dans requirements.txt. Supprimer les dependances non utilisees.
+                        </div>
+                    </div>
+
+                    <div class="issue high">
+                        <div class="issue-title"><span class="badge high">Haute</span> mysqlclient absent</div>
+                        <div class="issue-location">requirements.txt</div>
+                        <div class="issue-desc">Le backend MySQL est configure dans settings.py mais
+                            <code>mysqlclient</code> n'est pas dans les dependances. L'application ne peut pas se
+                            connecter a la base de donnees apres un <code>pip install</code>.
+                        </div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Ajouter
+                            <code>mysqlclient>=2.2.0</code> dans requirements.txt.
+                        </div>
+                    </div>
+
+                    <div class="issue high">
+                        <div class="issue-title"><span class="badge high">Haute</span> qrcode absent de requirements.txt
+                        </div>
+                        <div class="issue-location">requirements.txt</div>
+                        <div class="issue-desc">La librairie <code>qrcode</code> est utilisee dans
+                            <code>bankDeSang/models.py</code> pour generer les QR codes des poches de sang, mais n'est
+                            pas listee dans les dependances.
+                        </div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Ajouter
+                            <code>qrcode[pil]>=7.0</code> dans requirements.txt.
+                        </div>
+                    </div>
+
+                    <div class="issue medium">
+                        <div class="issue-title"><span class="badge medium">Moyenne</span> Dependances inutilisees dans
+                            requirements.txt</div>
+                        <div class="issue-location">requirements.txt</div>
+                        <div class="issue-desc">Packages comme <code>opencv-python-headless</code>, <code>rembg</code>,
+                            <code>scikit-image</code>, <code>coloredlogs</code>, <code>PyYAML</code>,
+                            <code>requests</code>, <code>tqdm</code> ne sont importes nulle part dans le code.
+                        </div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Supprimer les packages non utilises
+                            pour reduire la taille de l'installation.</div>
+                    </div>
+
+                    <div class="issue low">
+                        <div class="issue-title"><span class="badge low">Basse</span> Fichier requirements.txt.save
+                            obsolete</div>
+                        <div class="issue-location">requirements.txt.save</div>
+                        <div class="issue-desc">Un fichier backup existe avec un contenu different. Cree de la
+                            confusion.</div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Supprimer
+                            <code>requirements.txt.save</code>.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Settings.py</h3>
+
+                    <div class="issue medium">
+                        <div class="issue-title"><span class="badge medium">Moyenne</span> TEMPLATE_DIR defini mais non
+                            utilise</div>
+                        <div class="issue-location">eBloodBank/settings.py:32, 85</div>
+                        <div class="issue-desc"><code>TEMPLATE_DIR</code> est defini (ligne 32) mais
+                            <code>TEMPLATES['DIRS']</code> est une liste vide (ligne 85). Les templates dans le dossier
+                            racine <code>templates/</code> ne seront pas trouves.
+                        </div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Ajouter <code>TEMPLATE_DIR</code>
+                            dans <code>TEMPLATES['DIRS']</code> : <code>'DIRS': [TEMPLATE_DIR]</code>.</div>
+                    </div>
+
+                    <div class="issue low">
+                        <div class="issue-title"><span class="badge low">Basse</span> LANGUAGE_CODE 'en-us' pour une UI
+                            francaise</div>
+                        <div class="issue-location">eBloodBank/settings.py</div>
+                        <div class="issue-desc">L'UI est en francais mais le code de langue est configure en anglais.
+                            Les messages Django (validation, erreurs admin) seront en anglais.</div>
+                        <div class="fix"><span class="fix-label">Correction :</span> Changer pour
+                            <code>LANGUAGE_CODE = 'fr-fr'</code>.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--  -->
+        <!-- SECTION 8: ARCHITECTURE -->
+        <!--  -->
+        <div class="section" id="architecture">
+            <div class="section-header">
+                <div class="section-icon" style="background:#475569;">&#127959;</div>
+                <h2>8. Incoherences architecturales</h2>
+            </div>
+            <div class="section-body">
+
+                <div class="issue medium">
+                    <div class="issue-title"><span class="badge medium">Moyenne</span> Modeles repartis de maniere
+                        incoherente entre les apps</div>
+                    <div class="issue-desc">
+                        <p>Tous les modeles lies aux utilisateurs (Donneur, BanqueDeSang, ServiceMedicaux, Utilisateur)
+                            sont dans <code>_auth/models.py</code>, pas dans leurs apps respectives. Cela cree des
+                            dependances circulaires et rend l'architecture confuse :</p>
+                        <ul style="margin:0.5rem 0 0 1.5rem;">
+                            <li><code>donneur/models.py</code> est entierement commente (60 lignes de code mort)</li>
+                            <li><code>frontend/models.py</code> est vide avec un commentaire de modele planifie</li>
+                            <li><code>bankDeSang</code> et <code>serviceMedicaux</code> importent tout depuis
+                                <code>_auth.models</code>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="issue medium">
+                    <div class="issue-title"><span class="badge medium">Moyenne</span> Aucune application n'utilise de
+                        Django Forms</div>
+                    <div class="issue-desc">
+                        <p>Aucun fichier <code>forms.py</code> n'existe dans tout le projet. Toute la validation est
+                            manuelle via <code>request.POST.get()</code> :</p>
+                        <ul style="margin:0.5rem 0 0 1.5rem;">
+                            <li>Pas de validation de type ou de format</li>
+                            <li>Pas de messages d'erreur structures</li>
+                            <li>Pas de nettoyage des donnees (sanitization)</li>
+                            <li>Duplication de la logique de validation entre les vues</li>
+                        </ul>
+                    </div>
+                    <div class="fix"><span class="fix-label">Correction :</span> Creer des <code>ModelForm</code> pour
+                        chaque modele necesitant un formulaire. Centraliser la validation.</div>
+                </div>
+
+                <div class="issue medium">
+                    <div class="issue-title"><span class="badge medium">Moyenne</span> Aucun modele enregistre dans
+                        l'admin Django</div>
+                    <div class="issue-desc">Les 5 fichiers <code>admin.py</code> du projet sont tous vides. Aucun modele
+                        n'est administrable via l'interface d'administration Django, rendant la gestion des donnees
+                        impossible sans acces direct a la base de donnees.</div>
+                    <div class="fix"><span class="fix-label">Correction :</span> Enregistrer au minimum
+                        <code>CustomUser</code>, <code>Donneur</code>, <code>BanqueDeSang</code>,
+                        <code>ServiceMedicaux</code>, <code>PocheDeSang</code>, <code>DemandeDeSang</code> dans l'admin.
+                    </div>
+                </div>
+
+                <div class="issue low">
+                    <div class="issue-title"><span class="badge low">Basse</span> Convention de nommage mixte (camelCase
+                        vs snake_case)</div>
+                    <div class="issue-desc">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>camelCase</th>
+                                    <th>snake_case</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Vues</td>
+                                    <td><code>accueilBankDeSang</code></td>
+                                    <td><code>accepter_demande</code></td>
+                                </tr>
+                                <tr>
+                                    <td>URLs</td>
+                                    <td><code>listeDemandesDeSang</code></td>
+                                    <td><code>poches_disponibles</code></td>
+                                </tr>
+                                <tr>
+                                    <td>Modeles</td>
+                                    <td><code>StockDeSang</code></td>
+                                    <td><code>Stock_de_sang</code></td>
+                                </tr>
+                                <tr>
+                                    <td>Champs</td>
+                                    <td><code>serviceMedicaux</code></td>
+                                    <td><code>service_medical</code></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="fix"><span class="fix-label">Correction :</span> Adopter la convention PEP 8 :
+                        <code>snake_case</code> pour les fonctions, variables et noms de fichiers ;
+                        <code>PascalCase</code> pour les classes.
+                    </div>
+                </div>
+
+                <div class="issue low">
+                    <div class="issue-title"><span class="badge low">Basse</span> Aucun test ecrit</div>
+                    <div class="issue-desc">Tous les fichiers <code>tests.py</code> sont vides. Aucun test unitaire ou
+                        d'integration n'existe pour valider le fonctionnement des modeles, vues ou formulaires.</div>
+                    <div class="fix"><span class="fix-label">Correction :</span> Ecrire des tests pour les
+                        fonctionnalites critiques : creation de donneur, demande de sang, gestion de stock,
+                        authentification.</div>
+                </div>
+            </div>
+        </div>
+
+        <!--  -->
+        <!-- SECTION 9: RESUME -->
+        <!--  -->
+        <div class="section" id="resume">
+            <div class="section-header">
+                <div class="section-icon" style="background:#16a34a;">&#9989;</div>
+                <h2>9. Resume et plan de corrections prioritaire</h2>
+            </div>
+            <div class="section-body">
+
+                <div class="subsection">
+                    <h3>Recapitulatif par severite</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Severite</th>
+                                <th>Initial</th>
+                                <th>Corrigees</th>
+                                <th>Restantes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="color:var(--ok);font-weight:600;">
+                                <td>Corrigees (auth)</td>
+                                <td>&mdash;</td>
+                                <td>19</td>
+                                <td>&mdash;</td>
+                            </tr>
+                            <tr style="color:var(--critical);font-weight:600;">
+                                <td>Critique</td>
+                                <td>18</td>
+                                <td>13</td>
+                                <td>5</td>
+                            </tr>
+                            <tr style="color:var(--high);font-weight:600;">
+                                <td>Haute</td>
+                                <td>14</td>
+                                <td>8</td>
+                                <td>6</td>
+                            </tr>
+                            <tr style="color:var(--medium);">
+                                <td>Moyenne</td>
+                                <td>16</td>
+                                <td>2</td>
+                                <td>14</td>
+                            </tr>
+                            <tr style="color:var(--low);">
+                                <td>Basse</td>
+                                <td>12</td>
+                                <td>1</td>
+                                <td>11</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="subsection">
+                    <h3>Plan de corrections par ordre de priorite</h3>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Action</th>
+                                <th>Fichiers</th>
+                                <th>Priorite</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="background:#f0fdf4;">
+                                <td>1</td>
+                                <td><s>Creer un fichier <code>.env</code></s> &mdash; Securite, hors scope auth</td>
+                                <td>settings.py, info.py</td>
+                                <td style="color:var(--critical);font-weight:600;">P0</td>
+                            </tr>
+                            <tr style="background:#f0fdf4;text-decoration:line-through;color:var(--text-muted);">
+                                <td>2</td>
+                                <td>Corriger <code>numero_de_donneur()</code></td>
+                                <td>_auth/models.py:23</td>
+                                <td style="color:var(--ok);font-weight:600;">FAIT</td>
+                            </tr>
+                            <tr style="background:#f0fdf4;text-decoration:line-through;color:var(--text-muted);">
+                                <td>3</td>
+                                <td>Corriger <code>renomer_image()</code> pour supporter tous les modeles</td>
+                                <td>_auth/models.py:7-21</td>
+                                <td style="color:var(--ok);font-weight:600;">FAIT</td>
+                            </tr>
+                            <tr style="background:#f0fdf4;text-decoration:line-through;color:var(--text-muted);">
+                                <td>4</td>
+                                <td>Remplacer <code>User</code> par <code>CustomUser</code> dans les vues de reset
+                                    password</td>
+                                <td>_auth/views.py</td>
+                                <td style="color:var(--ok);font-weight:600;">FAIT</td>
+                            </tr>
+                            <tr style="background:#f0fdf4;text-decoration:line-through;color:var(--text-muted);">
+                                <td>5</td>
+                                <td>Ajouter les 4 URL patterns manquants pour le reset password</td>
+                                <td>_auth/urls.py</td>
+                                <td style="color:var(--ok);font-weight:600;">FAIT</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>Supprimer la reference a <code>StockDeSang</code> supprime dans
+                                    <code>recevoir_poches</code>
+                                </td>
+                                <td>serviceMedicaux/views.py:232</td>
+                                <td style="color:var(--critical);font-weight:600;">P0</td>
+                            </tr>
+                            <tr style="background:#f0fdf4;text-decoration:line-through;color:var(--text-muted);">
+                                <td>7</td>
+                                <td>Corriger le champ <code>statut</code> &rarr; <code>etat</code> dans
+                                    <code>notification()</code>
+                                </td>
+                                <td>bankDeSang/views.py</td>
+                                <td style="color:var(--ok);font-weight:600;">FAIT</td>
+                            </tr>
+                            <tr>
+                                <td>8</td>
+                                <td>Corriger le filtrage JSONField dans <code>listeDemandesDeSang</code></td>
+                                <td>bankDeSang/views.py:128</td>
+                                <td style="color:var(--critical);font-weight:600;">P0</td>
+                            </tr>
+                            <tr>
+                                <td>9</td>
+                                <td>Corriger <code>.get()</code> &rarr; <code>.filter()</code> dans
+                                    <code>getToutesDemande</code>
+                                </td>
+                                <td>serviceMedicaux/views.py:206</td>
+                                <td style="color:var(--critical);font-weight:600;">P0</td>
+                            </tr>
+                            <tr style="background:#f0fdf4;text-decoration:line-through;color:var(--text-muted);">
+                                <td>10</td>
+                                <td>Ajouter <code>@login_required</code> sur les 5+ vues non protegees</td>
+                                <td>serviceMedicaux, bankDeSang, donneur</td>
+                                <td style="color:var(--ok);font-weight:600;">FAIT</td>
+                            </tr>
+                            <tr>
+                                <td>11</td>
+                                <td>Ajouter le filtre par banque dans <code>poches_disponibles()</code></td>
+                                <td>bankDeSang/views.py:217</td>
+                                <td style="color:var(--high);font-weight:600;">P1</td>
+                            </tr>
+                            <tr style="background:#f0fdf4;text-decoration:line-through;color:var(--text-muted);">
+                                <td>12</td>
+                                <td>Ajouter <code>logout(request)</code> dans <code>logoutServiceMedicaux()</code></td>
+                                <td>_auth/views.py</td>
+                                <td style="color:var(--ok);font-weight:600;">FAIT</td>
+                            </tr>
+                            <tr>
+                                <td>13</td>
+                                <td>Corriger requirements.txt : ajouter Django, mysqlclient, qrcode</td>
+                                <td>requirements.txt</td>
+                                <td style="color:var(--high);font-weight:600;">P1</td>
+                            </tr>
+                            <tr>
+                                <td>14</td>
+                                <td>Utiliser <code>get_object_or_404()</code> dans toutes les vues qui font
+                                    <code>.get()</code>
+                                </td>
+                                <td>frontend, bankDeSang, serviceMedicaux</td>
+                                <td style="color:var(--high);font-weight:600;">P1</td>
+                            </tr>
+                            <tr>
+                                <td>15</td>
+                                <td>Creer les 4 templates email manquants</td>
+                                <td>_auth/templates/auth/users/</td>
+                                <td style="color:var(--high);font-weight:600;">P1</td>
+                            </tr>
+                            <tr>
+                                <td>16</td>
+                                <td>Corriger les 2 URLs cassees dans les templates</td>
+                                <td>gestion_stock.html, authentification.html</td>
+                                <td style="color:var(--high);font-weight:600;">P1</td>
+                            </tr>
+                            <tr>
+                                <td>17</td>
+                                <td>Normaliser la structure des JSONField entre les roles</td>
+                                <td>serviceMedicaux/views.py:72-119</td>
+                                <td style="color:var(--medium);">P2</td>
+                            </tr>
+                            <tr>
+                                <td>18</td>
+                                <td>Creer des Django Forms pour la validation</td>
+                                <td>Nouveau : forms.py dans chaque app</td>
+                                <td style="color:var(--medium);">P2</td>
+                            </tr>
+                            <tr>
+                                <td>19</td>
+                                <td>Enregistrer les modeles dans l'admin Django</td>
+                                <td>admin.py de chaque app</td>
+                                <td style="color:var(--medium);">P2</td>
+                            </tr>
+                            <tr>
+                                <td>20</td>
+                                <td>Nettoyer le code mort, imports dupliques, print() de debug</td>
+                                <td>Multiple fichiers</td>
+                                <td style="color:var(--low);">P3</td>
+                            </tr>
+                            <tr>
+                                <td>21</td>
+                                <td>Uniformiser les conventions de nommage (PEP 8)</td>
+                                <td>Projet entier</td>
+                                <td style="color:var(--low);">P3</td>
+                            </tr>
+                            <tr>
+                                <td>22</td>
+                                <td>Ecrire des tests unitaires pour les fonctionnalites critiques</td>
+                                <td>tests.py de chaque app</td>
+                                <td style="color:var(--low);">P3</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
     </div>
-</div>
 
-<!-- ============================================================ -->
-<!-- SECTION 5: DONNEUR & FRONTEND -->
-<!-- ============================================================ -->
-<div class="section" id="donneur-frontend">
-    <div class="section-header">
-        <div class="section-icon" style="background:#059669;">&#127760;</div>
-        <h2>5. Applications donneur et frontend</h2>
+    <div class="footer">
+        <p>Rapport genere automatiquement par Claude Code &mdash; Analyse statique du projet eBloodBank</p>
+        <p>60 incoherences identifiees &bull; 19 corrigees (authentification) &bull; 41 restantes</p>
     </div>
-    <div class="section-body">
-
-        <div class="subsection">
-            <h3>Application donneur</h3>
-
-            <div class="issue medium">
-                <div class="issue-title"><span class="badge medium">Moyenne</span> Vue listeDonneur() sans URL pattern</div>
-                <div class="issue-location">donneur/views.py / donneur/urls.py</div>
-                <div class="issue-desc">La vue <code>listeDonneur()</code> est definie mais n'est mappee sur aucune URL dans <code>urls.py</code>. Code mort inaccessible.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Ajouter <code>path('listeDonneurs/', views.listeDonneur, name='listeDonneur')</code> dans urls.py ou supprimer la vue.</div>
-            </div>
-
-            <div class="issue fixed">
-                <div class="issue-title"><span class="badge fixed">Corrige</span> Decorateur @donneurLogin commente</div>
-                <div class="issue-location">donneur/views.py:7-9 &mdash; Corrige : @login_required et @check_role('donor') ajoutes</div>
-                <div class="issue-desc"><strong>Correction appliquee :</strong> Les deux vues (<code>accueilDonneur</code>, <code>listeDonneur</code>) sont maintenant protegees. L'app_name 'donneur' a ete ajoute dans urls.py.</div>
-            </div>
-
-            <div class="issue low">
-                <div class="issue-title"><span class="badge low">Basse</span> Modeles dupliques et commentes dans donneur/models.py</div>
-                <div class="issue-location">donneur/models.py</div>
-                <div class="issue-desc">Un modele <code>Donneur</code> complet est commente (60 lignes). Le vrai modele est dans <code>_auth/models.py</code>. Cela prete a confusion.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Supprimer le code commente. Ajouter un commentaire indiquant que le modele est dans <code>_auth.models</code>.</div>
-            </div>
-        </div>
-
-        <div class="subsection">
-            <h3>Application frontend</h3>
-
-            <div class="issue high">
-                <div class="issue-title"><span class="badge high">Haute</span> hopital() sans gestion d'erreur 404</div>
-                <div class="issue-location">frontend/views.py:19-24</div>
-                <div class="issue-desc"><code>ServiceMedicaux.objects.get(id=id)</code> provoque une erreur 500 si l'ID n'existe pas.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Utiliser <code>get_object_or_404(ServiceMedicaux, id=id)</code>.</div>
-            </div>
-
-            <div class="issue medium">
-                <div class="issue-title"><span class="badge medium">Moyenne</span> Imports wildcard dans les vues</div>
-                <div class="issue-location">frontend/views.py:4-5</div>
-                <div class="issue-desc"><code>from _auth.models import *</code> et <code>from serviceMedicaux.models import *</code> polluent l'espace de noms et rendent les dependances opaques.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Importer explicitement : <code>from _auth.models import ServiceMedicaux</code>.</div>
-            </div>
-
-            <div class="issue medium">
-                <div class="issue-title"><span class="badge medium">Moyenne</span> Variable 'id' ecrase le built-in Python</div>
-                <div class="issue-location">frontend/views.py:29</div>
-                <div class="issue-desc"><code>id = utilisateur.id</code> masque la fonction built-in <code>id()</code> de Python.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Renommer en <code>user_id = utilisateur.id</code>.</div>
-            </div>
-
-            <div class="issue low">
-                <div class="issue-title"><span class="badge low">Basse</span> frontend/models.py vide avec commentaire de modele prevu</div>
-                <div class="issue-location">frontend/models.py</div>
-                <div class="issue-desc">Contient un commentaire mentionnant <code>DemandeDeSangU</code> qui n'a jamais ete implemente. Code mort.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Nettoyer le fichier (laisser vide ou supprimer le commentaire).</div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- ============================================================ -->
-<!-- SECTION 6: TEMPLATES -->
-<!-- ============================================================ -->
-<div class="section" id="templates">
-    <div class="section-header">
-        <div class="section-icon" style="background:#8b5cf6;">&#128196;</div>
-        <h2>6. Templates et Interface utilisateur</h2>
-    </div>
-    <div class="section-body">
-
-        <div class="subsection">
-            <h3>Liens et URLs casses</h3>
-
-            <div class="issue critical">
-                <div class="issue-title"><span class="badge critical">Critique</span> URL 'serviceMedicaux:detailStock' inexistante</div>
-                <div class="issue-location">frontend/templates/frontend/serviceMedicaux/gestion_stock.html:22</div>
-                <div class="issue-desc"><code>&#123;% url 'serviceMedicaux:detailStock' stock.id %&#125;</code> reference une URL non definie dans <code>serviceMedicaux/urls.py</code>. Provoque <code>NoReverseMatch</code> a chaque affichage de la page.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Creer la vue <code>detailStock</code> et son URL dans serviceMedicaux, ou supprimer le lien.</div>
-            </div>
-
-            <div class="issue critical">
-                <div class="issue-title"><span class="badge critical">Critique</span> URL '_auth:authentification' commentee</div>
-                <div class="issue-location">_auth/templates/auth/serviceMedicaux/authentification.html:13</div>
-                <div class="issue-desc"><code>&#123;% url '_auth:authentification' %&#125;</code> reference une URL commentee dans <code>_auth/urls.py</code>. Le formulaire de connexion des services medicaux est casse.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Decommentez l'URL dans <code>_auth/urls.py</code> ou redirigez vers <code>_auth:login</code>.</div>
-            </div>
-
-            <div class="issue high">
-                <div class="issue-title"><span class="badge high">Haute</span> URL hardcodee dans le JavaScript</div>
-                <div class="issue-location">frontend/templates/frontend/bankDeSang/historique_demandes_de_sang.html:205</div>
-                <div class="issue-desc"><code>fetch('/bankDeSang/poches_disponibles/?...')</code> utilise un chemin absolu au lieu d'un tag <code>&#123;% url %&#125;</code>. Tout changement d'URL cassera cette fonctionnalite.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Passer l'URL via un attribut <code>data-url</code> sur un element HTML : <code>data-url="&#123;% url 'bankDeSang:poches_disponibles' %&#125;"</code>.</div>
-            </div>
-
-            <div class="issue high">
-                <div class="issue-title"><span class="badge high">Haute</span> Fonction JavaScript refuserDemande() non definie</div>
-                <div class="issue-location">frontend/templates/frontend/bankDeSang/historique_demandes_de_sang.html:140</div>
-                <div class="issue-desc">Le bouton appelle <code>onclick="refuserDemande(...)"</code> mais cette fonction n'est definie nulle part dans le template. Clic = erreur JavaScript.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Definir la fonction <code>refuserDemande()</code> dans un bloc <code>&lt;script&gt;</code> ou dans un fichier JS externe.</div>
-            </div>
-        </div>
-
-        <div class="subsection">
-            <h3>Formulaires et navigation</h3>
-
-            <div class="issue medium">
-                <div class="issue-title"><span class="badge medium">Moyenne</span> Formulaire avec action="#" (placeholder)</div>
-                <div class="issue-location">frontend/templates/frontend/bankDeSang/base.html:~52</div>
-                <div class="issue-desc">Un formulaire POST a pour action <code>#</code>, ce qui signifie qu'il soumet vers la page actuelle sans traitement backend prevu.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Definir une URL d'action valide ou supprimer le formulaire s'il n'est pas necessaire.</div>
-            </div>
-
-            <div class="issue medium">
-                <div class="issue-title"><span class="badge medium">Moyenne</span> Liens de navigation pointe vers href="#"</div>
-                <div class="issue-location">Plusieurs templates (accueil.html, bankDeSang/accueil_bankDeSang.html, bankDeSang/base.html)</div>
-                <div class="issue-desc">Environ 12 liens de navigation utilisent <code>href="#"</code> comme placeholder : "Comment s'engager ?", "Qui sommes-nous ?", elements de la sidebar, fil d'Ariane.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Creer les pages correspondantes ou supprimer les liens non fonctionnels.</div>
-            </div>
-
-            <div class="issue low">
-                <div class="issue-title"><span class="badge low">Basse</span> Image placeholder.svg manquante</div>
-                <div class="issue-location">frontend/templates/frontend/donneur/accueil_donneur.html:322, 336</div>
-                <div class="issue-desc"><code>src="/placeholder.svg"</code> pointe vers un fichier inexistant.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Ajouter le fichier dans <code>static/img/</code> ou utiliser une vraie image.</div>
-            </div>
-
-            <div class="issue low">
-                <div class="issue-title"><span class="badge low">Basse</span> URLs frontend sans slash final</div>
-                <div class="issue-location">frontend/urls.py</div>
-                <div class="issue-desc">Les URLs <code>listeHopitaux</code>, <code>hopital/&lt;int:id&gt;</code>, <code>listeDemandeDeSang</code> n'ont pas de slash final, contrairement a la convention Django.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Ajouter des trailing slashes : <code>listeHopitaux/</code>, <code>hopital/&lt;int:id&gt;/</code>.</div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- ============================================================ -->
-<!-- SECTION 7: CONFIG & DEPS -->
-<!-- ============================================================ -->
-<div class="section" id="config">
-    <div class="section-header">
-        <div class="section-icon" style="background:#d97706;">&#9881;</div>
-        <h2>7. Configuration et Dependances</h2>
-    </div>
-    <div class="section-body">
-
-        <div class="subsection">
-            <h3>Requirements.txt</h3>
-
-            <div class="issue critical">
-                <div class="issue-title"><span class="badge critical">Critique</span> Django absent de requirements.txt</div>
-                <div class="issue-location">requirements.txt</div>
-                <div class="issue-desc">Le framework Django lui-meme n'est pas liste dans les dependances ! Le fichier contient principalement des librairies d'image processing (opencv, rembg, scikit-image) dont l'usage dans le projet n'est pas documente.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Ajouter <code>Django==4.2.*</code> et <code>mysqlclient</code> dans requirements.txt. Supprimer les dependances non utilisees.</div>
-            </div>
-
-            <div class="issue high">
-                <div class="issue-title"><span class="badge high">Haute</span> mysqlclient absent</div>
-                <div class="issue-location">requirements.txt</div>
-                <div class="issue-desc">Le backend MySQL est configure dans settings.py mais <code>mysqlclient</code> n'est pas dans les dependances. L'application ne peut pas se connecter a la base de donnees apres un <code>pip install</code>.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Ajouter <code>mysqlclient>=2.2.0</code> dans requirements.txt.</div>
-            </div>
-
-            <div class="issue high">
-                <div class="issue-title"><span class="badge high">Haute</span> qrcode absent de requirements.txt</div>
-                <div class="issue-location">requirements.txt</div>
-                <div class="issue-desc">La librairie <code>qrcode</code> est utilisee dans <code>bankDeSang/models.py</code> pour generer les QR codes des poches de sang, mais n'est pas listee dans les dependances.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Ajouter <code>qrcode[pil]>=7.0</code> dans requirements.txt.</div>
-            </div>
-
-            <div class="issue medium">
-                <div class="issue-title"><span class="badge medium">Moyenne</span> Dependances inutilisees dans requirements.txt</div>
-                <div class="issue-location">requirements.txt</div>
-                <div class="issue-desc">Packages comme <code>opencv-python-headless</code>, <code>rembg</code>, <code>scikit-image</code>, <code>coloredlogs</code>, <code>PyYAML</code>, <code>requests</code>, <code>tqdm</code> ne sont importes nulle part dans le code.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Supprimer les packages non utilises pour reduire la taille de l'installation.</div>
-            </div>
-
-            <div class="issue low">
-                <div class="issue-title"><span class="badge low">Basse</span> Fichier requirements.txt.save obsolete</div>
-                <div class="issue-location">requirements.txt.save</div>
-                <div class="issue-desc">Un fichier backup existe avec un contenu different. Cree de la confusion.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Supprimer <code>requirements.txt.save</code>.</div>
-            </div>
-        </div>
-
-        <div class="subsection">
-            <h3>Settings.py</h3>
-
-            <div class="issue medium">
-                <div class="issue-title"><span class="badge medium">Moyenne</span> TEMPLATE_DIR defini mais non utilise</div>
-                <div class="issue-location">eBloodBank/settings.py:32, 85</div>
-                <div class="issue-desc"><code>TEMPLATE_DIR</code> est defini (ligne 32) mais <code>TEMPLATES['DIRS']</code> est une liste vide (ligne 85). Les templates dans le dossier racine <code>templates/</code> ne seront pas trouves.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Ajouter <code>TEMPLATE_DIR</code> dans <code>TEMPLATES['DIRS']</code> : <code>'DIRS': [TEMPLATE_DIR]</code>.</div>
-            </div>
-
-            <div class="issue low">
-                <div class="issue-title"><span class="badge low">Basse</span> LANGUAGE_CODE 'en-us' pour une UI francaise</div>
-                <div class="issue-location">eBloodBank/settings.py</div>
-                <div class="issue-desc">L'UI est en francais mais le code de langue est configure en anglais. Les messages Django (validation, erreurs admin) seront en anglais.</div>
-                <div class="fix"><span class="fix-label">Correction :</span> Changer pour <code>LANGUAGE_CODE = 'fr-fr'</code>.</div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- ============================================================ -->
-<!-- SECTION 8: ARCHITECTURE -->
-<!-- ============================================================ -->
-<div class="section" id="architecture">
-    <div class="section-header">
-        <div class="section-icon" style="background:#475569;">&#127959;</div>
-        <h2>8. Incoherences architecturales</h2>
-    </div>
-    <div class="section-body">
-
-        <div class="issue medium">
-            <div class="issue-title"><span class="badge medium">Moyenne</span> Modeles repartis de maniere incoherente entre les apps</div>
-            <div class="issue-desc">
-                <p>Tous les modeles lies aux utilisateurs (Donneur, BanqueDeSang, ServiceMedicaux, Utilisateur) sont dans <code>_auth/models.py</code>, pas dans leurs apps respectives. Cela cree des dependances circulaires et rend l'architecture confuse :</p>
-                <ul style="margin:0.5rem 0 0 1.5rem;">
-                    <li><code>donneur/models.py</code> est entierement commente (60 lignes de code mort)</li>
-                    <li><code>frontend/models.py</code> est vide avec un commentaire de modele planifie</li>
-                    <li><code>bankDeSang</code> et <code>serviceMedicaux</code> importent tout depuis <code>_auth.models</code></li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="issue medium">
-            <div class="issue-title"><span class="badge medium">Moyenne</span> Aucune application n'utilise de Django Forms</div>
-            <div class="issue-desc">
-                <p>Aucun fichier <code>forms.py</code> n'existe dans tout le projet. Toute la validation est manuelle via <code>request.POST.get()</code> :</p>
-                <ul style="margin:0.5rem 0 0 1.5rem;">
-                    <li>Pas de validation de type ou de format</li>
-                    <li>Pas de messages d'erreur structures</li>
-                    <li>Pas de nettoyage des donnees (sanitization)</li>
-                    <li>Duplication de la logique de validation entre les vues</li>
-                </ul>
-            </div>
-            <div class="fix"><span class="fix-label">Correction :</span> Creer des <code>ModelForm</code> pour chaque modele necesitant un formulaire. Centraliser la validation.</div>
-        </div>
-
-        <div class="issue medium">
-            <div class="issue-title"><span class="badge medium">Moyenne</span> Aucun modele enregistre dans l'admin Django</div>
-            <div class="issue-desc">Les 5 fichiers <code>admin.py</code> du projet sont tous vides. Aucun modele n'est administrable via l'interface d'administration Django, rendant la gestion des donnees impossible sans acces direct a la base de donnees.</div>
-            <div class="fix"><span class="fix-label">Correction :</span> Enregistrer au minimum <code>CustomUser</code>, <code>Donneur</code>, <code>BanqueDeSang</code>, <code>ServiceMedicaux</code>, <code>PocheDeSang</code>, <code>DemandeDeSang</code> dans l'admin.</div>
-        </div>
-
-        <div class="issue low">
-            <div class="issue-title"><span class="badge low">Basse</span> Convention de nommage mixte (camelCase vs snake_case)</div>
-            <div class="issue-desc">
-                <table>
-                    <thead><tr><th>Type</th><th>camelCase</th><th>snake_case</th></tr></thead>
-                    <tbody>
-                        <tr><td>Vues</td><td><code>accueilBankDeSang</code></td><td><code>accepter_demande</code></td></tr>
-                        <tr><td>URLs</td><td><code>listeDemandesDeSang</code></td><td><code>poches_disponibles</code></td></tr>
-                        <tr><td>Modeles</td><td><code>StockDeSang</code></td><td><code>Stock_de_sang</code></td></tr>
-                        <tr><td>Champs</td><td><code>serviceMedicaux</code></td><td><code>service_medical</code></td></tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="fix"><span class="fix-label">Correction :</span> Adopter la convention PEP 8 : <code>snake_case</code> pour les fonctions, variables et noms de fichiers ; <code>PascalCase</code> pour les classes.</div>
-        </div>
-
-        <div class="issue low">
-            <div class="issue-title"><span class="badge low">Basse</span> Aucun test ecrit</div>
-            <div class="issue-desc">Tous les fichiers <code>tests.py</code> sont vides. Aucun test unitaire ou d'integration n'existe pour valider le fonctionnement des modeles, vues ou formulaires.</div>
-            <div class="fix"><span class="fix-label">Correction :</span> Ecrire des tests pour les fonctionnalites critiques : creation de donneur, demande de sang, gestion de stock, authentification.</div>
-        </div>
-    </div>
-</div>
-
-<!-- ============================================================ -->
-<!-- SECTION 9: RESUME -->
-<!-- ============================================================ -->
-<div class="section" id="resume">
-    <div class="section-header">
-        <div class="section-icon" style="background:#16a34a;">&#9989;</div>
-        <h2>9. Resume et plan de corrections prioritaire</h2>
-    </div>
-    <div class="section-body">
-
-        <div class="subsection">
-            <h3>Recapitulatif par severite</h3>
-            <table>
-                <thead>
-                    <tr><th>Severite</th><th>Initial</th><th>Corrigees</th><th>Restantes</th></tr>
-                </thead>
-                <tbody>
-                    <tr style="color:var(--ok);font-weight:600;"><td>Corrigees (auth)</td><td>&mdash;</td><td>19</td><td>&mdash;</td></tr>
-                    <tr style="color:var(--critical);font-weight:600;"><td>Critique</td><td>18</td><td>13</td><td>5</td></tr>
-                    <tr style="color:var(--high);font-weight:600;"><td>Haute</td><td>14</td><td>8</td><td>6</td></tr>
-                    <tr style="color:var(--medium);"><td>Moyenne</td><td>16</td><td>2</td><td>14</td></tr>
-                    <tr style="color:var(--low);"><td>Basse</td><td>12</td><td>1</td><td>11</td></tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="subsection">
-            <h3>Plan de corrections par ordre de priorite</h3>
-
-            <table>
-                <thead>
-                    <tr><th>#</th><th>Action</th><th>Fichiers</th><th>Priorite</th></tr>
-                </thead>
-                <tbody>
-                    <tr style="background:#f0fdf4;"><td>1</td><td><s>Creer un fichier <code>.env</code></s> &mdash; Securite, hors scope auth</td><td>settings.py, info.py</td><td style="color:var(--critical);font-weight:600;">P0</td></tr>
-                    <tr style="background:#f0fdf4;text-decoration:line-through;color:var(--text-muted);"><td>2</td><td>Corriger <code>numero_de_donneur()</code></td><td>_auth/models.py:23</td><td style="color:var(--ok);font-weight:600;">FAIT</td></tr>
-                    <tr style="background:#f0fdf4;text-decoration:line-through;color:var(--text-muted);"><td>3</td><td>Corriger <code>renomer_image()</code> pour supporter tous les modeles</td><td>_auth/models.py:7-21</td><td style="color:var(--ok);font-weight:600;">FAIT</td></tr>
-                    <tr style="background:#f0fdf4;text-decoration:line-through;color:var(--text-muted);"><td>4</td><td>Remplacer <code>User</code> par <code>CustomUser</code> dans les vues de reset password</td><td>_auth/views.py</td><td style="color:var(--ok);font-weight:600;">FAIT</td></tr>
-                    <tr style="background:#f0fdf4;text-decoration:line-through;color:var(--text-muted);"><td>5</td><td>Ajouter les 4 URL patterns manquants pour le reset password</td><td>_auth/urls.py</td><td style="color:var(--ok);font-weight:600;">FAIT</td></tr>
-                    <tr><td>6</td><td>Supprimer la reference a <code>StockDeSang</code> supprime dans <code>recevoir_poches</code></td><td>serviceMedicaux/views.py:232</td><td style="color:var(--critical);font-weight:600;">P0</td></tr>
-                    <tr style="background:#f0fdf4;text-decoration:line-through;color:var(--text-muted);"><td>7</td><td>Corriger le champ <code>statut</code> &rarr; <code>etat</code> dans <code>notification()</code></td><td>bankDeSang/views.py</td><td style="color:var(--ok);font-weight:600;">FAIT</td></tr>
-                    <tr><td>8</td><td>Corriger le filtrage JSONField dans <code>listeDemandesDeSang</code></td><td>bankDeSang/views.py:128</td><td style="color:var(--critical);font-weight:600;">P0</td></tr>
-                    <tr><td>9</td><td>Corriger <code>.get()</code> &rarr; <code>.filter()</code> dans <code>getToutesDemande</code></td><td>serviceMedicaux/views.py:206</td><td style="color:var(--critical);font-weight:600;">P0</td></tr>
-                    <tr style="background:#f0fdf4;text-decoration:line-through;color:var(--text-muted);"><td>10</td><td>Ajouter <code>@login_required</code> sur les 5+ vues non protegees</td><td>serviceMedicaux, bankDeSang, donneur</td><td style="color:var(--ok);font-weight:600;">FAIT</td></tr>
-                    <tr><td>11</td><td>Ajouter le filtre par banque dans <code>poches_disponibles()</code></td><td>bankDeSang/views.py:217</td><td style="color:var(--high);font-weight:600;">P1</td></tr>
-                    <tr style="background:#f0fdf4;text-decoration:line-through;color:var(--text-muted);"><td>12</td><td>Ajouter <code>logout(request)</code> dans <code>logoutServiceMedicaux()</code></td><td>_auth/views.py</td><td style="color:var(--ok);font-weight:600;">FAIT</td></tr>
-                    <tr><td>13</td><td>Corriger requirements.txt : ajouter Django, mysqlclient, qrcode</td><td>requirements.txt</td><td style="color:var(--high);font-weight:600;">P1</td></tr>
-                    <tr><td>14</td><td>Utiliser <code>get_object_or_404()</code> dans toutes les vues qui font <code>.get()</code></td><td>frontend, bankDeSang, serviceMedicaux</td><td style="color:var(--high);font-weight:600;">P1</td></tr>
-                    <tr><td>15</td><td>Creer les 4 templates email manquants</td><td>_auth/templates/auth/users/</td><td style="color:var(--high);font-weight:600;">P1</td></tr>
-                    <tr><td>16</td><td>Corriger les 2 URLs cassees dans les templates</td><td>gestion_stock.html, authentification.html</td><td style="color:var(--high);font-weight:600;">P1</td></tr>
-                    <tr><td>17</td><td>Normaliser la structure des JSONField entre les roles</td><td>serviceMedicaux/views.py:72-119</td><td style="color:var(--medium);">P2</td></tr>
-                    <tr><td>18</td><td>Creer des Django Forms pour la validation</td><td>Nouveau : forms.py dans chaque app</td><td style="color:var(--medium);">P2</td></tr>
-                    <tr><td>19</td><td>Enregistrer les modeles dans l'admin Django</td><td>admin.py de chaque app</td><td style="color:var(--medium);">P2</td></tr>
-                    <tr><td>20</td><td>Nettoyer le code mort, imports dupliques, print() de debug</td><td>Multiple fichiers</td><td style="color:var(--low);">P3</td></tr>
-                    <tr><td>21</td><td>Uniformiser les conventions de nommage (PEP 8)</td><td>Projet entier</td><td style="color:var(--low);">P3</td></tr>
-                    <tr><td>22</td><td>Ecrire des tests unitaires pour les fonctionnalites critiques</td><td>tests.py de chaque app</td><td style="color:var(--low);">P3</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-</div>
-
-<div class="footer">
-    <p>Rapport genere automatiquement par Claude Code &mdash; Analyse statique du projet eBloodBank</p>
-    <p>60 incoherences identifiees &bull; 19 corrigees (authentification) &bull; 41 restantes</p>
-</div>
 
 </body>
+
 </html>

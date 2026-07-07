@@ -313,8 +313,7 @@
                             placeholder="Informations complémentaires…"></textarea>
                     </div>
 
-                    <button type="submit" class="submit-btn" id="submit-med"
-                        onclick="this.disabled=true;this.textContent='Envoi en cours…'">
+                    <button type="submit" class="submit-btn" id="submit-med">
                         Soumettre
                     </button>
                 </form>
@@ -411,8 +410,7 @@
                             placeholder="Informations complémentaires…"></textarea>
                     </div>
 
-                    <button type="submit" class="submit-btn" id="submit-pat"
-                        onclick="this.disabled=true;this.textContent='Envoi en cours…'">
+                    <button type="submit" class="submit-btn" id="submit-pat">
                         Soumettre
                     </button>
                 </form>
@@ -429,5 +427,16 @@
         document.getElementById(id).classList.add('active');
         btn.classList.add('active');
     }
+
+    document.querySelectorAll('form').forEach(function (form) {
+        form.addEventListener('submit', function () {
+            var btn = form.querySelector('button[type="submit"]');
+            if (!btn) return;
+            setTimeout(function () {
+                btn.disabled = true;
+                btn.textContent = 'Envoi en cours…';
+            }, 0);
+        });
+    });
 </script>
 {% endblock %}

@@ -19,9 +19,10 @@
 
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
   <!--Bouton retour-->
-  <a href="{% url 'frontend:accueil' %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">&larr; Retour</a>
+  <a href="{% url 'frontend:accueil' %}"
+    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">&larr; Retour</a>
   <div class="container mx-auto py-8 w-full">
-    <!--=================Progress Bar Start==================-->
+    <!-- - Progress Bar Start- - -->
     <!-- Progress Bar -->
     <div class="flex justify-center mb-8">
       <div class="relative w-full max-w-xl">
@@ -75,12 +76,12 @@
         </div>
       </div>
     </div>
-    <!--=================End Progress Bar==================-->
+    <!-- - End Progress Bar- - -->
 
 
 
 
-    <!--=================Form Start==================-->
+    <!-- - Form Start- - -->
     <section>
       <div class="px-8 py-24 mx-auto md:px-12 lg:px-32 max-w-7xl">
         <div class="grid items-center gap-12 lg:grid-cols-2 lg:gap-24">
@@ -111,13 +112,15 @@
                   </div>
                 </div>
               </div>
-              <!--============== Start Multi-step Form==============-->
-              <form id="multiStepForm" class="space-y-8" method="post" action="{% url '_auth:inscriptionServiceMedicaux' %}">
+              <!-- -  Start Multi-step Form- ==-->
+              <form id="multiStepForm" class="space-y-8" method="post"
+                action="{% url '_auth:inscriptionServiceMedicaux' %}">
                 {% csrf_token %}
-                <!--============Étape 1: Informations de l'établissement=================-->
+                <!-- - =Étape 1: Informations de l'établissement- -->
                 <div class="step active">
                   <h2 class="text-xl font-bold mb-4" style="margin-top: 32px;">Informations sur l'établissement</h2>
-                  <input type="text" name="nom_etablissement" placeholder="Nom de l'établissement médical" class="w-full p-2 border rounded-md">
+                  <input type="text" name="nom_etablissement" placeholder="Nom de l'établissement médical"
+                    class="w-full p-2 border rounded-md">
                   <!-- <input type="text" name="type_etablissement" placeholder="Type d'établissement" class="w-full p-2 border rounded-md mt-4"> -->
                   <select name="type_etablissement" class="w-full p-2 border rounded-md mt-4">
                     <option value="">type d'établissement</option>
@@ -128,18 +131,20 @@
                     <!-- <option value="Pharmacie">Pharmacie</option> -->
                     <option value="Centre de soins">Centre de soins</option>
                   </select>
-                  <input type="text" name="responsable" placeholder="Nom du responsable" class="w-full p-2 border rounded-md mt-4">
+                  <input type="text" name="responsable" placeholder="Nom du responsable"
+                    class="w-full p-2 border rounded-md mt-4">
                   <div class="flex justify-end mt-4">
                     <button type="button" class="px-4 py-2 bg-black text-white rounded-md"
                       onclick="nextStep()">Suivant</button>
                   </div>
                 </div>
-                <!--============Étape 2: Coordonnées=================-->
+                <!-- - =Étape 2: Coordonnées- -->
                 <div class="step">
                   <h2 class="text-xl font-bold mb-4">Coordonnées de l'établissement</h2>
                   <input type="text" name="adresse" placeholder="Adresse" class="w-full p-2 border rounded-md">
                   <input type="text" name="ville" placeholder="Ville" class="w-full p-2 border rounded-md mt-4">
-                  <input type="text" name="code_postal" placeholder="Code postal" class="w-full p-2 border rounded-md mt-4">
+                  <input type="text" name="code_postal" placeholder="Code postal"
+                    class="w-full p-2 border rounded-md mt-4">
                   <div class="flex justify-between mt-4">
                     <button type="button" class="px-4 py-2 bg-gray-300 text-black rounded-md"
                       onclick="prevStep()">Précédent</button>
@@ -150,7 +155,8 @@
                 <div class="step">
                   <h2 class="text-xl font-bold mb-4">Coordonnées de l'établissement</h2>
                   <input type="text" name="pays" placeholder="Pays" class="w-full p-2 border rounded-md">
-                  <input type="tel" name="telephone" placeholder="Numéro de téléphone" class="w-full p-2 border rounded-md mt-4">
+                  <input type="tel" name="telephone" placeholder="Numéro de téléphone"
+                    class="w-full p-2 border rounded-md mt-4">
                   <input type="email" name="email" placeholder="Email" class="w-full p-2 border rounded-md mt-4">
                   <div class="flex justify-between mt-4">
                     <button type="button" class="px-4 py-2 bg-gray-300 text-black rounded-md"
@@ -159,11 +165,13 @@
                       onclick="nextStep()">Suivant</button>
                   </div>
                 </div>
-                <!--============Étape 3: Documentation=================-->
+                <!-- - =Étape 3: Documentation- -->
                 <div class="step">
                   <h2 class="text-xl font-bold mb-4">Documentation</h2>
-                  <input type="text" name="numero_licence" placeholder="Numéro de licence médicale" class="w-full p-2 border rounded-md">
-                  <input type="text" name="numero_enregistrement" placeholder="Numéro d'enregistrement" class="w-full p-2 border rounded-md mt-4">
+                  <input type="text" name="numero_licence" placeholder="Numéro de licence médicale"
+                    class="w-full p-2 border rounded-md">
+                  <input type="text" name="numero_enregistrement" placeholder="Numéro d'enregistrement"
+                    class="w-full p-2 border rounded-md mt-4">
                   <div class="max-w-xl" style="margin-top: 20px;">
                     <label
                       class="flex justify-center w-full h-32 px-4 transition bg-white border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:border-gray-400 focus:outline-none">
@@ -178,20 +186,20 @@
                           <span class="text-blue-600 underline">parcourir</span>
                         </span>
                       </span>
-                        <input type="file" name="certificat_enregistrement" class="hidden">
+                      <input type="file" name="certificat_enregistrement" class="hidden">
                     </label>
                     <!--Le password-->
-                    <input type="password" name="password" placeholder="Mot de passe" class="w-full p-2 border rounded-md mt-4">
-                    
+                    <input type="password" name="password" placeholder="Mot de passe"
+                      class="w-full p-2 border rounded-md mt-4">
+
                     <div class="flex justify-between mt-4">
                       <button type="button" class="px-4 py-2 bg-gray-300 text-black rounded-md"
                         onclick="prevStep()">Précédent</button>
-                      <button type="submit" class="px-4 py-2 bg-black text-white rounded-md"
-                      >Submit</button>
+                      <button type="submit" class="px-4 py-2 bg-black text-white rounded-md">Submit</button>
                     </div>
                   </div>
                 </div>
-                <!--=========Confirmation==========-->
+                <!-- =Confirmation- =-->
                 <!--On affiche tout ce qui a été saisi-->
               </form>
 
@@ -203,7 +211,7 @@
 
 
 
-              
+
             </div>
           </div>
         </div>
@@ -227,7 +235,7 @@
 
     function showStep(step) {
       steps.forEach((element, index) => {
-        element.classList.toggle('active', index === step);
+        element.classList.toggle('active', index  step);
       });
 
       stepCircles.forEach((circle, index) => {
@@ -236,29 +244,29 @@
           circle.classList.add('bg-black', 'text-white');
           circle.querySelector('.checkmark').classList.remove('hidden');
           circle.querySelector('.step-number').classList.add('hidden');
-        } else if (index === step) {
-          circle.classList.remove('bg-white', 'border-2', 'border-gray-3000', 'text-gray-300');
-          circle.classList.add('bg-black', 'text-white');
-          circle.querySelector('.checkmark').classList.add('hidden');
-          circle.querySelector('.step-number').classList.remove('hidden');
-        } else {
-          circle.classList.remove('bg-black', 'text-white');
-          circle.classList.add('bg-white', 'border-2', 'border-gray-300', 'text-gray-300');
-          circle.querySelector('.checkmark').classList.add('hidden');
-          circle.querySelector('.step-number').classList.remove('hidden');
-        }
-      });
+        } else if (index  step) {
+        circle.classList.remove('bg-white', 'border-2', 'border-gray-3000', 'text-gray-300');
+        circle.classList.add('bg-black', 'text-white');
+        circle.querySelector('.checkmark').classList.add('hidden');
+        circle.querySelector('.step-number').classList.remove('hidden');
+      } else {
+        circle.classList.remove('bg-black', 'text-white');
+        circle.classList.add('bg-white', 'border-2', 'border-gray-300', 'text-gray-300');
+        circle.querySelector('.checkmark').classList.add('hidden');
+        circle.querySelector('.step-number').classList.remove('hidden');
+      }
+    });
 
-      stepBranches.forEach((branche, index) => {
-        branche.style.transition = 'background-color 0.5s ease';
-        if (index <= currentStep - 1) {
-          branche.classList.remove('bg-gray-300');
-          branche.classList.add('bg-black');
-        } else {
-          branche.classList.remove('bg-black');
-          branche.classList.add('bg-gray-300');
-        }
-      });
+    stepBranches.forEach((branche, index) => {
+      branche.style.transition = 'background-color 0.5s ease';
+      if (index <= currentStep - 1) {
+        branche.classList.remove('bg-gray-300');
+        branche.classList.add('bg-black');
+      } else {
+        branche.classList.remove('bg-black');
+        branche.classList.add('bg-gray-300');
+      }
+    });
     }
 
     function nextStep() {
