@@ -1,4 +1,4 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, FileResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -104,6 +104,42 @@ def mes_demandes_flux(request):
     return JsonResponse({'count': count, 'etats': etats})
 
 
+def _generer_ordonnance_silencieux(demande):
+    """Génère l'ordonnance PDF sans faire échouer la création si la génération plante."""
+    try:
+        demande.generer_ordonnance()
+    except Exception:
+        pass
+
+
+def servir_ordonnance(demande):
+    """Renvoie une FileResponse (attachment) du PDF de `demande`.
+
+    Génère le PDF à la volée s'il n'existe pas encore (demandes antérieures).
+    Partagé par les vues de téléchargement service et banque.
+    """
+    if not demande.ordonnance_pdf:
+        demande.generer_ordonnance()
+    demande.ordonnance_pdf.open('rb')
+    return FileResponse(
+        demande.ordonnance_pdf, as_attachment=True,
+        filename=f"Ordonnance_{demande.reference()}.pdf",
+        content_type='application/pdf',
+    )
+
+
+@login_required
+@check_role('medical')
+def telechargerOrdonnance(request, demande_id):
+    """Téléchargement de l'ordonnance par le service médical propriétaire."""
+    try:
+        service = request.user.service_medical
+    except ServiceMedicaux.DoesNotExist:
+        return redirect('serviceMedicaux:mesDemandesDeSang')
+    demande = get_object_or_404(DemandeDeSang, id=demande_id, serviceMedicaux=service)
+    return servir_ordonnance(demande)
+
+
 @login_required
 @check_role('medical')
 def listeDemandeDeSang(request):
@@ -154,7 +190,7 @@ def faireDemandeDeSang(request):
                     return redirect('serviceMedicaux:faireDemandeDeSang')
 
             try:
-                DemandeDeSang.objects.create(
+                demande = DemandeDeSang.objects.create(
                     serviceMedicaux=service_medical,
                     patient=patient,
                     groupe_sanguin={service_medical.email: [groupe_sanguin]},
@@ -168,6 +204,8 @@ def faireDemandeDeSang(request):
             except Exception as e:
                 messages.error(request, f"Erreur lors de l'enregistrement de la demande : {e}")
                 return redirect('serviceMedicaux:faireDemandeDeSang')
+
+            _generer_ordonnance_silencieux(demande)
 
             messages.success(request, 'Votre demande a été enregistrée avec succès.')
             return redirect('serviceMedicaux:accueilServiceMedicaux')
@@ -187,6 +225,7 @@ def faireDemandeDeSang(request):
                 notification_envoyee=False,
             )
             demande.save()
+            _generer_ordonnance_silencieux(demande)
             messages.success(request, 'Votre demande a ete enregistree avec succes')
             return redirect('frontend:accueil')
 
@@ -215,6 +254,7 @@ def faireDemandeDeSang(request):
                 notification_envoyee=False,
             )
             demande.save()
+            _generer_ordonnance_silencieux(demande)
             messages.success(request, 'Votre demande a ete enregistree avec succes')
             return redirect('frontend:accueil')
 

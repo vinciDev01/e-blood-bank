@@ -113,6 +113,15 @@ def demandes_flux(request):
 
 @login_required
 @check_role('blood_bank')
+def telechargerOrdonnance(request, demande_id):
+    """Téléchargement de l'ordonnance PDF d'une demande par la banque de sang."""
+    from serviceMedicaux.views import servir_ordonnance
+    demande = get_object_or_404(DemandeDeSang, id=demande_id)
+    return servir_ordonnance(demande)
+
+
+@login_required
+@check_role('blood_bank')
 def gestionStock(request):
     from datetime import date, timedelta
 

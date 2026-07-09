@@ -216,3 +216,36 @@ class DemandesFluxBanqueTest(TestCase):
         self.client.force_login(autre)
         resp = self.client.get(reverse('bankDeSang:demandesFlux'))
         self.assertEqual(resp.status_code, 302)
+
+
+class OrdonnanceBanqueTest(TestCase):
+    def _demande(self):
+        from _auth.models import ServiceMedicaux
+        from serviceMedicaux.models import DemandeDeSang
+        u = User.objects.create_user(username='med_ordo_b', password='x', role='medical')
+        service = ServiceMedicaux.objects.create(
+            nom_etablissement='Hôpital Ordo B', type_etablissement='Public', responsable='R',
+            adresse='A', email='medordob@example.com', ville='Lomé', code_postal='0', pays='Togo',
+            telephone='0', numero_licence='L', numero_enregistrement='E', user=u,
+        )
+        return DemandeDeSang.objects.create(
+            serviceMedicaux=service, type_produit='Sang total', urgence='Immédiate',
+            motif='Accident', etat='En attente', groupe_sanguin={service.email: ['A+']},
+            nombre_poches={service.email: ['1']},
+        )
+
+    def test_banque_telecharge_l_ordonnance(self):
+        demande = self._demande()
+        banque = _creer_banque('bank_ordo')
+        self.client.force_login(banque)
+        resp = self.client.get(reverse('bankDeSang:telechargerOrdonnance', args=[demande.id]))
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp['Content-Type'], 'application/pdf')
+        self.assertIn('attachment', resp['Content-Disposition'])
+
+    def test_telechargement_refuse_role_non_banque(self):
+        demande = self._demande()
+        autre = User.objects.create_user(username='med_ordo_x', password='x', role='medical')
+        self.client.force_login(autre)
+        resp = self.client.get(reverse('bankDeSang:telechargerOrdonnance', args=[demande.id]))
+        self.assertEqual(resp.status_code, 302)

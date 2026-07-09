@@ -7,6 +7,7 @@ urlpatterns = [
     path('accueil/', views.accueilServiceMedicaux, name='accueilServiceMedicaux'),
     path('mesDemandesDeSang/', views.mesDemandesDeSang, name='mesDemandesDeSang'),
     path('api/demandes/flux/', views.mes_demandes_flux, name='mesDemandesFlux'),
+    path('ordonnance/<int:demande_id>/', views.telechargerOrdonnance, name='telechargerOrdonnance'),
     path('listeDemandeDeSang/', views.listeDemandeDeSang, name='listeDemandeDeSang'),
     #path('inscriptionServiceMedicaux/', views.inscriptionServiceMedicaux, name='inscriptionServiceMedicaux'),
     path('faireDemandeDeSang/', views.faireDemandeDeSang, name='faireDemandeDeSang'),

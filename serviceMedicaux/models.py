@@ -75,6 +75,7 @@ class DemandeDeSang(models.Model):
     etat_groupes = models.JSONField(default=dict)  # Nouveau champ pour suivre l'état de chaque groupe sanguin
     date_demande = models.DateField(auto_now_add=True)
     notification_envoyee = models.BooleanField(default=False)
+    ordonnance_pdf = models.FileField(upload_to='ordonnances/', null=True, blank=True)
 
     def __str__(self):
         return f"Demande de {self.serviceMedicaux.nom_etablissement if self.serviceMedicaux else 'N/A'} pour {self.patient.nom_complet if self.patient else 'N/A'}"
@@ -125,6 +126,24 @@ class DemandeDeSang(models.Model):
 
     def get_etat_groupe(self, groupe_sang):
         return self.etat_groupes.get(groupe_sang, 'En attente')
+
+    def reference(self):
+        """Référence lisible et unique de l'ordonnance : DEM-<id>-<année>."""
+        from datetime import date as _date
+        annee = self.date_demande.year if self.date_demande else _date.today().year
+        return f"DEM-{self.id}-{annee}"
+
+    def generer_ordonnance(self):
+        """Construit l'ordonnance PDF et l'enregistre dans `ordonnance_pdf`.
+
+        Nécessite un id (donc à appeler après la création). Renvoie le champ fichier.
+        """
+        from django.core.files.base import ContentFile
+        from serviceMedicaux.ordonnance import construire_pdf
+        pdf = construire_pdf(self)
+        nom = f"{self.reference()}.pdf"
+        self.ordonnance_pdf.save(nom, ContentFile(pdf), save=True)
+        return self.ordonnance_pdf
     
     # def get_matricules(self):
     #     service_email = self.serviceMedicaux.email

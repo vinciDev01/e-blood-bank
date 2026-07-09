@@ -225,3 +225,71 @@ class MesDemandesFluxTest(TestCase):
         self.client.force_login(autre)
         resp = self.client.get(reverse('serviceMedicaux:mesDemandesFlux'))
         self.assertEqual(resp.status_code, 302)
+
+
+class OrdonnancePdfTest(TestCase):
+    def _service(self, username, email):
+        u = User.objects.create_user(username=username, password='x', role='medical')
+        s = ServiceMedicaux.objects.create(
+            nom_etablissement='Hôpital Ordo', type_etablissement='Public', responsable='Dr X',
+            adresse='Rue 1', email=email, ville='Lomé', code_postal='0', pays='Togo',
+            telephone='90000000', numero_licence='L', numero_enregistrement='E', user=u,
+        )
+        return u, s
+
+    def _demande(self, service):
+        patient = Patient.objects.create(
+            nom_complet='Jean Test', date_de_naissance=date(1990, 5, 1), proche='',
+            groupe_sanguin='O+', telephone_proche='',
+        )
+        return DemandeDeSang.objects.create(
+            serviceMedicaux=service, patient=patient, type_produit='Sang total',
+            urgence='Immédiate', motif='Accident', etat='En attente',
+            groupe_sanguin={service.email: ['O+']}, nombre_poches={service.email: ['2']},
+        )
+
+    def test_construire_pdf_renvoie_un_pdf(self):
+        from serviceMedicaux.ordonnance import construire_pdf
+        _, service = self._service('ordo_a', 'ordoa@example.com')
+        demande = self._demande(service)
+        pdf = construire_pdf(demande)
+        self.assertTrue(pdf.startswith(b'%PDF'))
+        self.assertGreater(len(pdf), 1000)
+
+    def test_generer_ordonnance_remplit_le_champ(self):
+        _, service = self._service('ordo_b', 'ordob@example.com')
+        demande = self._demande(service)
+        self.assertFalse(bool(demande.ordonnance_pdf))
+        demande.generer_ordonnance()
+        self.assertTrue(bool(demande.ordonnance_pdf))
+        self.assertTrue(demande.ordonnance_pdf.name.endswith('.pdf'))
+
+    def test_reference_format(self):
+        _, service = self._service('ordo_r', 'ordor@example.com')
+        demande = self._demande(service)
+        self.assertEqual(demande.reference(), f"DEM-{demande.id}-{demande.date_demande.year}")
+
+    def test_telechargement_service_proprietaire(self):
+        u, service = self._service('ordo_c', 'ordoc@example.com')
+        demande = self._demande(service)  # sans ordonnance_pdf → génération paresseuse
+        self.client.force_login(u)
+        resp = self.client.get(reverse('serviceMedicaux:telechargerOrdonnance', args=[demande.id]))
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp['Content-Type'], 'application/pdf')
+        self.assertIn('attachment', resp['Content-Disposition'])
+
+    def test_service_ne_telecharge_pas_la_demande_d_un_autre(self):
+        u1, s1 = self._service('ordo_d', 'ordod@example.com')
+        _, s2 = self._service('ordo_e', 'ordoe@example.com')
+        demande_autre = self._demande(s2)
+        self.client.force_login(u1)
+        resp = self.client.get(reverse('serviceMedicaux:telechargerOrdonnance', args=[demande_autre.id]))
+        self.assertEqual(resp.status_code, 404)
+
+    def test_telechargement_refuse_role_non_medical(self):
+        _, service = self._service('ordo_f', 'ordof@example.com')
+        demande = self._demande(service)
+        donor = User.objects.create_user(username='don_ordo', password='x', role='donor')
+        self.client.force_login(donor)
+        resp = self.client.get(reverse('serviceMedicaux:telechargerOrdonnance', args=[demande.id]))
+        self.assertEqual(resp.status_code, 302)
