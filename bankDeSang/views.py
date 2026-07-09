@@ -89,6 +89,30 @@ def refuser_demande(request):
 
 @login_required
 @check_role('blood_bank')
+def demandes_flux(request):
+    """Flux JSON du compteur de demandes pour la banque (polling temps réel).
+
+    count   : total des demandes « En attente » rattachées à un service.
+    max_id  : plus grand id de demande (détecte une nouvelle demande émise).
+    recentes: jusqu'à 5 dernières demandes en attente, pour le texte du toast.
+    """
+    qs = DemandeDeSang.objects.filter(serviceMedicaux__isnull=False)
+    en_attente = qs.filter(etat='En attente')
+    max_id = qs.aggregate(m=models.Max('id'))['m'] or 0
+    recentes = []
+    for d in en_attente.select_related('serviceMedicaux').order_by('-id')[:5]:
+        groupe = d.groupeSanguin()
+        recentes.append({
+            'id': d.id,
+            'etablissement': d.serviceMedicaux.nom_etablissement if d.serviceMedicaux else '',
+            'groupe': ', '.join(str(g) for g in groupe) if isinstance(groupe, list) else str(groupe),
+            'urgence': d.urgence,
+        })
+    return JsonResponse({'count': en_attente.count(), 'max_id': max_id, 'recentes': recentes})
+
+
+@login_required
+@check_role('blood_bank')
 def gestionStock(request):
     from datetime import date, timedelta
 

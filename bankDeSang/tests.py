@@ -175,3 +175,44 @@ class HistoriqueStockTest(TestCase):
         self.client.force_login(autre)
         resp = self.client.get(reverse('bankDeSang:historiqueStock'))
         self.assertEqual(resp.status_code, 302)
+
+
+class DemandesFluxBanqueTest(TestCase):
+    def _service(self, username, email):
+        from _auth.models import ServiceMedicaux
+        u = User.objects.create_user(username=username, password='x', role='medical')
+        return ServiceMedicaux.objects.create(
+            nom_etablissement='Hôpital Flux', type_etablissement='Public', responsable='R',
+            adresse='A', email=email, ville='Lomé', code_postal='0', pays='Togo',
+            telephone='0', numero_licence='L', numero_enregistrement='E', user=u,
+        )
+
+    def test_flux_renvoie_compte_et_max_id(self):
+        from serviceMedicaux.models import DemandeDeSang
+        service = self._service('med_flx', 'medflx@example.com')
+        DemandeDeSang.objects.create(
+            serviceMedicaux=service, type_produit='Sang total', urgence='Immédiate',
+            motif='Accident', etat='En attente', groupe_sanguin={service.email: ['A+']},
+        )
+        DemandeDeSang.objects.create(
+            serviceMedicaux=service, type_produit='Sang total', urgence='24 heures',
+            motif='Chirurgie', etat='En attente', groupe_sanguin={service.email: ['O-']},
+        )
+        derniere = DemandeDeSang.objects.create(
+            serviceMedicaux=service, type_produit='Sang total', urgence='Non urgent',
+            motif='Maladie', etat='Approuvee',  # ne compte pas dans count, mais max_id oui
+        )
+        banque = _creer_banque('bank_flux')
+        self.client.force_login(banque)
+        resp = self.client.get(reverse('bankDeSang:demandesFlux'))
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertEqual(data['count'], 2)
+        self.assertEqual(data['max_id'], derniere.id)  # plus grand id, tous états confondus
+        self.assertTrue(len(data['recentes']) >= 1)
+
+    def test_flux_refuse_role_non_banque(self):
+        autre = User.objects.create_user(username='med_flx2', password='x', role='medical')
+        self.client.force_login(autre)
+        resp = self.client.get(reverse('bankDeSang:demandesFlux'))
+        self.assertEqual(resp.status_code, 302)

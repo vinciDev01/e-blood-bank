@@ -226,6 +226,18 @@
                 color: #b91c1c;
             }
 
+            .ebb-nav-badge {
+                margin-left: auto;
+                background: #b91c1c;
+                color: #fff;
+                font-size: 0.68rem;
+                font-weight: 700;
+                padding: 2px 7px;
+                border-radius: 10px;
+                min-width: 20px;
+                text-align: center;
+            }
+
             .ebb-sidebar-footer {
                 padding: 14px 16px 18px;
                 border-top: 1px solid #f1f5f9;
@@ -378,6 +390,8 @@
                             <line x1="9" y1="17" x2="15" y2="17" />
                         </svg>
                         <span>Mes demandes</span>
+                        <span class="ebb-nav-badge" id="demandes-badge"
+                            {% if not demandes_badge_count %}style="display:none;"{% endif %}>{{ demandes_badge_count }}</span>
                     </a>
                     <a href="{% url 'serviceMedicaux:listeDemandeDeSang' %}"
                         class="ebb-nav-item {% if url_name == 'listeDemandeDeSang' %}active{% endif %}">
@@ -1017,6 +1031,83 @@
                 }
             });
             document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeLogoutConfirm(); });
+        })();
+    </script>
+
+    <!-- Alertes temps réel : réponses de la banque à mes demandes -->
+    <div id="ebb-toast-wrap"
+        style="position:fixed;top:20px;right:20px;z-index:99999;display:flex;flex-direction:column;gap:8px;"></div>
+    <script>
+        (function () {
+            var FLUX_URL = "{% url 'serviceMedicaux:mesDemandesFlux' %}";
+            var LISTE_URL = "{% url 'serviceMedicaux:mesDemandesDeSang' %}";
+            var INTERVAL = 20000;
+            var badge = document.getElementById('demandes-badge');
+            var wrap = document.getElementById('ebb-toast-wrap');
+            var snapshot = null;   // { id: etat } de référence
+            var notifReady = false;
+
+            document.addEventListener('click', function () {
+                if (notifReady) return;
+                notifReady = true;
+                if ('Notification' in window && Notification.permission === 'default') {
+                    Notification.requestPermission();
+                }
+            }, { once: true });
+
+            function escapeHtml(s) {
+                var d = document.createElement('div');
+                d.textContent = s == null ? '' : String(s);
+                return d.innerHTML;
+            }
+
+            function majBadge(count) {
+                if (!badge) return;
+                badge.textContent = count;
+                badge.style.display = count > 0 ? '' : 'none';
+            }
+
+            function toast(html) {
+                if (!wrap) return;
+                var el = document.createElement('div');
+                el.style.cssText = 'background:#fff;border-left:4px solid #b91c1c;box-shadow:0 6px 20px rgba(0,0,0,.15);border-radius:8px;padding:12px 14px;max-width:300px;font-size:.85rem;color:#1e293b;cursor:pointer;';
+                el.innerHTML = '<strong style="color:#b91c1c;">Mise à jour de demande</strong><br>' + html;
+                el.addEventListener('click', function () { window.location.href = LISTE_URL; });
+                wrap.appendChild(el);
+                setTimeout(function () { el.remove(); }, 6000);
+            }
+
+            function systeme(text) {
+                if ('Notification' in window && Notification.permission === 'granted' && document.hidden) {
+                    new Notification('Mise à jour de demande', { body: text });
+                }
+            }
+
+            function poll() {
+                fetch(FLUX_URL, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                    .then(function (r) { return r.ok ? r.json() : null; })
+                    .then(function (d) {
+                        if (!d) return;
+                        majBadge(d.count);
+                        var courant = {};
+                        (d.etats || []).forEach(function (e) { courant[e[0]] = e[1]; });
+                        if (snapshot === null) { snapshot = courant; return; }
+                        var change = null;
+                        Object.keys(courant).forEach(function (id) {
+                            if (snapshot[id] !== undefined && snapshot[id] !== courant[id]) {
+                                change = courant[id];
+                            }
+                        });
+                        snapshot = courant;
+                        if (change) {
+                            toast('Votre demande est désormais : ' + escapeHtml(change));
+                            systeme('Votre demande est désormais : ' + change);
+                        }
+                    })
+                    .catch(function () { });
+            }
+            poll();
+            setInterval(poll, INTERVAL);
         })();
     </script>
 </body>

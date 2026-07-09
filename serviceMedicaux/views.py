@@ -86,6 +86,26 @@ def mesDemandesDeSang(request):
 
 @login_required
 @check_role('medical')
+def mes_demandes_flux(request):
+    """Flux JSON du compteur de demandes pour le service médical (polling).
+
+    count : demandes du service courant encore « En attente » (de réponse).
+    etats : snapshot [id, etat] des dernières demandes, pour que le client
+            détecte un changement d'état (réponse de la banque).
+    """
+    try:
+        service = request.user.service_medical
+    except ServiceMedicaux.DoesNotExist:
+        return JsonResponse({'count': 0, 'etats': []})
+
+    qs = DemandeDeSang.objects.filter(serviceMedicaux=service)
+    count = qs.filter(etat='En attente').count()
+    etats = list(qs.order_by('-id').values_list('id', 'etat')[:50])
+    return JsonResponse({'count': count, 'etats': etats})
+
+
+@login_required
+@check_role('medical')
 def listeDemandeDeSang(request):
     demandes = DemandeDeSang.objects.filter(etat='En attente', patient__isnull=False)
     return render(request, 'frontend/serviceMedicaux/liste_demande_de_sang.html', {'demandes': demandes})

@@ -147,3 +147,81 @@ class SuiviDemandesTest(TestCase):
         self.client.force_login(u)
         resp = self.client.get(reverse('serviceMedicaux:listeDemandeDeSang'))
         self.assertEqual(resp.status_code, 200)
+
+
+class DemandesBadgeContextTest(TestCase):
+    def _service(self, username, email):
+        u = User.objects.create_user(username=username, password='x', role='medical')
+        s = ServiceMedicaux.objects.create(
+            nom_etablissement='Hôpital', type_etablissement='Public', responsable='R',
+            adresse='A', email=email, ville='Lomé', code_postal='0', pays='Togo',
+            telephone='0', numero_licence='L', numero_enregistrement='E', user=u,
+        )
+        return u, s
+
+    def _demande(self, service, etat='En attente'):
+        return DemandeDeSang.objects.create(
+            serviceMedicaux=service, type_produit='Sang total', urgence='Immédiate',
+            motif='Accident', etat=etat, groupe_sanguin={service.email: ['A+']},
+            nombre_poches={service.email: ['2']},
+        )
+
+    def test_badge_banque_compte_toutes_les_demandes_en_attente(self):
+        u_med, service = self._service('med_b', 'medb@example.com')
+        self._demande(service)
+        self._demande(service)
+        self._demande(service, etat='Approuvee')  # ne compte pas
+
+        banque = User.objects.create_user(username='bank_b', password='x', role='blood_bank')
+        self.client.force_login(banque)
+        resp = self.client.get(reverse('bankDeSang:accueilBankDeSang'))
+        self.assertEqual(resp.context['demandes_badge_count'], 2)
+        self.assertEqual(resp.context['demandes_badge_url_name'], 'listeDemandesDeSang')
+
+    def test_badge_service_compte_ses_propres_demandes(self):
+        u_med, service = self._service('med_s', 'meds@example.com')
+        self._demande(service)
+        # Demande d'un autre service : ne doit pas compter
+        _, autre = self._service('med_x', 'medx@example.com')
+        self._demande(autre)
+
+        self.client.force_login(u_med)
+        resp = self.client.get(reverse('serviceMedicaux:mesDemandesDeSang'))
+        self.assertEqual(resp.context['demandes_badge_count'], 1)
+        self.assertEqual(resp.context['demandes_badge_url_name'], 'mesDemandesDeSang')
+
+
+class MesDemandesFluxTest(TestCase):
+    def _service(self, username, email):
+        u = User.objects.create_user(username=username, password='x', role='medical')
+        s = ServiceMedicaux.objects.create(
+            nom_etablissement='Hôpital', type_etablissement='Public', responsable='R',
+            adresse='A', email=email, ville='Lomé', code_postal='0', pays='Togo',
+            telephone='0', numero_licence='L', numero_enregistrement='E', user=u,
+        )
+        return u, s
+
+    def test_flux_isole_les_demandes_du_service(self):
+        u, service = self._service('med_f', 'medf@example.com')
+        d1 = DemandeDeSang.objects.create(
+            serviceMedicaux=service, type_produit='Sang total', urgence='Immédiate',
+            motif='Accident', etat='En attente',
+        )
+        _, autre = self._service('med_g', 'medg@example.com')
+        DemandeDeSang.objects.create(
+            serviceMedicaux=autre, type_produit='Sang total', urgence='Immédiate',
+            motif='Accident', etat='En attente',
+        )
+        self.client.force_login(u)
+        resp = self.client.get(reverse('serviceMedicaux:mesDemandesFlux'))
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertEqual(data['count'], 1)
+        ids = [e[0] for e in data['etats']]
+        self.assertEqual(ids, [d1.id])
+
+    def test_flux_refuse_role_non_medical(self):
+        autre = User.objects.create_user(username='don_f', password='x', role='donor')
+        self.client.force_login(autre)
+        resp = self.client.get(reverse('serviceMedicaux:mesDemandesFlux'))
+        self.assertEqual(resp.status_code, 302)

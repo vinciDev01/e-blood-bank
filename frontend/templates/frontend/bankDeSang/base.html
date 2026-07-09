@@ -438,6 +438,8 @@
                             <line x1="9" y1="17" x2="15" y2="17" />
                         </svg>
                         <span>Demandes de sang</span>
+                        <span class="ebb-nav-badge" id="demandes-badge"
+                            {% if not demandes_badge_count %}style="display:none;"{% endif %}>{{ demandes_badge_count }}</span>
                     </a>
 
                     <a href="{% url 'bankDeSang:historiqueDemandes' %}"
@@ -990,62 +992,80 @@
 
     </script> -->
 
-    <div x-data="{openNotify: {{ demandes.count|add:0|yesno:'true,false' }}}"
-        class="relative min-h-screen py-6 flex flex-col justify-center sm:py-12 items-center" style="display: none;">
-        <template x-if="openNotify">
-            <div x-transition:enter="transition ease-out duration-200"
-                x-transition:enter-start="opacity-0 transform translate-y-4"
-                x-transition:enter-end="opacity-100 transform translate-y-0"
-                x-transition:leave="transition ease-in duration-200"
-                x-transition:leave-start="opacity-100 transform translate-y-0"
-                x-transition:leave-end="opacity-0 transform translate-y-4"
-                class="fixed top-5 right-8 flex flex-col space-y-2 z-50"
-                :class="{'block': openNotify, 'none': !openNotify}">
-                <div class="bg-white cursor-pointer shadow rounded-lg px-3 py-2 w-64 space-y-2">
-                    <!-- Header -->
-                    <div class="flex justify-between items-center w-full">
-                        <div class="font-semibold text-sm">Nouvelle Notification</div>
-                        <div @click="openNotify = false"
-                            class="h-6 w-6 flex justify-center items-center bg-gray-200 rounded-full cursor-pointer hover:bg-gray-300">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M6 18L18 6M6 6l12 12"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <!-- Content -->
-                    <div class="flex justify-start items-start space-x-4">
-                        <div class="relative flex flex-shrink-0">
-                            <img src="https://images.unsplash.com/photo-1582789991349-8f8e6eb15308?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MjN8fGFuaW1lfGVufDB8fDB8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
-                                alt="Meow" class="w-14 h-14 rounded-full object-cover">
-                            <div
-                                class="absolute -bottom-1 -right-2 h-7 w-7 bg-gradient-to-t from-blue-600 via-cyan-500 to-cyan-400 rounded-full text-white flex justify-center items-start">
-                                <div class="">
-                                    <svg class="w-5 h-6" fill="currentColor" viewBox="0 0 20 20"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z">
-                                        </path>
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex flex-col h-20 overflow-hidden">
-                            <div class="overflow-ellipsis overflow-hidden text-sm">
-                                <div class="clamp-3 leading-tight">
-                                    <b class="font-semibold">Nouvelle demande de sang</b>
-                                    - Consultez les détails et répondez.
-                                </div>
-                            </div>
-                            <div class="text-blue-600 font-semibold text-xs leading-loose">{{ demande.date_demande }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </template>
-    </div>
+    <!-- Alertes temps réel des demandes de sang (toasts) -->
+    <div id="ebb-toast-wrap"
+        style="position:fixed;top:20px;right:20px;z-index:99999;display:flex;flex-direction:column;gap:8px;"></div>
+    <script>
+        (function () {
+            var FLUX_URL = "{% url 'bankDeSang:demandesFlux' %}";
+            var LISTE_URL = "{% url 'bankDeSang:listeDemandesDeSang' %}";
+            var INTERVAL = 20000;
+            var badge = document.getElementById('demandes-badge');
+            var wrap = document.getElementById('ebb-toast-wrap');
+            var baselineMaxId = null;
+            var notifReady = false;
+
+            // La demande d'autorisation de notification exige un geste utilisateur.
+            document.addEventListener('click', function () {
+                if (notifReady) return;
+                notifReady = true;
+                if ('Notification' in window && Notification.permission === 'default') {
+                    Notification.requestPermission();
+                }
+            }, { once: true });
+
+            function escapeHtml(s) {
+                var d = document.createElement('div');
+                d.textContent = s == null ? '' : String(s);
+                return d.innerHTML;
+            }
+
+            function majBadge(count) {
+                if (!badge) return;
+                badge.textContent = count;
+                badge.style.display = count > 0 ? '' : 'none';
+            }
+
+            function toast(html) {
+                if (!wrap) return;
+                var el = document.createElement('div');
+                el.style.cssText = 'background:#fff;border-left:4px solid #b91c1c;box-shadow:0 6px 20px rgba(0,0,0,.15);border-radius:8px;padding:12px 14px;max-width:300px;font-size:.85rem;color:#1e293b;cursor:pointer;';
+                el.innerHTML = '<strong style="color:#b91c1c;">Nouvelle demande de sang</strong><br>' + html;
+                el.addEventListener('click', function () { window.location.href = LISTE_URL; });
+                wrap.appendChild(el);
+                setTimeout(function () { el.remove(); }, 6000);
+            }
+
+            function systeme(text) {
+                // « si besoin » : seulement quand l'onglet est en arrière-plan.
+                if ('Notification' in window && Notification.permission === 'granted' && document.hidden) {
+                    new Notification('Nouvelle demande de sang', { body: text });
+                }
+            }
+
+            function poll() {
+                fetch(FLUX_URL, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                    .then(function (r) { return r.ok ? r.json() : null; })
+                    .then(function (d) {
+                        if (!d) return;
+                        majBadge(d.count);
+                        if (baselineMaxId === null) { baselineMaxId = d.max_id; return; }
+                        if (d.max_id > baselineMaxId) {
+                            baselineMaxId = d.max_id;
+                            var r = (d.recentes && d.recentes[0]) || null;
+                            var texte = r ? (r.groupe + ' / ' + r.urgence + ' — ' + r.etablissement)
+                                : "Une nouvelle demande vient d'arriver.";
+                            toast(r ? (escapeHtml(r.groupe) + ' / ' + escapeHtml(r.urgence) + '<br>' + escapeHtml(r.etablissement))
+                                : "Une nouvelle demande vient d'arriver.");
+                            systeme(texte);
+                        }
+                    })
+                    .catch(function () { });
+            }
+            poll();
+            setInterval(poll, INTERVAL);
+        })();
+    </script>
 
 
     <!-- Popup de confirmation de déconnexion -->

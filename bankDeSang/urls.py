@@ -7,6 +7,7 @@ urlpatterns = [
     path('', views.accueilBankDeSang, name='accueilBankDeSang'),
     path('carteBanques/', views.carteBanques, name='carteBanques'),
     path('listeDemandesDeSang/', views.listeDemandesDeSang, name='listeDemandesDeSang'),
+    path('api/demandes/flux/', views.demandes_flux, name='demandesFlux'),
     path('historiqueDemandes/', views.historiqueDemandesDeSang, name='historiqueDemandes'),
     path('accepterDemande', views.accepter_demande, name='accepterDemande'),
     # path('traiterDemande/<int:demande_id>/', views.traiter_demande, name='traiterDemande'),
