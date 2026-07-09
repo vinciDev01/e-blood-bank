@@ -423,14 +423,7 @@
     </div>
 </div>
 
-{% if messages %}
-<div id="stk-toasts">
-    {% for message in messages %}
-    <div class="stk-toast {{ message.tags }}">{{ message }}</div>
-    {% endfor %}
-</div>
-<script>setTimeout(function(){ document.querySelectorAll('#stk-toasts .stk-toast').forEach(function(t){ t.remove(); }); }, 5000);</script>
-{% endif %}
+{# Les messages sont désormais rendus globalement par frontend/_messages.html (base). #}
 
 <script>
     function openStockModal() { document.getElementById('stockModal').classList.add('active'); }

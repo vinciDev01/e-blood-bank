@@ -227,6 +227,24 @@ class MesDemandesFluxTest(TestCase):
         self.assertEqual(resp.status_code, 302)
 
 
+class MessagesAffichesTest(TestCase):
+    """Les messages Django (success/error) doivent s'afficher sur les pages qui
+    étendent les gabarits de base (régression : la base ne les rendait pas)."""
+
+    def test_message_erreur_saffiche_apres_action(self):
+        u = User.objects.create_user(username='msg_med', password='x', role='medical')
+        ServiceMedicaux.objects.create(
+            nom_etablissement='Hôpital Msg', type_etablissement='Public', responsable='R',
+            adresse='A', email='msgmed@example.com', ville='Lomé', code_postal='0', pays='Togo',
+            telephone='0', numero_licence='L', numero_enregistrement='E', user=u,
+        )
+        self.client.force_login(u)
+        # POST incomplet → messages.error puis redirection vers le formulaire
+        resp = self.client.post(reverse('serviceMedicaux:faireDemandeDeSang'), {}, follow=True)
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Veuillez remplir tous les champs obligatoires')
+
+
 class OrdonnancePdfTest(TestCase):
     def _service(self, username, email):
         u = User.objects.create_user(username=username, password='x', role='medical')
