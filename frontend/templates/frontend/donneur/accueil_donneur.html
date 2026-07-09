@@ -183,76 +183,71 @@
                                     <p class="text-gray-500 dark:text-gray-400">Manage your blood donation schedule and
                                         history.</p>
                                 </div>
-                                <button
-                                    class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">
+                                <a href="{% url 'donneur:planifierDon' %}"
+                                    class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors bg-red-600 text-white hover:bg-red-700 h-10 px-4 py-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                         stroke-linejoin="round" class="h-5 w-5">
                                         <path d="M5 12h14"></path>
                                         <path d="M12 5v14"></path>
                                     </svg>
-                                    Schedule Donation
-                                </button>
+                                    Planifier un don
+                                </a>
                             </div>
                         </div>
                         <div class="p-6">
                             <div class="grid gap-6">
                                 <div>
-                                    <h4 class="font-semibold text-base">Upcoming Donations</h4>
+                                    <h4 class="font-semibold text-base">Rendez-vous à venir</h4>
                                     <div class="grid gap-2 mt-2">
-                                        <div class="flex items-center justify-between">
+                                        {% for rdv in rdv_a_venir %}
+                                        <div class="flex items-center justify-between gap-3">
                                             <div>
-                                                <div class="font-semibold">Blood Drive</div>
-                                                <div class="text-sm text-gray-500 dark:text-gray-400">September 28, 2022
+                                                <div class="font-semibold">{{ rdv.banque.nom_etablissement }}</div>
+                                                <div class="text-sm text-gray-500 dark:text-gray-400">
+                                                    {{ rdv.date|date:"d/m/Y" }} · {{ rdv.creneau }}
                                                 </div>
                                             </div>
-                                            <div
-                                                class="inline-flex w-fit items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary text-primary-foreground hover:bg-primary/80 ml-auto">
-                                                Confirmed
+                                            <div class="flex items-center gap-2 ml-auto">
+                                                <span class="inline-flex w-fit items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold border-transparent bg-green-100 text-green-800">
+                                                    {{ rdv.statut }}
+                                                </span>
+                                                <form method="post" action="{% url 'donneur:annulerRendezVous' rdv.id %}"
+                                                      onsubmit="return confirm('Annuler ce rendez-vous ?');">
+                                                    {% csrf_token %}
+                                                    <button type="submit"
+                                                        class="rounded-md border border-red-200 text-red-700 hover:bg-red-50 text-xs font-semibold px-2.5 py-1">
+                                                        Annuler
+                                                    </button>
+                                                </form>
                                             </div>
                                         </div>
-                                        <div data-orientation="horizontal" role="none"
-                                            class="shrink-0 bg-gray-100 h-[1px] w-full"></div>
-                                        <div class="flex items-center justify-between">
-                                            <div>
-                                                <div class="font-semibold">Blood Drive</div>
-                                                <div class="text-sm text-gray-500 dark:text-gray-400">October 15, 2022
-                                                </div>
-                                            </div>
-                                            <div
-                                                class="inline-flex w-fit items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary text-primary-foreground hover:bg-primary/80 ml-auto">
-                                                Confirmed
-                                            </div>
-                                        </div>
+                                        <div class="shrink-0 bg-gray-100 h-[1px] w-full"></div>
+                                        {% empty %}
+                                        <p class="text-sm text-gray-500">Aucun rendez-vous à venir.
+                                            <a href="{% url 'donneur:planifierDon' %}" class="text-red-600 font-semibold">Planifier un don</a>.
+                                        </p>
+                                        {% endfor %}
                                     </div>
                                 </div>
                                 <div>
-                                    <h4 class="font-semibold text-base">Past Donations</h4>
+                                    <h4 class="font-semibold text-base">Rendez-vous passés</h4>
                                     <div class="grid gap-2 mt-2">
+                                        {% for rdv in rdv_passes %}
                                         <div class="flex items-center justify-between">
                                             <div>
-                                                <div class="font-semibold">Blood Drive</div>
-                                                <div class="text-sm text-gray-500 dark:text-gray-400">August 12, 2022
+                                                <div class="font-semibold">{{ rdv.banque.nom_etablissement }}</div>
+                                                <div class="text-sm text-gray-500 dark:text-gray-400">
+                                                    {{ rdv.date|date:"d/m/Y" }} · {{ rdv.creneau }}
                                                 </div>
                                             </div>
-                                            <div
-                                                class="inline-flex w-fit items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ml-auto">
-                                                Completed
+                                            <div class="inline-flex w-fit items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold ml-auto">
+                                                {{ rdv.statut }}
                                             </div>
                                         </div>
-                                        <div data-orientation="horizontal" role="none"
-                                            class="shrink-0 bg-gray-100 h-[1px] w-full"></div>
-                                        <div class="flex items-center justify-between">
-                                            <div>
-                                                <div class="font-semibold">Blood Drive</div>
-                                                <div class="text-sm text-gray-500 dark:text-gray-400">June 30, 2022
-                                                </div>
-                                            </div>
-                                            <div
-                                                class="inline-flex w-fit items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ml-auto">
-                                                Completed
-                                            </div>
-                                        </div>
+                                        {% empty %}
+                                        <p class="text-sm text-gray-500">Aucun rendez-vous passé.</p>
+                                        {% endfor %}
                                     </div>
                                 </div>
                             </div>

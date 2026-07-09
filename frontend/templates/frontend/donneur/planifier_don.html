@@ -1,0 +1,115 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+{% block title %}Planifier un don — eBloodBank{% endblock %}
+
+{% block main %}
+<section style="background:#f6f8fb;min-height:100%;" class="px-4 sm:px-6 lg:px-10 py-8">
+  <div class="max-w-4xl mx-auto">
+
+    <header class="flex flex-wrap items-end justify-between gap-4 mb-7">
+      <div>
+        <p class="text-xs font-bold uppercase tracking-[0.2em] text-red-600">eBloodBank</p>
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-1">Planifier un don</h1>
+        <p class="text-slate-500 mt-2">Choisissez une date, une banque et un créneau horaire.</p>
+      </div>
+      <a href="{% url 'donneur:accueilDonneur' %}"
+         class="inline-flex items-center gap-2 rounded-full bg-white border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 hover:text-red-600 hover:border-red-200 shadow-sm transition">
+        ← Mon tableau de bord
+      </a>
+    </header>
+
+    <style>
+      .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; }
+      .cal-head { text-align:center; font-size:12px; font-weight:700; color:#94a3b8; text-transform:uppercase; padding:6px 0; }
+      .cal-day { aspect-ratio:1/1; border:1px solid #e2e8f0; border-radius:10px; background:#fff; color:#1e293b;
+                 font-size:14px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .15s ease; }
+      .cal-day:hover { border-color:#dc2626; color:#dc2626; }
+      .cal-day.is-out { color:#cbd5e1; background:#f8fafc; }
+      .cal-day.is-past { color:#cbd5e1; background:#f8fafc; cursor:not-allowed; }
+      .cal-day.is-today { border-color:#93c5fd; }
+      .cal-day.is-selected { background:#dc2626; color:#fff; border-color:#dc2626; }
+    </style>
+
+    <form method="post" action="{% url 'donneur:planifierDon' %}"
+          class="bg-white border border-slate-200 rounded-2xl shadow-sm p-5 sm:p-7 grid gap-6">
+      {% csrf_token %}
+      <input type="hidden" name="date" id="date-choisie" value="">
+
+      <!-- Calendrier -->
+      <div>
+        <div class="flex items-center justify-between mb-4">
+          <a href="?annee={{ mois_precedent.0 }}&mois={{ mois_precedent.1 }}"
+             class="rounded-lg border border-slate-200 px-3 py-1.5 text-sm text-slate-600 hover:text-red-600">←</a>
+          <h2 class="text-lg font-bold text-slate-900">{{ nom_mois }} {{ annee }}</h2>
+          <a href="?annee={{ mois_suivant.0 }}&mois={{ mois_suivant.1 }}"
+             class="rounded-lg border border-slate-200 px-3 py-1.5 text-sm text-slate-600 hover:text-red-600">→</a>
+        </div>
+        <div class="cal-grid mb-2">
+          <div class="cal-head">Lun</div><div class="cal-head">Mar</div><div class="cal-head">Mer</div>
+          <div class="cal-head">Jeu</div><div class="cal-head">Ven</div><div class="cal-head">Sam</div>
+          <div class="cal-head">Dim</div>
+        </div>
+        <div class="cal-grid">
+          {% for semaine in semaines %}
+            {% for jour in semaine %}
+              {% if jour.month != mois_courant %}
+                <div class="cal-day is-out">{{ jour.day }}</div>
+              {% elif jour < aujourd_hui %}
+                <div class="cal-day is-past">{{ jour.day }}</div>
+              {% else %}
+                <button type="button" class="cal-day{% if jour == aujourd_hui %} is-today{% endif %}"
+                        data-date="{{ jour|date:'Y-m-d' }}">{{ jour.day }}</button>
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+        </div>
+        <p id="date-label" class="text-sm text-slate-500 mt-3">Aucune date sélectionnée.</p>
+      </div>
+
+      <!-- Banque -->
+      <div class="flex flex-col">
+        <label for="banque_id" class="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-1">Banque de sang</label>
+        <select name="banque_id" id="banque_id" required
+          class="rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-red-200">
+          <option value="">— Choisir une banque —</option>
+          {% for b in banques %}
+          <option value="{{ b.id }}">{{ b.nom_etablissement }}{% if b.ville %} — {{ b.ville }}{% endif %}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Créneau -->
+      <div class="flex flex-col">
+        <label for="creneau" class="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-1">Créneau horaire</label>
+        <select name="creneau" id="creneau" required
+          class="rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-red-200">
+          <option value="">— Choisir un créneau —</option>
+          {% for valeur, libelle in creneaux %}
+          <option value="{{ valeur }}">{{ libelle }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <button type="submit"
+        class="inline-flex items-center justify-center gap-2 rounded-lg bg-red-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-red-700 transition">
+        Planifier le don
+      </button>
+    </form>
+  </div>
+</section>
+
+<script>
+  (function () {
+    var hidden = document.getElementById('date-choisie');
+    var label = document.getElementById('date-label');
+    document.querySelectorAll('.cal-day[data-date]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.cal-day.is-selected').forEach(function (c) { c.classList.remove('is-selected'); });
+        btn.classList.add('is-selected');
+        hidden.value = btn.getAttribute('data-date');
+        label.textContent = 'Date sélectionnée : ' + btn.getAttribute('data-date');
+      });
+    });
+  })();
+</script>
+{% endblock %}
