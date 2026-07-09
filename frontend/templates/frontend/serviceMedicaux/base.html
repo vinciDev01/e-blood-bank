@@ -484,6 +484,13 @@
                     <div class="flex items-center gap-3 2xsm:gap-7">
                         <ul class="flex items-center gap-2 2xsm:gap-4">
                             <li class="relative z-10">
+                                <button type="button" id="notif-enable-btn" title="Activer les notifications système"
+                                    style="display:none;align-items:center;gap:6px;height:38px;padding:0 12px;border-radius:9999px;border:1px solid #e2e8f0;background:#fff;color:#334155;font-size:.75rem;font-weight:600;cursor:pointer;">
+                                    <span id="notif-enable-icon">🔔</span>
+                                    <span id="notif-enable-label" class="hidden sm:inline">Activer les notifications</span>
+                                </button>
+                            </li>
+                            <li class="relative z-10">
                                 <!-- Dark Mode Toggler -->
                                 <button class="text-blue-600 font-bold border border-blue-600 rounded-lg px-4 py-2"
                                     id="ouvrirModal">
@@ -1045,15 +1052,48 @@
             var badge = document.getElementById('demandes-badge');
             var wrap = document.getElementById('ebb-toast-wrap');
             var snapshot = null;   // { id: etat } de référence
-            var notifReady = false;
+            var btn = document.getElementById('notif-enable-btn');
+            var supporte = 'Notification' in window;
 
-            document.addEventListener('click', function () {
-                if (notifReady) return;
-                notifReady = true;
-                if ('Notification' in window && Notification.permission === 'default') {
-                    Notification.requestPermission();
+            function majBoutonNotif() {
+                if (!btn) return;
+                if (!supporte) { btn.style.display = 'none'; return; }
+                btn.style.display = 'inline-flex';
+                var icon = document.getElementById('notif-enable-icon');
+                var label = document.getElementById('notif-enable-label');
+                if (Notification.permission === 'granted') {
+                    if (icon) icon.textContent = '🔔';
+                    if (label) label.textContent = 'Notifications activées';
+                    btn.style.borderColor = '#16a34a';
+                    btn.style.color = '#16a34a';
+                    btn.title = 'Notifications activées — cliquez pour tester';
+                } else if (Notification.permission === 'denied') {
+                    if (icon) icon.textContent = '🔕';
+                    if (label) label.textContent = 'Notifications bloquées';
+                    btn.style.borderColor = '#e2e8f0';
+                    btn.style.color = '#94a3b8';
+                    btn.title = 'Bloquées : réactivez-les dans les réglages du navigateur (icône cadenas).';
+                } else {
+                    if (icon) icon.textContent = '🔔';
+                    if (label) label.textContent = 'Activer les notifications';
+                    btn.style.borderColor = '#b91c1c';
+                    btn.style.color = '#b91c1c';
+                    btn.title = 'Activer les notifications système';
                 }
-            }, { once: true });
+            }
+
+            if (btn && supporte) {
+                btn.addEventListener('click', function () {
+                    if (Notification.permission === 'granted') {
+                        new Notification('eBloodBank', { body: 'Les notifications sont activées ✅' });
+                    } else if (Notification.permission !== 'denied') {
+                        Notification.requestPermission().then(majBoutonNotif);
+                    } else {
+                        majBoutonNotif();
+                    }
+                });
+            }
+            majBoutonNotif();
 
             function escapeHtml(s) {
                 var d = document.createElement('div');
@@ -1078,8 +1118,9 @@
             }
 
             function systeme(text) {
-                if ('Notification' in window && Notification.permission === 'granted' && document.hidden) {
-                    new Notification('Mise à jour de demande', { body: text });
+                // Notification OS à chaque nouvel événement (premier plan inclus).
+                if (supporte && Notification.permission === 'granted') {
+                    try { new Notification('Mise à jour de demande', { body: text }); } catch (e) { }
                 }
             }
 
