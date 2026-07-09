@@ -13,6 +13,9 @@ class Patient(models.Model):
     telephone_proche = models.CharField(max_length=20)
     utilisateur = models.ForeignKey(Utilisateur, on_delete=models.CASCADE, null=True, blank=True)
 
+    class Meta:
+        ordering = ['-id']
+
     # Méthode pour retourner une représentation en chaîne de caractères de l'objet
     def __str__(self):
         return f"{self.nom_complet} ({self.date_de_naissance})"
@@ -139,6 +142,7 @@ class DemandeDeSang(models.Model):
     class Meta:
         verbose_name = "Demande de Sang"
         verbose_name_plural = "Demandes de Sang"
+        ordering = ['-id']
 
 
 
@@ -148,6 +152,9 @@ class Stock_de_sang(models.Model):
     groupe_sanguin = models.CharField(max_length=3, choices=PocheDeSang.groupe_sanguin_choices)
     nombre_de_poches = models.IntegerField(default=1)
     date_enregistrement = models.DateField(auto_now=True)
+
+    class Meta:
+        ordering = ['-id']
 
     def __str__(self):
         return f"Stock de {self.service_medical.nom_etablissement} ({self.groupe_sanguin}) - {self.nombre_de_poches} poches"

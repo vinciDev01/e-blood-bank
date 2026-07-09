@@ -124,6 +124,7 @@ class ServiceMedicaux(models.Model):
     class Meta:
         verbose_name = "Service Médical"
         verbose_name_plural = "Services Médicaux"
+        ordering = ['-id']
 
 
 class Donneur(models.Model):
@@ -177,6 +178,7 @@ class Donneur(models.Model):
     class Meta:
         verbose_name = "Donneur"
         verbose_name_plural = "Donneurs"
+        ordering = ['-id']
 
 
 class BanqueDeSang(models.Model):
@@ -233,6 +235,7 @@ class BanqueDeSang(models.Model):
     class Meta:
         verbose_name = "Banque de Sang"
         verbose_name_plural = "Banques de Sang"
+        ordering = ['-id']
 
 
 class OTPCode(models.Model):

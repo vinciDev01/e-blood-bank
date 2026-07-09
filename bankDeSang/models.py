@@ -73,6 +73,9 @@ class PocheDeSang(models.Model):
     def jour_restant(self):
         return f"{(self.date_expiration - date.today()).days}"
 
+    class Meta:
+        ordering = ['-id']
+
     def __str__(self):
         return f"Poche {self.matricule} - {self.type_produit} ({self.groupe_sanguin})"
 
@@ -85,6 +88,9 @@ class DonDeSang(models.Model):
     date_don = models.DateField(auto_now_add=True)
     date_expiration = models.DateField(default=default_date_expiration)
 
+    class Meta:
+        ordering = ['-id']
+
     def __str__(self):
         return f"Don de {self.donneur.nom} {self.donneur.prenom} ({self.type_produit} - {self.date_don})"
 
@@ -95,6 +101,9 @@ class StockDeSang(models.Model):
     groupe_sanguin = models.CharField(max_length=3, choices=PocheDeSang.groupe_sanguin_choices, null=True, blank=True)
     nombre_de_poches = models.IntegerField(default=1)
     date_enregistrement = models.DateField(auto_now=True)
+
+    class Meta:
+        ordering = ['-id']
 
     def __str__(self):
         return f"Stock de {self.groupe_sanguin} - {self.nombre_de_poches} poches"
