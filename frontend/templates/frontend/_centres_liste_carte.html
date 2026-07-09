@@ -19,6 +19,8 @@ Partagé par /centres/ et les pages "Carte des banques" des dashboards.
   .clc-card:hover { box-shadow:0 10px 26px -14px rgba(15,23,42,.30); border-color:#cbd5e1; }
   .clc-card__icon { flex-shrink:0; width:40px; height:40px; border-radius:11px; display:grid; place-items:center; color:#dc2626; background:#fef2f2; }
   .clc-card__name { font-weight:700; color:#0f172a; line-height:1.3; font-size:14.5px; }
+  .clc-card__badge { display:inline-block; margin-top:6px; padding:2px 9px; border-radius:9999px; background:#ecfdf5; color:#047857; font-size:11.5px; font-weight:700; }
+  .clc-card__badge--vide { background:#f1f5f9; color:#94a3b8; }
   .clc-card__loc { display:flex; align-items:flex-start; gap:6px; color:#64748b; font-size:12.5px; margin-top:5px; }
   .clc-card__tel { display:inline-flex; align-items:center; gap:6px; margin-top:9px; color:#b91c1c; font-size:13px; font-weight:600; }
   .clc-card__tel:hover { color:#7f1d1d; }
@@ -39,6 +41,11 @@ Partagé par /centres/ et les pages "Carte des banques" des dashboards.
         </div>
         <div style="min-width:0;">
           <h3 class="clc-card__name">{{ b.nom }}</h3>
+          {% if b.dispo != '' %}
+          <span class="clc-card__badge {% if b.dispo == 0 %}clc-card__badge--vide{% endif %}">
+            {% if b.dispo_groupe %}{{ b.dispo_groupe }} poche{{ b.dispo_groupe|pluralize }} dispo{% else %}{{ b.dispo }} poche{{ b.dispo|pluralize }} dispo{% endif %}
+          </span>
+          {% endif %}
           <p class="clc-card__loc">
             <svg style="flex-shrink:0;margin-top:2px" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" />

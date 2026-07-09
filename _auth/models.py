@@ -199,19 +199,41 @@ class BanqueDeSang(models.Model):
     user_permissions = models.ManyToManyField(Permission, related_name="banques_de_sang_permissions")
 
     @classmethod
-    def donnees_carte(cls):
-        """Banques géocodées, sérialisées pour la carte (liste de dicts)."""
-        return [
-            {
+    def donnees_carte(cls, groupe=None):
+        """Banques géocodées, sérialisées pour la carte (liste de dicts).
+
+        Chaque banque porte `dispo` = nombre de poches disponibles (est_disponible).
+        Si `groupe` (un groupe sanguin valide) est fourni, on ne renvoie que les
+        banques ayant au moins une poche disponible de ce groupe, et chaque dict
+        porte alors `dispo_groupe` = nombre de poches disponibles de ce groupe.
+        """
+        from django.db.models import Count, Q
+
+        qs = cls.objects.filter(latitude__isnull=False, longitude__isnull=False).annotate(
+            dispo=Count('pochedesang', filter=Q(pochedesang__est_disponible=True)),
+        )
+        if groupe:
+            qs = qs.annotate(
+                dispo_groupe=Count('pochedesang', filter=Q(
+                    pochedesang__est_disponible=True, pochedesang__groupe_sanguin=groupe,
+                )),
+            ).filter(dispo_groupe__gt=0)
+
+        données = []
+        for b in qs:
+            d = {
                 'nom': b.nom_etablissement,
                 'adresse': b.adresse,
                 'ville': b.ville,
                 'telephone': b.telephone,
                 'lat': b.latitude,
                 'lng': b.longitude,
+                'dispo': b.dispo,
             }
-            for b in cls.objects.filter(latitude__isnull=False, longitude__isnull=False)
-        ]
+            if groupe:
+                d['dispo_groupe'] = b.dispo_groupe
+            données.append(d)
+        return données
 
     def _adresse_complete(self):
         return f'{self.adresse}|{self.ville}|{self.code_postal}|{self.pays}'
