@@ -1,21 +1,37 @@
-asgiref==3.8.1
-charset-normalizer==3.4.2
-coloredlogs==15.0.1
-decorator==5.1.1
-idna==3.7
-numpy==2.2.6
-opencv-python-headless==4.12.0.88
-pillow==12.0.0
-protobuf==6.33.2
-python-dateutil==2.9.0.post0
-pytz==2025.2
-PyYAML==6.0.1
-requests==2.32.4
-scikit-image==0.25.2
-scipy==1.16.3
-six==1.16.0
-tqdm==4.67.1
-tzdata==2025.3
-urllib3==1.26.19
-rembg==2.0.69
+# =============================================================================
+# eBloodBank — dépendances Python
+# =============================================================================
+# Installation :  pip install -r requirements.txt
+#
+# Ne sont listées que les dépendances DIRECTES du projet. pip installe
+# automatiquement leurs sous-dépendances (asgiref, sqlparse, tzdata, etc.).
+# Versions épinglées pour garantir un environnement identique sur toutes les
+# machines (Linux / Windows / macOS) et éviter les erreurs de version.
+# =============================================================================
+
+# --- Framework web ---
+Django==6.0.4
+
+# --- Base de données MySQL ---
+# Pilote MySQL (extension C). Sous Windows, pip installe un wheel précompilé :
+# aucune compilation nécessaire pour les versions courantes de Python.
+# En cas de problème, alternative 100 % Python : PyMySQL (voir note en bas).
+mysqlclient==2.2.8
+
+# --- Génération des QR codes des poches de sang ---
+qrcode==8.2
+
+# --- Génération des ordonnances PDF (demandes de sang) ---
 reportlab==5.0.0
+
+# --- Traitement d'images ---
+# Requis par qrcode (export PNG) et reportlab (logo dans les PDF).
+pillow==12.0.0
+
+# =============================================================================
+# Note Windows — si `pip install mysqlclient` échoue (compilation) :
+#   basculer sur PyMySQL (pur Python, aucune compilation) :
+#       pip install PyMySQL
+#   puis, en tête de eBloodBank/__init__.py :
+#       import pymysql; pymysql.install_as_MySQLdb()
+# =============================================================================
