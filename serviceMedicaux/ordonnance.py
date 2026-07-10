@@ -78,7 +78,7 @@ def construire_pdf(demande):
         Paragraph(f"<b>Référence :</b> {demande.reference()}", st_normal),
         Paragraph(f"<b>Date de la demande :</b> {demande.date_demande or date.today()}", st_normal),
     ]
-
+    
     qr_flow = Image(_qr_image(demande.reference()), width=24 * mm, height=24 * mm)
 
     entete = Table([[logo_flow, bloc_titre, qr_flow]], colWidths=[30 * mm, 100 * mm, 28 * mm])
