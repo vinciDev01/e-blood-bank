@@ -1,0 +1,101 @@
+{% comment %}
+Détail d'une demande de sang (lecture seule). Contexte attendu :
+`demande`, `details_groupes` (liste {groupe, quantite, etat}), `retour_url`, `pdf_url`.
+{% endcomment %}
+<div class="max-w-3xl mx-auto">
+
+  <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[0.2em] text-red-600">Demande de sang</p>
+      <h1 class="text-2xl font-extrabold text-slate-900">Détail de la demande</h1>
+      <p class="text-sm text-slate-500 mt-1">Référence <strong class="text-slate-700">{{ demande.reference }}</strong>
+        · {{ demande.date_demande|date:"d/m/Y" }}</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <a href="{{ pdf_url }}"
+        class="inline-flex items-center gap-2 rounded-lg border border-red-200 text-red-700 hover:bg-red-50 px-4 py-2 text-sm font-semibold">
+        Ordonnance PDF
+      </a>
+      <a href="{{ retour_url }}"
+        class="inline-flex items-center gap-2 rounded-lg border border-slate-200 text-slate-600 hover:text-red-600 px-4 py-2 text-sm font-medium">
+        ← Retour à la liste
+      </a>
+    </div>
+  </div>
+
+  <!-- Récapitulatif -->
+  <div class="grid sm:grid-cols-2 gap-4 mb-6">
+    <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
+      <h2 class="font-bold text-slate-900 mb-3">Établissement demandeur</h2>
+      {% if demande.serviceMedicaux %}
+      <dl class="text-sm text-slate-600 space-y-1">
+        <div><dt class="inline font-semibold text-slate-700">Nom :</dt> {{ demande.serviceMedicaux.nom_etablissement }}</div>
+        <div><dt class="inline font-semibold text-slate-700">Adresse :</dt> {{ demande.serviceMedicaux.adresse }}, {{ demande.serviceMedicaux.ville }}</div>
+        <div><dt class="inline font-semibold text-slate-700">Téléphone :</dt> {{ demande.serviceMedicaux.telephone|default:"—" }}</div>
+        <div><dt class="inline font-semibold text-slate-700">Email :</dt> {{ demande.serviceMedicaux.email|default:"—" }}</div>
+      </dl>
+      {% else %}
+      <p class="text-sm text-slate-500">Particulier / donneur</p>
+      {% endif %}
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
+      <h2 class="font-bold text-slate-900 mb-3">Patient</h2>
+      {% if demande.patient %}
+      <dl class="text-sm text-slate-600 space-y-1">
+        <div><dt class="inline font-semibold text-slate-700">Nom :</dt> {{ demande.patient.nom_complet }}</div>
+        <div><dt class="inline font-semibold text-slate-700">Naissance :</dt> {{ demande.patient.date_de_naissance|date:"d/m/Y" }}</div>
+        <div><dt class="inline font-semibold text-slate-700">Groupe :</dt> {{ demande.patient.groupe_sanguin|default:"—" }}</div>
+      </dl>
+      {% else %}
+      <p class="text-sm text-slate-500">Aucun patient rattaché.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Caractéristiques -->
+  <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-5 mb-6">
+    <h2 class="font-bold text-slate-900 mb-3">Caractéristiques</h2>
+    <div class="grid sm:grid-cols-3 gap-3 text-sm">
+      <div><p class="text-slate-500">Type de produit</p><strong class="text-slate-800">{{ demande.type_produit|default:"—" }}</strong></div>
+      <div><p class="text-slate-500">Urgence</p><strong class="text-slate-800">{{ demande.urgence|default:"—" }}</strong></div>
+      <div><p class="text-slate-500">Motif</p><strong class="text-slate-800">{{ demande.motif|default:"—" }}</strong></div>
+      <div><p class="text-slate-500">État global</p><strong class="text-slate-800">{{ demande.etat }}</strong></div>
+    </div>
+  </div>
+
+  <!-- Groupes demandés -->
+  <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
+    <h2 class="font-bold text-slate-900 mb-3">Groupes demandés</h2>
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead>
+          <tr class="text-left text-xs uppercase tracking-wide text-slate-500 border-b border-slate-200">
+            <th class="py-2 pr-4">Groupe sanguin</th>
+            <th class="py-2 pr-4">Quantité (poches)</th>
+            <th class="py-2">État</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for ligne in details_groupes %}
+          <tr class="border-b border-slate-100 last:border-0">
+            <td class="py-2 pr-4 font-semibold text-slate-800">{{ ligne.groupe }}</td>
+            <td class="py-2 pr-4 text-slate-600">{{ ligne.quantite }}</td>
+            <td class="py-2">
+              <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold
+                {% if ligne.etat == 'Approuvee' %}bg-green-100 text-green-800
+                {% elif ligne.etat == 'Rejetee' %}bg-red-100 text-red-800
+                {% else %}bg-slate-100 text-slate-600{% endif %}">
+                {{ ligne.etat }}
+              </span>
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="3" class="py-3 text-slate-500">Aucun groupe renseigné.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

@@ -73,7 +73,7 @@ def construire_pdf(demande):
 
     bloc_titre = [
         Paragraph('ORDONNANCE DE DEMANDE DE SANG', st_titre),
-        Paragraph('eBloodBank — Système de gestion de banque de sang', st_sous),
+        Paragraph('eBloodBank - Système de gestion de banque de sang', st_sous),
         Spacer(1, 4),
         Paragraph(f"<b>Référence :</b> {demande.reference()}", st_normal),
         Paragraph(f"<b>Date de la demande :</b> {demande.date_demande or date.today()}", st_normal),

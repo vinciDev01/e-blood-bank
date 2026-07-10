@@ -127,6 +127,16 @@ class DemandeDeSang(models.Model):
     def get_etat_groupe(self, groupe_sang):
         return self.etat_groupes.get(groupe_sang, 'En attente')
 
+    def details_groupes(self):
+        """Lignes {groupe, quantite, etat} pour l'affichage détaillé d'une demande."""
+        groupes = self.groupeSanguin() or []
+        poches = self.nombrePoches() or []
+        lignes = []
+        for i, g in enumerate(groupes):
+            quantite = poches[i] if i < len(poches) else ''
+            lignes.append({'groupe': g, 'quantite': quantite, 'etat': self.get_etat_groupe(g)})
+        return lignes
+
     def reference(self):
         """Référence lisible et unique de l'ordonnance : DEM-<id>-<année>."""
         from datetime import date as _date

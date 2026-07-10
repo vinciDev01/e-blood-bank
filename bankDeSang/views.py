@@ -1,5 +1,6 @@
 from datetime import datetime
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import JsonResponse
@@ -109,6 +110,19 @@ def demandes_flux(request):
             'urgence': d.urgence,
         })
     return JsonResponse({'count': en_attente.count(), 'max_id': max_id, 'recentes': recentes})
+
+
+@login_required
+@check_role('blood_bank')
+def detailDemande(request, demande_id):
+    """Page de détail (lecture seule) d'une demande, côté banque."""
+    demande = get_object_or_404(DemandeDeSang, id=demande_id)
+    return render(request, 'frontend/bankDeSang/detail_demande.html', {
+        'demande': demande,
+        'details_groupes': demande.details_groupes(),
+        'retour_url': reverse('bankDeSang:listeDemandesDeSang'),
+        'pdf_url': reverse('bankDeSang:telechargerOrdonnance', args=[demande.id]),
+    })
 
 
 @login_required

@@ -1,5 +1,6 @@
 from django.http import JsonResponse, FileResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
@@ -126,6 +127,23 @@ def servir_ordonnance(demande):
         filename=f"Ordonnance_{demande.reference()}.pdf",
         content_type='application/pdf',
     )
+
+
+@login_required
+@check_role('medical')
+def detailDemande(request, demande_id):
+    """Page de détail (lecture seule) d'une demande du service propriétaire."""
+    try:
+        service = request.user.service_medical
+    except ServiceMedicaux.DoesNotExist:
+        return redirect('serviceMedicaux:mesDemandesDeSang')
+    demande = get_object_or_404(DemandeDeSang, id=demande_id, serviceMedicaux=service)
+    return render(request, 'frontend/serviceMedicaux/detail_demande.html', {
+        'demande': demande,
+        'details_groupes': demande.details_groupes(),
+        'retour_url': reverse('serviceMedicaux:mesDemandesDeSang'),
+        'pdf_url': reverse('serviceMedicaux:telechargerOrdonnance', args=[demande.id]),
+    })
 
 
 @login_required

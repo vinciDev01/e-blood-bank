@@ -266,6 +266,55 @@ class MessagesAffichesTest(TestCase):
         self.assertContains(resp, 'Veuillez remplir tous les champs obligatoires')
 
 
+class DetailDemandeTest(TestCase):
+    def _service(self, username, email):
+        u = User.objects.create_user(username=username, password='x', role='medical')
+        s = ServiceMedicaux.objects.create(
+            nom_etablissement='Hôpital Détail', type_etablissement='Public', responsable='R',
+            adresse='Rue 1', email=email, ville='Lomé', code_postal='0', pays='Togo',
+            telephone='90000000', numero_licence='L', numero_enregistrement='E', user=u,
+        )
+        return u, s
+
+    def _demande(self, service):
+        return DemandeDeSang.objects.create(
+            serviceMedicaux=service, type_produit='Sang total', urgence='Immédiate',
+            motif='Accident', etat='En attente', groupe_sanguin={service.email: ['O+']},
+            nombre_poches={service.email: ['2']}, etat_groupes={'O+': 'En attente'},
+        )
+
+    def test_details_groupes_mapping(self):
+        _, service = self._service('det_a', 'deta@example.com')
+        demande = self._demande(service)
+        lignes = demande.details_groupes()
+        self.assertEqual(lignes, [{'groupe': 'O+', 'quantite': '2', 'etat': 'En attente'}])
+
+    def test_page_detail_proprietaire(self):
+        u, service = self._service('det_b', 'detb@example.com')
+        demande = self._demande(service)
+        self.client.force_login(u)
+        resp = self.client.get(reverse('serviceMedicaux:detailDemande', args=[demande.id]))
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Détail de la demande')
+        self.assertContains(resp, 'Hôpital Détail')
+
+    def test_detail_refuse_demande_d_un_autre_service(self):
+        u1, _ = self._service('det_c', 'detc@example.com')
+        _, s2 = self._service('det_d', 'detd@example.com')
+        demande_autre = self._demande(s2)
+        self.client.force_login(u1)
+        resp = self.client.get(reverse('serviceMedicaux:detailDemande', args=[demande_autre.id]))
+        self.assertEqual(resp.status_code, 404)
+
+    def test_detail_refuse_role_non_medical(self):
+        _, service = self._service('det_e', 'dete@example.com')
+        demande = self._demande(service)
+        donor = User.objects.create_user(username='don_det', password='x', role='donor')
+        self.client.force_login(donor)
+        resp = self.client.get(reverse('serviceMedicaux:detailDemande', args=[demande.id]))
+        self.assertEqual(resp.status_code, 302)
+
+
 class OrdonnancePdfTest(TestCase):
     def _service(self, username, email):
         u = User.objects.create_user(username=username, password='x', role='medical')

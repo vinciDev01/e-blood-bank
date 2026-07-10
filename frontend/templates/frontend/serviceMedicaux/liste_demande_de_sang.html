@@ -456,13 +456,13 @@
           </td>
           <td>
             <div style="display:flex;align-items:center;gap:6px">
-              <button class="btn-eye" data-id="{{ demande.id }}" title="Voir détails">
+              <a href="{% url 'serviceMedicaux:detailDemande' demande.id %}" class="btn-eye" title="Voir détails">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
                   stroke-linecap="round" stroke-linejoin="round">
                   <path d="M3 13C6.6 5 17.4 5 21 13" />
                   <circle cx="12" cy="14" r="3" fill="currentColor" stroke="currentColor" />
                 </svg>
-              </button>
+              </a>
               <a href="{% url 'serviceMedicaux:telechargerOrdonnance' demande.id %}"
                 title="Télécharger l'ordonnance PDF"
                 style="display:inline-flex;align-items:center;color:#b91c1c">
@@ -474,42 +474,6 @@
                   <polyline points="9 15 12 18 15 15" />
                 </svg>
               </a>
-            </div>
-          </td>
-        </tr>
-        <tr id="detail-{{ demande.id }}" class="detail-row" style="display:none">
-          <td colspan="{% if mes_demandes %}9{% else %}10{% endif %}">
-            <div class="detail-inner">
-              <div>
-                <p>Motif</p>
-                <strong>{{ demande.motif|default:"Non renseigné" }}</strong>
-              </div>
-              <div>
-                <p>Urgence</p>
-                <strong>{{ demande.urgence }}</strong>
-              </div>
-              <div>
-                <p>État</p>
-                <strong>{{ demande.etat }}</strong>
-              </div>
-              {% if not mes_demandes %}
-              <div>
-                <p>Proche ({{ demande.patient.relation_proche_patient }})</p>
-                <strong>{{ demande.patient.proche }}</strong>
-              </div>
-              <div>
-                <p>Contact</p>
-                <strong>{{ demande.patient.telephone_proche }}</strong>
-              </div>
-              {% endif %}
-              {% if mes_demandes and demande.etat == 'Approuvée' or demande.etat == 'Complétée' %}
-              <div>
-                <p>Poches allouées</p>
-                {% for poche in poches_allouees %}
-                <strong style="display:block">{{ poche }}</strong>
-                {% endfor %}
-              </div>
-              {% endif %}
             </div>
           </td>
         </tr>
@@ -666,16 +630,6 @@
     document.getElementById('searchInput').addEventListener('input', function () {
       clearTimeout(searchTimer);
       searchTimer = setTimeout(() => { query = this.value; page = 1; render(); }, 200);
-    });
-
-    document.querySelectorAll('.btn-eye').forEach(btn => {
-      btn.addEventListener('click', function () {
-        const id = this.dataset.id;
-        const det = document.getElementById('detail-' + id);
-        if (!det) return;
-        const open = det.style.display !== 'none';
-        det.style.display = open ? 'none' : '';
-      });
     });
 
     render();

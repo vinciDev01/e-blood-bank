@@ -9,6 +9,7 @@ urlpatterns = [
     path('listeDemandesDeSang/', views.listeDemandesDeSang, name='listeDemandesDeSang'),
     path('api/demandes/flux/', views.demandes_flux, name='demandesFlux'),
     path('ordonnance/<int:demande_id>/', views.telechargerOrdonnance, name='telechargerOrdonnance'),
+    path('demande/<int:demande_id>/', views.detailDemande, name='detailDemande'),
     path('historiqueDemandes/', views.historiqueDemandesDeSang, name='historiqueDemandes'),
     path('accepterDemande', views.accepter_demande, name='accepterDemande'),
     # path('traiterDemande/<int:demande_id>/', views.traiter_demande, name='traiterDemande'),

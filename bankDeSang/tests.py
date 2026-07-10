@@ -241,6 +241,39 @@ class DemandesFluxBanqueTest(TestCase):
         self.assertEqual(resp.status_code, 302)
 
 
+class DetailDemandeBanqueTest(TestCase):
+    def _demande(self):
+        from _auth.models import ServiceMedicaux
+        from serviceMedicaux.models import DemandeDeSang
+        u = User.objects.create_user(username='med_det_b', password='x', role='medical')
+        service = ServiceMedicaux.objects.create(
+            nom_etablissement='Hôpital Détail B', type_etablissement='Public', responsable='R',
+            adresse='A', email='meddetb@example.com', ville='Lomé', code_postal='0', pays='Togo',
+            telephone='0', numero_licence='L', numero_enregistrement='E', user=u,
+        )
+        return DemandeDeSang.objects.create(
+            serviceMedicaux=service, type_produit='Sang total', urgence='Immédiate',
+            motif='Accident', etat='En attente', groupe_sanguin={service.email: ['A+']},
+            nombre_poches={service.email: ['1']}, etat_groupes={'A+': 'En attente'},
+        )
+
+    def test_page_detail_banque(self):
+        demande = self._demande()
+        banque = _creer_banque('bank_det')
+        self.client.force_login(banque)
+        resp = self.client.get(reverse('bankDeSang:detailDemande', args=[demande.id]))
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Détail de la demande')
+        self.assertContains(resp, 'Hôpital Détail B')
+
+    def test_detail_refuse_role_non_banque(self):
+        demande = self._demande()
+        autre = User.objects.create_user(username='med_det_x', password='x', role='medical')
+        self.client.force_login(autre)
+        resp = self.client.get(reverse('bankDeSang:detailDemande', args=[demande.id]))
+        self.assertEqual(resp.status_code, 302)
+
+
 class OrdonnanceBanqueTest(TestCase):
     def _demande(self):
         from _auth.models import ServiceMedicaux
