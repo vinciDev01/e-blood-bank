@@ -67,6 +67,29 @@ class CarteBanquesBankDeSangTest(TestCase):
         resp = self.client.get(reverse('bankDeSang:carteBanques'))
         self.assertEqual(resp.status_code, 302)
 
+    def test_carte_a_le_filtre_et_filtre_par_groupe(self):
+        from datetime import date, timedelta
+        from _auth.models import BanqueDeSang
+        from bankDeSang.models import PocheDeSang
+        u = User.objects.create_user(username='bank_filtre', password='x', role='blood_bank')
+        with patch('_auth.models.geocoder_adresse', return_value=(6.13, 1.22)):
+            banque = BanqueDeSang.objects.create(
+                nom_etablissement='Banque Filtre', responsable='R', adresse='Rue',
+                ville='Lomé', code_postal='0', pays='Togo', telephone='90000000', user=u,
+            )
+        PocheDeSang.objects.create(
+            matricule='BF-O', type_produit='Sang total', groupe_sanguin='O-',
+            date_expiration=date.today() + timedelta(days=42), est_disponible=True,
+            bank_de_sang=banque,
+        )
+        self.client.force_login(u)
+        resp = self.client.get(reverse('bankDeSang:carteBanques'))
+        self.assertContains(resp, 'name="groupe"')
+        resp2 = self.client.get(reverse('bankDeSang:carteBanques'), {'groupe': 'O-'})
+        noms = [b['nom'] for b in resp2.context['banques']]
+        self.assertIn('Banque Filtre', noms)
+        self.assertEqual(resp2.context['groupe_selectionne'], 'O-')
+
 
 class ModifierSupprimerStockTest(TestCase):
     def setUp(self):

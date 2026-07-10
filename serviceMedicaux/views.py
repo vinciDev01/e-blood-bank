@@ -316,9 +316,8 @@ def recevoir_poches(request):
 @login_required
 @check_role('medical')
 def carteBanques(request):
-    response = render(request, 'frontend/serviceMedicaux/carte_banques_de_sang.html', {
-        'banques': BanqueDeSang.donnees_carte(),
-    })
+    response = render(request, 'frontend/serviceMedicaux/carte_banques_de_sang.html',
+                      BanqueDeSang.contexte_carte(request))
     # Les serveurs de tuiles OpenStreetMap exigent un en-tête Referer. La politique
     # globale 'same-origin' le supprime en cross-origin ; on transmet l'origine
     # (sans le chemin) uniquement pour cette page.

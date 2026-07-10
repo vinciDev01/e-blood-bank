@@ -528,9 +528,8 @@ def accepter_demande(request):
 @login_required
 @check_role('blood_bank')
 def carteBanques(request):
-    response = render(request, 'frontend/bankDeSang/carte_banques_de_sang.html', {
-        'banques': BanqueDeSang.donnees_carte(),
-    })
+    response = render(request, 'frontend/bankDeSang/carte_banques_de_sang.html',
+                      BanqueDeSang.contexte_carte(request))
     # Les serveurs de tuiles OpenStreetMap exigent un en-tête Referer ; la politique
     # globale 'same-origin' le supprime en cross-origin -> on transmet l'origine ici.
     response['Referrer-Policy'] = 'strict-origin-when-cross-origin'

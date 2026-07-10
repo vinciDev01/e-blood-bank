@@ -7,7 +7,7 @@
   <div class="max-w-3xl mx-auto">
 
     <!-- En-tête donneur -->
-    <header class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 mb-6">
+    <header class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 mb-6 mt-40">
       <div class="flex flex-wrap items-center justify-between gap-4">
         <div class="flex items-center gap-4">
           <div class="h-14 w-14 rounded-full bg-red-50 text-red-600 grid place-items-center text-xl font-bold">
@@ -23,9 +23,12 @@
           </div>
         </div>
         <a href="{% url 'donneur:planifierDon' %}"
-           class="inline-flex items-center gap-2 rounded-lg bg-red-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-red-700 transition">
+          class="inline-flex items-center gap-2 rounded-lg bg-red-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-red-700 transition">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-               stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14" />
+            <path d="M12 5v14" />
+          </svg>
           Planifier un don
         </a>
       </div>
@@ -54,11 +57,12 @@
             <div class="text-sm text-slate-500">{{ rdv.date|date:"d/m/Y" }} · {{ rdv.creneau }}</div>
           </div>
           <div class="flex items-center gap-2">
-            <span class="inline-flex items-center whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-semibold bg-green-100 text-green-800">
+            <span
+              class="inline-flex items-center whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-semibold bg-green-100 text-green-800">
               {{ rdv.statut }}
             </span>
             <form method="post" action="{% url 'donneur:annulerRendezVous' rdv.id %}"
-                  onsubmit="return confirm('Annuler ce rendez-vous ?');">
+              onsubmit="return confirm('Annuler ce rendez-vous ?');">
               {% csrf_token %}
               <button type="submit"
                 class="rounded-md border border-red-200 text-red-700 hover:bg-red-50 text-xs font-semibold px-2.5 py-1">
@@ -85,7 +89,8 @@
             <div class="font-semibold text-slate-900">{{ rdv.banque.nom_etablissement }}</div>
             <div class="text-sm text-slate-500">{{ rdv.date|date:"d/m/Y" }} · {{ rdv.creneau }}</div>
           </div>
-          <span class="inline-flex items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold text-slate-500">
+          <span
+            class="inline-flex items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold text-slate-500">
             {{ rdv.statut }}
           </span>
         </div>

@@ -116,6 +116,27 @@ class CarteBanquesViewTest(TestCase):
         self.assertContains(resp, 'Itinéraire')
         self.assertContains(resp, 'router.project-osrm.org')
 
+    def test_carte_a_le_filtre_groupe(self):
+        self.client.force_login(self.medical)
+        resp = self.client.get(reverse('serviceMedicaux:carteBanques'))
+        self.assertContains(resp, 'name="groupe"')
+        self.assertContains(resp, 'Groupe sanguin recherché')
+
+    def test_carte_filtre_par_groupe(self):
+        from datetime import timedelta
+        from bankDeSang.models import PocheDeSang
+        banque = BanqueDeSang.objects.get(nom_etablissement='Banque Visible')
+        PocheDeSang.objects.create(
+            matricule='CB-O', type_produit='Sang total', groupe_sanguin='O-',
+            date_expiration=date.today() + timedelta(days=42), est_disponible=True,
+            bank_de_sang=banque,
+        )
+        self.client.force_login(self.medical)
+        resp = self.client.get(reverse('serviceMedicaux:carteBanques'), {'groupe': 'O-'})
+        noms = [b['nom'] for b in resp.context['banques']]
+        self.assertEqual(noms, ['Banque Visible'])
+        self.assertEqual(resp.context['groupe_selectionne'], 'O-')
+
 
 class SuiviDemandesTest(TestCase):
     def _service_avec_demande(self):

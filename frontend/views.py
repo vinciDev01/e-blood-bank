@@ -75,20 +75,9 @@ def centresDeDon(request):
     Filtre optionnel `?groupe=` : ne montre que les centres ayant au moins une
     poche disponible du groupe sanguin demandé.
     """
-    from bankDeSang.models import PocheDeSang
-
-    groupes = [g for g, _ in PocheDeSang.groupe_sanguin_choices]
-    groupe = request.GET.get('groupe', '').strip()
-    if groupe not in groupes:
-        groupe = ''  # valeur invalide ou "Tous" → pas de filtre
-
-    centres = BanqueDeSang.objects.all()
-    response = render(request, 'frontend/centres_de_don.html', {
-        'centres': centres,
-        'banques': BanqueDeSang.donnees_carte(groupe or None),
-        'groupes': groupes,
-        'groupe_selectionne': groupe,
-    })
+    contexte = BanqueDeSang.contexte_carte(request)
+    contexte['centres'] = BanqueDeSang.objects.all()
+    response = render(request, 'frontend/centres_de_don.html', contexte)
     # Les tuiles OpenStreetMap exigent un en-tête Referer (politique 'same-origin'
     # globale le supprimerait en cross-origin).
     response['Referrer-Policy'] = 'strict-origin-when-cross-origin'

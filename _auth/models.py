@@ -235,6 +235,29 @@ class BanqueDeSang(models.Model):
             données.append(d)
         return données
 
+    @classmethod
+    def groupes_sanguins(cls):
+        """Liste des groupes sanguins valides (source unique : PocheDeSang)."""
+        from bankDeSang.models import PocheDeSang
+        return [g for g, _ in PocheDeSang.groupe_sanguin_choices]
+
+    @classmethod
+    def contexte_carte(cls, request):
+        """Contexte commun des pages carte : banques filtrées par `?groupe=` + méta.
+
+        Partagé par la page publique « Centres de don » et les pages
+        « Carte des banques de sang » des tableaux de bord.
+        """
+        groupes = cls.groupes_sanguins()
+        groupe = request.GET.get('groupe', '').strip()
+        if groupe not in groupes:
+            groupe = ''  # valeur invalide ou « Tous » → pas de filtre
+        return {
+            'banques': cls.donnees_carte(groupe or None),
+            'groupes': groupes,
+            'groupe_selectionne': groupe,
+        }
+
     def _adresse_complete(self):
         return f'{self.adresse}|{self.ville}|{self.code_postal}|{self.pays}'
 
