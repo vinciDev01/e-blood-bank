@@ -13,14 +13,20 @@ from donneur.models import RendezVousDon, CRENEAUX
 @login_required
 @check_role('donor')
 def accueilDonneur(request):
+    from bankDeSang.models import PocheDeSang
+
     donneur = request.user.donneur
     rdv = RendezVousDon.objects.filter(donneur=donneur).select_related('banque')
     aujourd_hui = date.today()
     rdv_a_venir = [r for r in rdv if r.statut == 'Planifié' and r.date >= aujourd_hui]
     rdv_passes = [r for r in rdv if r.statut == 'Effectué' or r.date < aujourd_hui]
+    nb_dons = PocheDeSang.objects.filter(donneur=donneur).count()
     return render(request, 'frontend/donneur/accueil_donneur.html', {
+        'donneur': donneur,
         'rdv_a_venir': rdv_a_venir,
         'rdv_passes': rdv_passes,
+        'nb_rdv_a_venir': len(rdv_a_venir),
+        'nb_dons': nb_dons,
     })
 
 

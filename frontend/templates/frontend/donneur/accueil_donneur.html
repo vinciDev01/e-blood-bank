@@ -1,379 +1,100 @@
 {% extends 'frontend/base.html' %}
 {% load static %}
+{% block title %}Tableau de bord donneur — eBloodBank{% endblock %}
 
-{% block stylesheet %}
-<style>
-    .sticky-top {
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        width: 100%;
-        height: 60px;
-        background-color: #fff;
-        border-bottom: 1px solid #e5e7eb;
-        padding: 0 1rem;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        box-shadow: 0 2px 4px rgba(139, 139, 139, 0.1);
-        transition: height 0.3s ease;
-    }
+{% block main %}
+<section style="background:#f6f8fb;min-height:100%;" class="px-4 sm:px-6 lg:px-10 py-8">
+  <div class="max-w-3xl mx-auto">
 
-    .sticky-left {
-        position: sticky;
-        top: 60px;
-        height: calc(100vh - 60px);
-        padding: 1rem;
-        overflow-y: auto;
-    }
-
-    .sticky-right {
-        position: sticky;
-        top: 60px;
-        height: calc(100vh - 60px);
-        padding: 1rem;
-        overflow-y: auto;
-    }
-        /* Pour masquer complètement la barre de défilement */
-        ::-webkit-scrollbar {
-      display: none;
-    }
-
-    /* Pour affiner la barre de défilement */
-    ::-webkit-scrollbar {
-      width: 10px;
-      /* Largeur de la barre */
-    }
-
-    ::-webkit-scrollbar-track {
-      background-color: #f1f1f1;
-      /* Couleur de fond de la piste */
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background-color: #888;
-      /* Couleur de la barre de défilement */
-    }
-
-    /* Pour masquer complètement la barre de défilement 
-    ::-webkit-scrollbar {
-      display: none;
-    }*/
-
-    ::-webkit-scrollbar-thumb:hover {
-      background-color: #555;
-      /* Couleur de la barre de défilement au survol */
-    }
-
-</style>
-{% endblock %}
-
-{% block body %}
-<!-- Sidebar Left -->
-<div class="sticky-left w-1/5 p-4 shadow bg-white">
-    <div class="mb-4 text-center">
-        <img class="h-12 w-12 rounded-full mx-auto" src="https://via.placeholder.com/150" alt="Profile Picture">
-        <h2 class="mt-2 text-xl font-semibold">User Name</h2>
-    </div>
-    <div class="space-y-2">
-        <a href="#" class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-300">
-            <svg class="w-6 h-6 stroke-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z"></path>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="m3 9 2.45-4.9A2 2 0 0 1 7.24 3h9.52a2 2 0 0 1 1.8 1.1L21 9"></path>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v6"></path>
-            </svg>
-            <span class="ml-2 text-sm font-medium">Dashboard</span>
-        </a>
-        <a href="#" class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-300">
-            <?xml version="1.0" encoding="UTF-8"?><svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24"
-                fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000">
-                <path
-                    d="M18.1336 11C18.7155 16.3755 21 18 21 18H3C3 18 6 15.8667 6 8.4C6 6.70261 6.63214 5.07475 7.75736 3.87452C8.88258 2.67428 10.4087 2 12 2C12.3373 2 12.6717 2.0303 13 2.08949"
-                    stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                <path
-                    d="M19 8C20.6569 8 22 6.65685 22 5C22 3.34315 20.6569 2 19 2C17.3431 2 16 3.34315 16 5C16 6.65685 17.3431 8 19 8Z"
-                    stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                <path
-                    d="M13.73 21C13.5542 21.3031 13.3019 21.5547 12.9982 21.7295C12.6946 21.9044 12.3504 21.9965 12 21.9965C11.6496 21.9965 11.3054 21.9044 11.0018 21.7295C10.6982 21.5547 10.4458 21.3031 10.27 21"
-                    stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-            </svg>
-            <span class="ml-2 text-sm font-medium">Notifications</span>
-        </a>
-        <a href="#" class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-300">
-            <?xml version="1.0" encoding="UTF-8"?>
-            <svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none"
-                xmlns="http://www.w3.org/2000/svg" color="#000000">
-                <path
-                    d="M15 4V2M15 4V6M15 4H10.5M3 10V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V10H3Z"
-                    stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                <path d="M3 10V6C3 4.89543 3.89543 4 5 4H7" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                    stroke-linejoin="round"></path>
-                <path d="M7 2V6" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                </path>
-                <path d="M21 10V6C21 4.89543 20.1046 4 19 4H18.5" stroke="#000000" stroke-width="1.5"
-                    stroke-linecap="round" stroke-linejoin="round"></path>
-            </svg>
-            <span class="ml-2 text-sm font-medium">Calendrier</span>
-        </a>
-        <a href="#" class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-300">
-            <?xml version="1.0" encoding="UTF-8"?><svg width="24px" stroke-width="1.5" height="24px" viewBox="0 0 24 24"
-                fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000">
-                <path d="M4 19V5C4 3.89543 4.89543 3 6 3H19.4C19.7314 3 20 3.26863 20 3.6V16.7143" stroke="#000000"
-                    stroke-width="1.5" stroke-linecap="round"></path>
-                <path d="M8 3V11L10.5 9.4L13 11V3" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                    stroke-linejoin="round"></path>
-                <path d="M6 17L20 17" stroke="#000000" stroke-width="1.5" stroke-linecap="round"></path>
-                <path d="M6 21L20 21" stroke="#000000" stroke-width="1.5" stroke-linecap="round"></path>
-                <path d="M6 21C4.89543 21 4 20.1046 4 19C4 17.8954 4.89543 17 6 17" stroke="#000000" stroke-width="1.5"
-                    stroke-linecap="round" stroke-linejoin="round"></path>
-            </svg>
-            <span class="ml-2 text-sm font-medium">Historique des dons</span>
-        </a>
-        <a href="#" class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-300">
-            <?xml version="1.0" encoding="UTF-8"?><svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24"
-                fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000">
-                <path d="M12 12H19M19 12L16 15M19 12L16 9" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                    stroke-linejoin="round"></path>
-                <path
-                    d="M19 6V5C19 3.89543 18.1046 3 17 3H7C5.89543 3 5 3.89543 5 5V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V18"
-                    stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-            </svg>
-            <span class="ml-2 text-sm font-medium">Déconnexion</span>
-        </a>
-    </div>
-</div>
-
-
-<!-- Main Content -->
-<div class="w-4/5 p-4">
-    {% block main %}
-
-    <div class="grid min-h-screen items-start gap-4 p-4 lg:gap-8 lg:p-6 bg-card bg-white w-auto" style="font-size: 1.140rem; font-family: 'Poppins', sans-serif;">
-        <div class="mx-auto w-full max-w-2xl">
-            <div class="grid gap-2">
-                <div class="flex items-center gap-2">
-                    <img src="{% static 'img/Logo_eBloodBank.png' %}" alt="eBloodBank" style="height: 40px; width: auto; display: block;">
-                </div>
-                <p class="text-gray-500 md:w-3/4 xl:w-1/2 dark:text-gray-400">
-                    An innovative web application that simplifies and improves blood management.
-                </p>
-            </div>
+    <!-- En-tête donneur -->
+    <header class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 mb-6">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center gap-4">
+          <div class="h-14 w-14 rounded-full bg-red-50 text-red-600 grid place-items-center text-xl font-bold">
+            {{ donneur.prenom|first|upper }}{{ donneur.nom|first|upper }}
+          </div>
+          <div>
+            <p class="text-xs font-bold uppercase tracking-[0.2em] text-red-600">Espace donneur</p>
+            <h1 class="text-2xl font-extrabold text-slate-900">Bonjour, {{ donneur.prenom }}</h1>
+            <p class="text-sm text-slate-500 mt-0.5">
+              Groupe <strong class="text-slate-700">{{ donneur.groupe_sanguin }}</strong>
+              · N° donneur <strong class="text-slate-700">{{ donneur.numero_de_donneur }}</strong>
+            </p>
+          </div>
         </div>
-        <div class="rounded-lg border shadow-sm w-full overflow-hidden">
-            <main class="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6" style="zoom: 1.2;">
-                <section class="mx-auto grid max-w-4xl items-start gap-4 lg:gap-8">
-                    <div class="flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="h-6 w-6">
-                            <path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z"></path>
-                            <path d="m3 9 2.45-4.9A2 2 0 0 1 7.24 3h9.52a2 2 0 0 1 1.8 1.1L21 9"></path>
-                            <path d="M12 3v6"></path>
-                        </svg>
-                        <h2 class="font-semibold text-2xl">Donor Dashboard</h2>
-                    </div>
-                    <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
-                        <div class="flex flex-col space-y-1.5 p-6">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <h3 class="font-semibold text-lg">Welcome, Donor!</h3>
-                                    <p class="text-gray-500 dark:text-gray-400">Manage your blood donation schedule and
-                                        history.</p>
-                                </div>
-                                <a href="{% url 'donneur:planifierDon' %}"
-                                    class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors bg-red-600 text-white hover:bg-red-700 h-10 px-4 py-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="h-5 w-5">
-                                        <path d="M5 12h14"></path>
-                                        <path d="M12 5v14"></path>
-                                    </svg>
-                                    Planifier un don
-                                </a>
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <div class="grid gap-6">
-                                <div>
-                                    <h4 class="font-semibold text-base">Rendez-vous à venir</h4>
-                                    <div class="grid gap-2 mt-2">
-                                        {% for rdv in rdv_a_venir %}
-                                        <div class="flex items-center justify-between gap-3">
-                                            <div>
-                                                <div class="font-semibold">{{ rdv.banque.nom_etablissement }}</div>
-                                                <div class="text-sm text-gray-500 dark:text-gray-400">
-                                                    {{ rdv.date|date:"d/m/Y" }} · {{ rdv.creneau }}
-                                                </div>
-                                            </div>
-                                            <div class="flex items-center gap-2 ml-auto">
-                                                <span class="inline-flex w-fit items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold border-transparent bg-green-100 text-green-800">
-                                                    {{ rdv.statut }}
-                                                </span>
-                                                <form method="post" action="{% url 'donneur:annulerRendezVous' rdv.id %}"
-                                                      onsubmit="return confirm('Annuler ce rendez-vous ?');">
-                                                    {% csrf_token %}
-                                                    <button type="submit"
-                                                        class="rounded-md border border-red-200 text-red-700 hover:bg-red-50 text-xs font-semibold px-2.5 py-1">
-                                                        Annuler
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                        <div class="shrink-0 bg-gray-100 h-[1px] w-full"></div>
-                                        {% empty %}
-                                        <p class="text-sm text-gray-500">Aucun rendez-vous à venir.
-                                            <a href="{% url 'donneur:planifierDon' %}" class="text-red-600 font-semibold">Planifier un don</a>.
-                                        </p>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-base">Rendez-vous passés</h4>
-                                    <div class="grid gap-2 mt-2">
-                                        {% for rdv in rdv_passes %}
-                                        <div class="flex items-center justify-between">
-                                            <div>
-                                                <div class="font-semibold">{{ rdv.banque.nom_etablissement }}</div>
-                                                <div class="text-sm text-gray-500 dark:text-gray-400">
-                                                    {{ rdv.date|date:"d/m/Y" }} · {{ rdv.creneau }}
-                                                </div>
-                                            </div>
-                                            <div class="inline-flex w-fit items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold ml-auto">
-                                                {{ rdv.statut }}
-                                            </div>
-                                        </div>
-                                        {% empty %}
-                                        <p class="text-sm text-gray-500">Aucun rendez-vous passé.</p>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
-                        <div class="flex flex-col space-y-1.5 p-6">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <h3 class="font-semibold text-lg">Donation Impact</h3>
-                                    <p class="text-gray-500 dark:text-gray-400">See how your donations have helped save
-                                        lives.</p>
-                                </div>
-                                <div class="flex items-center gap-4">
-                                    <div class="flex flex-col items-center">
-                                        <div class="text-2xl font-semibold">24</div>
-                                        <div class="text-sm text-gray-500 dark:text-gray-400">Lives Saved</div>
-                                    </div>
-                                    <div class="flex flex-col items-center">
-                                        <div class="text-2xl font-semibold">Level 3</div>
-                                        <div class="text-sm text-gray-500 dark:text-gray-400">Donor Level</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                                <div class="bg-primary h-2.5 rounded-full" style="width:75%"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
-                        <div class="flex flex-col space-y-1.5 p-6">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <h3 class="font-semibold text-lg">Urgent Requests</h3>
-                                    <p class="text-gray-500 dark:text-gray-400">
-                                        Help save a life by donating blood for urgent requests.
-                                    </p>
-                                </div>
-                                <button
-                                    class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="h-5 w-5">
-                                        <path d="M5 12h14"></path>
-                                        <path d="M12 5v14"></path>
-                                    </svg>
-                                    Donate Now
-                                </button>
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <div class="grid gap-2">
-                                <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
-                                    <div class="p-6 flex items-center gap-4">
-                                        <img alt="Avatar" class="rounded-full aspect-square object-cover" height="72"
-                                            src="/placeholder.svg" width="72" />
-                                        <div class="grid gap-1.5">
-                                            <div class="font-semibold">Emma Johnson</div>
-                                            <div class="text-sm text-gray-500 dark:text-gray-400">O+</div>
-                                            <div class="text-sm text-gray-500 dark:text-gray-400">2 bags required</div>
-                                        </div>
-                                        <a class="ml-auto underline" href="#">
-                                            Donate
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
-                                    <div class="p-6 flex items-center gap-4">
-                                        <img alt="Avatar" class="rounded-full aspect-square object-cover" height="72"
-                                            src="/placeholder.svg" width="72" />
-                                        <div class="grid gap-1.5">
-                                            <div class="font-semibold">Sophia Williams</div>
-                                            <div class="text-sm text-gray-500 dark:text-gray-400">B+</div>
-                                            <div class="text-sm text-gray-500 dark:text-gray-400">1 bag required</div>
-                                        </div>
-                                        <a class="ml-auto underline" href="#">
-                                            Donate
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </main>
-        </div>
+        <a href="{% url 'donneur:planifierDon' %}"
+           class="inline-flex items-center gap-2 rounded-lg bg-red-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-red-700 transition">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+          Planifier un don
+        </a>
+      </div>
+    </header>
+
+    <!-- Statistiques réelles -->
+    <div class="grid grid-cols-2 gap-4 mb-6">
+      <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
+        <div class="text-3xl font-extrabold text-slate-900">{{ nb_rdv_a_venir }}</div>
+        <div class="text-sm text-slate-500 mt-1">Rendez-vous à venir</div>
+      </div>
+      <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
+        <div class="text-3xl font-extrabold text-slate-900">{{ nb_dons }}</div>
+        <div class="text-sm text-slate-500 mt-1">Don{{ nb_dons|pluralize }} effectué{{ nb_dons|pluralize }}</div>
+      </div>
     </div>
 
-
-    <section class="w-full box-shadow">
-        {% include 'frontend/donneur/bloodDonnorIllustration.html' %}
-    </section>
-    <!-- Repeat the post block for more posts -->
-    {% endblock %}
-</div>
-
-<!-- Sidebar Right -->
-<!-- <div class="sticky-right top-0 right-0 w-1/5 p-4 shadow bg-gray-200">
-    <div class="space-y-4">
-        <div>
-            <h3 class="text-lg font-semibold">Santé</h3>
-            <div class="flex items-center space-x-4 mt-2">
-                <img class="h-10 w-10 rounded-full" src="https://via.placeholder.com/150" alt="Image de l'utilisateur">
-                <div>
-                    <h4 class="font-semibold">John Doe</h4>
-                    <button class="text-blue-600 hover:text-blue-700">Voir</button>
-                    <button class="text-gray-600 hover:text-gray-700">Supprimer</button>
-                </div>
-            </div>
+    <!-- Rendez-vous à venir -->
+    <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 mb-6">
+      <h2 class="font-bold text-lg text-slate-900 mb-3">Rendez-vous à venir</h2>
+      <div class="grid gap-2">
+        {% for rdv in rdv_a_venir %}
+        <div class="flex items-center justify-between gap-3 py-2 border-b border-slate-100 last:border-0">
+          <div>
+            <div class="font-semibold text-slate-900">{{ rdv.banque.nom_etablissement }}</div>
+            <div class="text-sm text-slate-500">{{ rdv.date|date:"d/m/Y" }} · {{ rdv.creneau }}</div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="inline-flex items-center whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-semibold bg-green-100 text-green-800">
+              {{ rdv.statut }}
+            </span>
+            <form method="post" action="{% url 'donneur:annulerRendezVous' rdv.id %}"
+                  onsubmit="return confirm('Annuler ce rendez-vous ?');">
+              {% csrf_token %}
+              <button type="submit"
+                class="rounded-md border border-red-200 text-red-700 hover:bg-red-50 text-xs font-semibold px-2.5 py-1">
+                Annuler
+              </button>
+            </form>
+          </div>
         </div>
-        <div>
-             <h3 class="text-lg font-semibold">Lorem</h3>
-            <p class="mt-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus reprehenderit eum consectetur quisquam, tenetur porro saepe rem molestiae fugit vel vitae ex qui ad asperiores itaque! Accusamus, optio. Numquam, similique?</p>
-        </div>
+        {% empty %}
+        <p class="text-sm text-slate-500">Aucun rendez-vous à venir.
+          <a href="{% url 'donneur:planifierDon' %}" class="text-red-600 font-semibold">Planifier un don</a>.
+        </p>
+        {% endfor %}
+      </div>
     </div>
-</div> -->
-<script>
-    // Add any JavaScript here if needed
-    // Pour masquer complètement la barre de défilement
-    document.body.style.overflow = 'hidden';
 
-    // Pour affiner la barre de défilement
-    document.body.style.overflow = 'auto';
-    document.body.style.scrollbarWidth = 'thin'; // Pour Firefox
+    <!-- Rendez-vous passés -->
+    <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6">
+      <h2 class="font-bold text-lg text-slate-900 mb-3">Rendez-vous passés</h2>
+      <div class="grid gap-2">
+        {% for rdv in rdv_passes %}
+        <div class="flex items-center justify-between gap-3 py-2 border-b border-slate-100 last:border-0">
+          <div>
+            <div class="font-semibold text-slate-900">{{ rdv.banque.nom_etablissement }}</div>
+            <div class="text-sm text-slate-500">{{ rdv.date|date:"d/m/Y" }} · {{ rdv.creneau }}</div>
+          </div>
+          <span class="inline-flex items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold text-slate-500">
+            {{ rdv.statut }}
+          </span>
+        </div>
+        {% empty %}
+        <p class="text-sm text-slate-500">Aucun rendez-vous passé.</p>
+        {% endfor %}
+      </div>
+    </div>
 
-  </script>
+  </div>
+</section>
 {% endblock %}
